@@ -9,24 +9,28 @@ $ npm run dev
 ```
 
 ### Code Snippets
-This code displays tabular data in ```Vue JS```.
-```html
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Description</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr v-for="category in categories" :key="category.id">
-        <td>{{ category.id }}</td>
-        <td>{{ category.name }}</td>
-        <td>{{ category.description }}</td>
-    </tr>
-    </tbody>
-</table>
+```./src/router.js```
+
+```js
+import { createRouter, createWebHistory } from 'vue-router';
+import Home from './components/Home.vue';
+import Category from './components/Category.vue';
+import About from './components/About.vue';
+import Login from './components/Login.vue';
+
+const routes = [
+    { path: '/', component: Home },
+    { path: '/category', component: Category },
+    { path: '/about', component: About },
+    { path: '/login', component: Login, name: Login },
+];
+
+const router = createRouter({
+    history: createWebHistory(),
+    routes,
+});
+
+export default router;
 ```
 > ```<table class="table table-striped">```: This creates an HTML table with the Bootstrap class "table" and "table-striped," which gives the table a striped appearance for better readability.
 
