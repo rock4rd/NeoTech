@@ -17,7 +17,7 @@ import NavigationBar from './NavigationBar.vue'
     <table>
       <thead>
         <tr>
-          <th>Time</th>
+          <th>Timasdsade</th>
           <th>Monday</th>
           <th>Tuesday</th>
           <th>Wednesday</th>
