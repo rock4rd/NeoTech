@@ -159,7 +159,7 @@ import NavigationBar from './NavigationBar.vue'
         </div>
 
         <div class="laboratory">
-    <h2 class="headir">LABORATOasdsadsaRY ROOM</h2>
+    <h2 class="headir">LABORATORY ROOM</h2>
     <table class="labtable">
       <thead></thead>
       <tbody>
