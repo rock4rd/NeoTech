@@ -17,7 +17,7 @@ import NavigationBar from './NavigationBar.vue'
            <table class="sched-table">
       <thead>
         <tr>
-          <th>Time</th>
+          <th>Timesad</th>
           <th>Monday</th>
           <th>Tuesday</th>
           <th>Wednesday</th>
