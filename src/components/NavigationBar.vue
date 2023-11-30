@@ -22,7 +22,7 @@
           <!-- Left links -->
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link" href="/home"><b class="bi bi-house-door navicon"></b></a>
+              <router-link to="/home"><a class="nav-link"><b class="bi bi-house-door navicon"></b></a></router-link>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/booking"> <b class="bi bi-bell navicon"></b></a>
