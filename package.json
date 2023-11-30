@@ -9,8 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "bootstrap": "^5.3.0",
+    "bootstrap-icons": "^1.11.2",
+    "bootstrap-vue": "^2.21.2",
     "mdb-vue-ui-kit": "^4.1.1",
+    "moment": "^2.29.4",
     "vue": "^3.3.4",
+    "vue-full-calendar": "^3.0.0",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
