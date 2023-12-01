@@ -157,7 +157,7 @@ left: 350px;
 }
 
 .loginbtn:hover {
-    background-color: #2980b9 sd; /* Change the hover background color as needed */
+    background-color: #2980b9 ; /* Change the hover background color as needed */
 }
 .terms-checkbox {
   display: flex;
