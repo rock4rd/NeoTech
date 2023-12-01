@@ -165,7 +165,7 @@ left: 350px;
   position: relative;
   background-color: #f3efef;
   width: 850px;
-  left: 505px;
+  left: 26.7%;
   top: 75px;
  
   border: solid black 1px;
