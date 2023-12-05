@@ -237,7 +237,7 @@ table {
 
 }
 .calendartable{
-height: 270px;
+height: 305px;
 width: 350px;
 margin-top: 50px;
 background-color: #FDB0C0;
