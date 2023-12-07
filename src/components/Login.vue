@@ -16,7 +16,7 @@
             </div>
 
         <div class="user">
-            <label for="userInput">USERNAME</label>
+            <label for="userInput"><i class="bi bi-person"></i>USERNAME</label>
             <input type="text" class="userInput" v-model="username" @input="handleInput">
         </div>
 

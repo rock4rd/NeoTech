@@ -8,7 +8,7 @@ import NavigationBar from './NavigationBar.vue'
         <div class="homeheader">
             <p class="phead">LIVE DATE & TIME <b class="bi bi-record2 rec"></b></p>
         </div>
-        
+        <div class="itemscontainer">
         <h2 class="schedhead">SCHEDULE</h2>
 
         <div class="schedhome">
@@ -148,9 +148,7 @@ import NavigationBar from './NavigationBar.vue'
 
 
            
-            <div class="labrec"> 
-                <p>LABORATORY RECORD</p>
-            </div>
+            
             
         </div>
         
@@ -177,53 +175,54 @@ import NavigationBar from './NavigationBar.vue'
 
       </div>
     </div>
+  </div>
   
 </template>
 <style>
 .homecontainer {
-    position: fixed;
-    top: 96px; /* Set the top position to the height of the navigation bar */
-    left: 0;
-    width: 100%;
-    overflow: hidden;
-    height: calc(100% - 96px); /* Adjusted to cover the remaining height */
-    background-color: black;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: 1; /* Adjust the value to be less than the dropdown z-index */
+  position: fixed;
+  top: 0; /* Adjusted to start from the top of the viewport */
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  background-image: url('./overallbg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+  }
+  .itemscontainer{
+    position: relative;
+    top: 10%;
+    left: 13%;
+    height: 75%;
+    width: 80%;
+    border-radius: 34.56px 34.56px 0px 0px;
+border: 1px solid var(--LIght, #F5347F);
+background: rgba(255, 255, 255, 0.41);
+box-shadow: 15px 15px 10px 0px #F5347F;
   }
   .schedhome{
     position: relative;
     background-color: white;
-    left: 130px;
+    left: 50px;
     top: 50px;
     color: white;
-    height: 615px;
+    height: 525px;
     width: 600px;
+    
+  overflow-y: auto; /* Add a scrollbar when the content exceeds the height */
     
   }
   .sched-table{
     color: black;
     border: none;
     grid: none;
+    font-size: 12px; /* Adjust the font size as needed */
+  width: 100%; /* Set the width to 100% or a specific value */
   }
-  .labrec p{
-    position: relative;
-    top: 12px;
-    left: 27px;
-  }
-
-  .labrec{
-    position: relative;
-    height: 50px;
-    width: 250px;
-    background-color: #ff69b4;
-    border-radius: 10px;
-    font-weight: bold;
-    top: 20px;
-    left: 28%;
-  }
+  
   .rec{
     color:red;
     font-weight: bold;
@@ -240,13 +239,13 @@ import NavigationBar from './NavigationBar.vue'
   .divider{
     position: relative;
     height: 650px;
-    width: 10px;
-    bottom: 70%;
-    background-color: white;
+    width: 5px;
+    bottom: 75%;
+    background-color: black;
     left: 49%;
   }
   .schedhead{
-    color: #ff69b4;
+    color: black;
     font-weight: bold;
     position: relative;
     left: 17%;
@@ -255,10 +254,10 @@ import NavigationBar from './NavigationBar.vue'
   }
   .homeheader{
     position:relative;
-    left: 41%;
+    left: 44.3%;
     height: 50px;
     width: 300px;
-    top: 20px;
+    top: 60px;
     background-color: #ff69b4 ;
     color: white;
     border-radius: 20px;
@@ -271,11 +270,11 @@ import NavigationBar from './NavigationBar.vue'
     font-weight: 20%;
   }
   .headir{
-    color: #ff69b4;
+    color: black;
     font-weight: bold;
     position: relative;
     left: 80px;
-    bottom: 50px;
+    bottom: 133px;
     
   }
   .laboratory {
@@ -312,7 +311,7 @@ import NavigationBar from './NavigationBar.vue'
 .laboratory .labtable th,
 .laboratory .labtable td {
   border: none; /* Remove borders */
-  padding: 20px; /* Add padding to cells */
+  padding: 5px; /* Add padding to cells */
 }
 .status{
     position: relative;

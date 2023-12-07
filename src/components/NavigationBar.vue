@@ -1,118 +1,104 @@
+To change your navigation bar from a top landscape to a left portrait orientation, you'll need to update the styles and structure of your navigation bar. Here's a modified version of your code to achieve a left portrait navigation bar:
+
+```html
 <!-- NavigationBar.vue -->
 <template>
-    <!-- <nav>
-      <router-link to="/">Home</router-link>
-      <router-link to="/category">Category</router-link>
-      <router-link to="/about">About</router-link>
-    </nav> -->
+  
+    
+  <nav class="navbar navbar-expand-lg navbar-light bg-light sidebar">
+    <div class="container-fluid">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light"> 
-      <!-- Container wrapper -->
-      <div class="container-fluid">
+        <ul class="navbar-nav flex-column">
+          <li class="nav-item">
+            <router-link to="/home" class="nav-link">
+              <b class="bi bi-house-door navicon"></b> 
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <a href="/booking" class="nav-link">
+              <b class="bi bi-bell navicon"></b> 
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/profile" class="nav-link">
+              <b class="bi bi-person navicon"></b>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/history" class="nav-link">
+              <b class="bi bi-archive navicon"></b> 
+            </a>
+          </li>
 
-
-        <!-- Collapsible wrapper -->
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <!-- Navbar brand -->
-          <a class="navbar-brand mt-2 mt-lg-0" href="/">
-            <img src="/logo.png" alt="">
-          </a>
-          <label for="navbar-brand" class="logoname">NEOTECH</label>
-          <!-- Left links -->
-          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <router-link to="/home"><a class="nav-link"><b class="bi bi-house-door navicon"></b></a></router-link>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/booking"> <b class="bi bi-bell navicon"></b></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/profile"><b class="bi bi-person navicon"></b></a>
-            </li>
-
-            <li class="nav-link">
-    <div class="dropdown" @click.stop>
-        <button @click="toggleDropdown"><b class="bi bi-three-dots-vertical navicon"></b></button>
-        <!-- Use v-if to conditionally render the dropdown based on a boolean data property -->
-        <ul v-if="showDropdown" style="left: 0;">
-            <!-- Dropdown content goes here -->
-            <li @click="toggleMode">
-          <a href="#">
-            <b class="bi" :class="{ 'bi-sun': isDarkMode, 'bi-moon': !isDarkMode }"></b>
-            {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
-          </a>
-        </li>
-            <li><a href="/history"> <b class="bi bi-clock-history dropdownicon"></b> History</a></li>
-            <li><a href="/"> <b class="bi bi-box-arrow-right dropdownicon"></b> Logout</a></li>
+          <li class="nav-item">
+            <div class="dropdown" @click.stop>
+              <button @click="toggleDropdown" class="nav-link">
+                <b class="bi bi-three-dots-vertical navicon"></b> 
+              </button>
+              <ul v-if="showDropdown">
+                <li @click="toggleMode">
+                  <a href="#">
+                    <b class="bi" :class="{ 'bi-sun': isDarkMode, 'bi-moon': !isDarkMode }"></b>
+                    {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+                  </a>
+                </li>
+                <li><a href="/history"> <b class="bi bi-clock-history dropdownicon"></b> History</a></li>
+                <li><a href="/"> <b class="bi bi-box-arrow-right dropdownicon"></b> Logout</a></li>
+              </ul>
+            </div>
+          </li>
         </ul>
-    </div>
-</li>
-            </ul>
-            
-         
-          <!-- Left links -->
-        </div>
-        <!-- Collapsible wrapper -->
-
       </div>
-      <!-- Container wrapper -->
-    </nav>
-    <!-- Navbar -->
-  </template>
+    </div>
+  </nav>
 
-  <style>
-  /* Custom styles for the navbar */
-  .container-fluid {
-    margin-top: -12px;
-    height: 100px;
-   background-color: #ff69b4;
-   align-items: end;
-   
-  }
-  .navicon{
-    font-size: 25px;
-  }
-  .dropdownicon{
-    font-size: 20px;
-    font-weight: bolder;
-  }
-  .nav-link {
-    position: relative;
-    right: 100px;
-    color: white;
-    margin: 30px;
-    background-color: transparent;
-    list-style: none;
-  }
-  .navbar-brand{
+</template>
+
+<style>
+/* Custom styles for the sidebar */
+.sidebar {
+  height: 50%;
+  width: 3%; /* Adjust the width as needed */
   position: relative;
-  bottom: 50px;
-  right: 25px;
-  transition: transform 0.3s ease-in-out;
- 
+  top: 300px;
+  left: 5%;
+  border-radius: 118.526px;
+background: rgba(255, 255, 255, 0.55);
+box-shadow: 3px 5px 3px 5px #F5347F;
+  z-index: 1000;
 }
 
-.navbar-brand img:hover {
-  transform: scale(1.1);
+
+.navbar-brand {
+  margin-bottom: 20px;
 }
-.logoname{
-  font-weight: 20%;
-  color: white;
+.nav-item{
+  
+position: relative;
+right: 7%;
+  
+}
+
+.nav-link {
+  color: black;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.navicon {
+  font-size: 25px;
+}
+
+.dropdownicon {
   font-size: 20px;
+  font-weight: bolder;
 }
-        .nav-link button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            color: white;
-        }
 
-        .dropdown {
+.dropdown {
   position: relative;
   display: inline-block;
-  z-index: 1000 !important;
 }
 
 .dropdown ul {
@@ -122,34 +108,28 @@
   position: absolute;
   top: 100%;
   left: 0;
-  z-index: 1000 !important;
   background-color: #ff69b4;
   border: 1px solid black;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  white-space: nowrap; /* Prevent line breaks */
-  min-width: 150px; /* Set a minimum width */
+  white-space: nowrap;
+  min-width: 150px;
 }
-        .dropdown li {
-            padding: 8px;
-            font-weight: bold;
-            z-index: 1000 !important;
-        }
 
-        .dropdown li:last-child {
-            border-bottom: none;
-            z-index: 1000 !important;
-        }
+.dropdown li {
+  padding: 8px;
+  font-weight: bold;
+}
 
-        .dropdown a {
-            text-decoration: none;
-            color: #333;
-            display: block;
-        }
+.dropdown li:last-child {
+  border-bottom: none;
+}
 
-
-
-
-  </style>
+.dropdown a {
+  text-decoration: none;
+  color: #333;
+  display: block;
+}
+</style>
 
 <script>
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -170,5 +150,6 @@ export default {
     },
   },
 };
-
 </script>
+```
+

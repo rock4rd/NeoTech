@@ -5,6 +5,7 @@ import NavigationBar from './NavigationBar.vue'
 <template>
   <div>
     <NavigationBar />
+
     
     <div class="profcontainer">
         <div class="profheader">
@@ -23,17 +24,18 @@ import NavigationBar from './NavigationBar.vue'
 <style>
 .profcontainer {
   position: fixed;
-  top: 96px; /* Set the top position to the height of the navigation bar */
+  top: 0; /* Adjusted to start from the top of the viewport */
   left: 0;
-  width: 100%;
-  overflow: hidden;
-  height: calc(100% - 96px); /* Adjusted to cover the remaining height */
+  width: 100vw;
+  height: 100vh;
   background-color: black;
+  background-image: url('./overallbg.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: 1; /* Adjust the value to be less than the dropdown z-index */
+  z-index: 1;
 }
+
 
 
 .profheader {
