@@ -300,6 +300,7 @@ box-shadow: 15px 15px 10px 0px #F5347F;
   color: black;
   font-weight: bold;
   margin-bottom: 20px;
+  padding: 14px;
 }
 
 
@@ -317,6 +318,10 @@ box-shadow: 15px 15px 10px 0px #F5347F;
     position: relative;
     bottom: 10px;
     font-weight: bold;
+}
+.labtable{
+  position: relative;
+  bottom: 15%;
 }
 
 

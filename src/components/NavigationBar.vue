@@ -31,27 +31,26 @@ To change your navigation bar from a top landscape to a left portrait orientatio
               <b class="bi bi-archive navicon"></b> 
             </a>
           </li>
-
-          <li class="nav-item">
-            <div class="dropdown" @click.stop>
-              <button @click="toggleDropdown" class="nav-link">
-                <b class="bi bi-three-dots-vertical navicon"></b> 
-              </button>
-              <ul v-if="showDropdown">
-                <li @click="toggleMode">
-                  <a href="#">
-                    <b class="bi" :class="{ 'bi-sun': isDarkMode, 'bi-moon': !isDarkMode }"></b>
-                    {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+          <li @click="toggleMode" class="nav-item">
+                  <a href="#" class="nav-link">
+                    <b class="bi" :class="{ 'bi-sun sunicon': isDarkMode, 'bi-moon moonicon': !isDarkMode }"></b>
+                   
                   </a>
-                </li>
-                <li><a href="/history"> <b class="bi bi-clock-history dropdownicon"></b> History</a></li>
-                <li><a href="/"> <b class="bi bi-box-arrow-right dropdownicon"></b> Logout</a></li>
-              </ul>
-            </div>
           </li>
-        </ul>
+
+              <li class="nav-item">
+            
+                <a href="/" class="nav-link"> 
+                  <b class="bi bi-box-arrow-right dropdownicon"></b>
+                </a>
+              </li>
+
+            </ul>
+       
+            </div>
+         
       </div>
-    </div>
+    
   </nav>
 
 </template>
@@ -79,6 +78,12 @@ box-shadow: 3px 5px 3px 5px #F5347F;
 position: relative;
 right: 7%;
   
+}
+.sunicon {
+  font-size: 23px;
+}
+.moonicon{
+  font-size: 23px;
 }
 
 .nav-link {
