@@ -14,7 +14,7 @@ import NavigationBar from './NavigationBar.vue'
       <div class="sched-wrapper">
         <div class="scheditems">
     
-    <table>
+    <table class="schedtable">
       <thead>
         <tr>
           <th>Time</th>
@@ -143,7 +143,7 @@ import NavigationBar from './NavigationBar.vue'
       </tbody>
     </table>
   </div>
-      </div>
+      
 
       <div class="calendar">
     <div class="month">
@@ -172,23 +172,38 @@ import NavigationBar from './NavigationBar.vue'
       </table>
     </div>
   </div>
-
+  <button ></button>
+</div>
     </div>
   </div>
 </template>
 
 <style>
 .hiscontainer {
-  position: absolute;
-  
-  top: 96px; /* Set the top position to the height of the navigation bar */
+  position: fixed;
+  top: 0; /* Adjusted to start from the top of the viewport */
   left: 0;
-  width: 100%;
-  height: calc(100% - 96px); /* Adjusted to cover the remaining height */
+  width: 100vw;
+  height: 100vh;
   background-color: black;
+  background-image: url('./overallbg.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  z-index: 1;
+}
+.schedtable{
+  color: black;
+    border: none;
+    grid: none;
+    position: relative;
+    left: 3%;
+    font-size: 70%; /* Adjust the font size as needed */
+  width: 65%; /* Set the width to 100% or a specific value */
+  border-radius: 34.56px;
+background: rgba(0, 0, 0, 0.05);
+box-shadow: -1.44px 0px 5.76px 0px rgba(0, 0, 0, 0.15) inset, 0px 11.52px 8.64px 0px rgba(0, 0, 0, 0.05);
+backdrop-filter: blur(25px);
 }
 
 .hisheader {
@@ -198,12 +213,15 @@ import NavigationBar from './NavigationBar.vue'
   top: 50px;
 }
 .sched-wrapper{
-    position: relative;
-    top: 80px;
-    left: 80px;
-    height: 80%;
-    width: 65%;
-    background-color: white;
+  position: relative;
+    top: 10%;
+    left: 13%;
+    height: 75%;
+    width: 80%;
+    border-radius: 34.56px 34.56px 0px 0px;
+border: 1px solid var(--LIght, #F5347F);
+background: rgba(255, 255, 255, 0.41);
+box-shadow: 15px 15px 10px 0px #F5347F;
 }
 
 table {
@@ -214,14 +232,14 @@ table {
    
 
     th, td {
-      border: 1px solid #ddd;
+      border: none;
       padding: 8px;
       text-align: center;
       
     }
     
     th {
-      background-color: #f2f2f2;
+     font-weight: bold;
     }
 .scheditems{
     position:relative;
@@ -231,17 +249,18 @@ table {
   position: relative;
   height: 500px;
   width: 350px;
-  left: 75%;
-  bottom: 70%;
+  left: 70%;
+  bottom: 85%;
   
 
 }
 .calendartable{
-height: 305px;
+height: 50%;
 width: 350px;
-margin-top: 50px;
+margin-top: 35px;
 background-color: #FDB0C0;
 border: solid 1px black;
+font-size: 70%;
 }
 .monthbot{
   position: relative;
@@ -280,7 +299,7 @@ button {
   position: absolute;
   top: 100%;
   left: 20px;
-  background-color: #fff;
+  background-color: #FF71A6;;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border: 1px solid #ccc;
   border-top: none;

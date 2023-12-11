@@ -16,12 +16,12 @@
             </div>
 
         <div class="user">
-            <label for="userInput"><i class="bi bi-person"></i>USERNAME</label>
+            <label for="userInput"><i class="bi bi-person"></i> USERNAME</label>
             <input type="text" class="userInput" v-model="username" @input="handleInput">
         </div>
 
         <div class="pass">
-            <label for="passInput">PASSWORD</label>
+            <label for="passInput" class="bi bi-lock"> PASSWORD</label>
             <input type="password" class="passInput" v-model="password" @input="handleInput">
         </div>
 

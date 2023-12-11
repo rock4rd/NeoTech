@@ -7,26 +7,34 @@ import NavigationBar from './NavigationBar.vue'
     
     <div class="bookcontainer">
         <div class="bookheader">
-            <h1 class="bookhead">Booking Request</h1>
+            <h1 class="bookhead">NOTIFICATION</h1>
         </div>
+       <div class="bookingcontainer">
+     <table class="bookingtable">
+      <thead>
+        <tr class="headerz">
+          <th>Client name</th>
+          <th>Purpose</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="notifs in notif" :key="notifs.id">
+          <td>
+            <div class="notif-content">
+              <div class="clientName">{{ notifs.clientName }}</div>
+              <div class="purpose">{{ notifs.purpose }}</div>
+              <div class="time">{{ notifs.time }}</div>
+            </div>
+          </td>
+        </tr>
         
-      <div class="book-wrapper">
-        <p>Name:  </p>
-        <p>Purpose: </p>
-        <p>Schedule: </p>
-        <p><b class="bi bi-dot"></b> Date:</p>
-        <p><b class="bi bi-dot"></b> Time In:</p>
-        <p><b class="bi bi-dot"></b> Time Out:</p>
-        <p>Contact Number: </p>
-        <p>  </p>
-        <p>NOTE (OPTIONAL): </p>
-      </div>
+      </tbody>
+     </table>
 
-      <div class="decision">
-            <div class="yes"><a href="" class="accept">Accept <b class="bi bi-check2 icon"></b></a></div>
-            <div class="no"><a href="" class="decline">Decline <b class="bi bi-x-lg icon"></b> </a></div>
-      </div>
+      
     </div>
+  </div> 
   </div>
 
 
@@ -35,17 +43,73 @@ import NavigationBar from './NavigationBar.vue'
 
 <style>
 .bookcontainer {
+  
   position: fixed;
-  top: 96px; /* Set the top position to the height of the navigation bar */
+  top: 0; /* Adjusted to start from the top of the viewport */
   left: 0;
-  width: 100%;
-  overflow: hidden;
-  height: calc(100% - 96px); /* Adjusted to cover the remaining height */
+  width: 100vw;
+  height: 100vh;
   background-color: black;
+  background-image: url('./overallbg.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: 1; /* Adjust the value to be less than the dropdown z-index */
+  z-index: 1;
+  
+}
+.bookingtable{
+  color: black;
+    border: none;
+    grid: none;
+    
+    font-size: 50%; /* Adjust the font size as needed */
+  width: 100%; /* Set the width to 100% or a specific value */
+  }
+
+.bookingcontainer{
+  position: relative;
+    top: 10%;
+    left: 13%;
+    height: 75%;
+    width: 80%;
+    border-radius: 34.56px 34.56px 0px 0px;
+border: 1px solid var(--LIght, #F5347F);
+background: rgba(255, 255, 255, 0.41);
+box-shadow: 15px 15px 10px 0px #F5347F;
+}
+.notif-content{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-right: 10%;
+  height: 50px; /* Set a fixed height for consistency */
+}
+.notifdata {
+  background-color: #CCCCCC; /* Grey background color */
+  border: none; /* Remove borders */
+  
+  overflow: hidden; /* Hide any overflow content */
+}
+.notifdata td {
+  height: 50px;
+  
+ 
+}
+.headerz th{
+  position: relative;
+    right: 20%;
+  color:#DD2A70;
+  border: none; /* Remove borders */
+  background-color: transparent; /* Make the background transparent */
+  
+}
+.clientName, .purpose, .time{
+  position: relative;
+  left: 25%;
+
+}
+.clientName{
+  margin-left: 50px;
 }
 .bookheader{
   color: #F5347F;
@@ -101,3 +165,20 @@ import NavigationBar from './NavigationBar.vue'
 }
 
 </style>
+<script>
+
+export default {
+  data() {
+    return {
+      notif: [
+        { id: 1, clientName: "Zon Trisha Japay", purpose: "Special Quiz", time:"1 hour ago" },
+        { id: 2, clientName: "202", purpose: "Occupied", time:"1 hour ago"  },
+        { id: 3, clientName: "203", purpose: "Available", time:"1 hour ago" },
+        { id: 4, clientName: "204", purpose: "Available", time:"1 hour ago" },
+        { id: 5, clientName: "205", purpose: "Available", time:"1 hour ago" },
+        
+      ],
+    };
+  }
+}
+</script>

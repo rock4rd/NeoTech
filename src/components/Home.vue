@@ -206,11 +206,12 @@ box-shadow: 15px 15px 10px 0px #F5347F;
   .schedhome{
     position: relative;
     background-color: white;
-    left: 50px;
-    top: 50px;
+    left: 30px;
+    top: 30px;
     color: white;
-    height: 525px;
-    width: 600px;
+    height: 82%;
+    width: 45%;
+  
     
   overflow-y: auto; /* Add a scrollbar when the content exceeds the height */
     
@@ -219,7 +220,8 @@ box-shadow: 15px 15px 10px 0px #F5347F;
     color: black;
     border: none;
     grid: none;
-    font-size: 12px; /* Adjust the font size as needed */
+    
+    font-size: 50%; /* Adjust the font size as needed */
   width: 100%; /* Set the width to 100% or a specific value */
   }
   
@@ -238,9 +240,9 @@ box-shadow: 15px 15px 10px 0px #F5347F;
   }
   .divider{
     position: relative;
-    height: 650px;
+    height: 90%;
     width: 5px;
-    bottom: 75%;
+    bottom: 85%;
     background-color: black;
     left: 49%;
   }
@@ -249,12 +251,12 @@ box-shadow: 15px 15px 10px 0px #F5347F;
     font-weight: bold;
     position: relative;
     left: 17%;
-    top: 5%;
+    top: 3%;
     
   }
   .homeheader{
     position:relative;
-    left: 44.3%;
+    left: 43%;
     height: 50px;
     width: 300px;
     top: 60px;
@@ -274,22 +276,25 @@ box-shadow: 15px 15px 10px 0px #F5347F;
     font-weight: bold;
     position: relative;
     left: 80px;
-    bottom: 133px;
+    bottom: 100px;
     
   }
   .laboratory {
   position: relative;
   height: 300px;
   width: 500px;
-  left: 60%;
-  bottom: 145%;
+  left: 55%;
+  bottom: 160%;
   color: white;
+  font-size: 70%;
 }
 
 .lab-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-right: 10%;
+  
 }
 
 .labroom {
@@ -322,6 +327,7 @@ box-shadow: 15px 15px 10px 0px #F5347F;
 .labtable{
   position: relative;
   bottom: 15%;
+  
 }
 
 
