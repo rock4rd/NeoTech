@@ -58,10 +58,10 @@ To change your navigation bar from a top landscape to a left portrait orientatio
 <style>
 /* Custom styles for the sidebar */
 .sidebar {
-  height: 55%;
+  height: 50%;
   width: 3%; /* Adjust the width as needed */
   position: fixed;
-  top:30%;
+  top:25%;
   left: 5%;
   border-radius: 118.526px;
 background: rgba(255, 255, 255, 0.55);

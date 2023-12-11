@@ -17,7 +17,7 @@ import NavigationBar from './NavigationBar.vue'
            <table class="sched-table">
       <thead>
         <tr>
-          <th>Timesad</th>
+          <th>Times</th>
           <th>Monday</th>
           <th>Tuesday</th>
           <th>Wednesday</th>
@@ -221,7 +221,7 @@ box-shadow: 15px 15px 10px 0px #F5347F;
     border: none;
     grid: none;
     
-    font-size: 50%; /* Adjust the font size as needed */
+    font-size: 90%; /* Adjust the font size as needed */
   width: 100%; /* Set the width to 100% or a specific value */
   }
   

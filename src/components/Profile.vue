@@ -13,7 +13,7 @@ import NavigationBar from './NavigationBar.vue'
         </div>
        
       <div class="prof-wrapper">
-        <div class="scheditems">
+        <div class="profilepic">
            
         </div>
       </div>
@@ -35,6 +35,17 @@ import NavigationBar from './NavigationBar.vue'
   background-repeat: no-repeat;
   z-index: 1;
 }
+.prof-wrapper{
+  position: relative;
+    top: 10%;
+    left: 13%;
+    height: 75%;
+    width: 80%;
+    border-radius: 34.56px 34.56px 0px 0px;
+border: 1px solid var(--LIght, #F5347F);
+background: rgba(255, 255, 255, 0.41);
+box-shadow: 15px 15px 10px 0px #F5347F;
+}
 
 
 
@@ -44,14 +55,15 @@ import NavigationBar from './NavigationBar.vue'
   left: 50px;
   top: 50px;
 }
-.prof-wrapper{
-    position: relative;
-    top: 60px;
-    left: 120px;
-    height: 40%;
-    width: 25%;
-    background-color: white;
-    border-radius: 20px;
+.profilepic{
+  position: relative;
+  top: 20%;
+  left: 10%;
+  height: 25%;
+  width: 15%;
+  border-radius: 20px;
+background: var(--Soft-Grey, #DFDFDF);
+box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25);
 }
 
 

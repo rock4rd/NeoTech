@@ -198,8 +198,9 @@ import NavigationBar from './NavigationBar.vue'
     grid: none;
     position: relative;
     left: 3%;
-    font-size: 70%; /* Adjust the font size as needed */
+    font-size: 85%; /* Adjust the font size as needed */
   width: 65%; /* Set the width to 100% or a specific value */
+
   border-radius: 34.56px;
 background: rgba(0, 0, 0, 0.05);
 box-shadow: -1.44px 0px 5.76px 0px rgba(0, 0, 0, 0.15) inset, 0px 11.52px 8.64px 0px rgba(0, 0, 0, 0.05);
@@ -216,7 +217,7 @@ backdrop-filter: blur(25px);
   position: relative;
     top: 10%;
     left: 13%;
-    height: 75%;
+    height: 83%;
     width: 80%;
     border-radius: 34.56px 34.56px 0px 0px;
 border: 1px solid var(--LIght, #F5347F);
@@ -250,7 +251,7 @@ table {
   height: 500px;
   width: 350px;
   left: 70%;
-  bottom: 85%;
+  bottom: 55%;
   
 
 }
@@ -299,7 +300,7 @@ button {
   position: absolute;
   top: 100%;
   left: 20px;
-  background-color: #FF71A6;;
+  background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border: 1px solid #ccc;
   border-top: none;

@@ -4,6 +4,7 @@ import History from './components/History.vue';
 import Profile from './components/Profile.vue';
 import Login from './components/Login.vue';
 import Booking from './components/Booking.vue';
+import Bookreq from './components/Bookreq.vue';
 
 
 const routes = [
@@ -11,6 +12,7 @@ const routes = [
     { path: '/history', component: History },
     { path: '/profile', component: Profile },
     { path: '/booking', component: Booking },
+    { path: '/bookreq', component: Bookreq },
     { path: '/home', component: Home, name: "home" },
 ];
 
