@@ -35,11 +35,11 @@ To change your navigation bar from a top landscape to a left portrait orientatio
                   <a href="#" class="nav-link">
                     <b class="bi" :class="{ 'bi-sun sunicon': isDarkMode, 'bi-moon moonicon': !isDarkMode }"></b>
                    
+                   
                   </a>
           </li>
 
               <li class="nav-item">
-            
                 <a href="/" class="nav-link"> 
                   <b class="bi bi-box-arrow-right dropdownicon"></b>
                 </a>
@@ -60,8 +60,8 @@ To change your navigation bar from a top landscape to a left portrait orientatio
 .sidebar {
   height: 50%;
   width: 3%; /* Adjust the width as needed */
-  position: fixed;
-  top:25%;
+  position: relative;
+  top: 300px;
   left: 5%;
   border-radius: 118.526px;
 background: rgba(255, 255, 255, 0.55);
@@ -76,7 +76,7 @@ box-shadow: 3px 5px 3px 5px #F5347F;
 .nav-item{
   
 position: relative;
-right: 15%;
+right: 7%;
   
 }
 .sunicon {
