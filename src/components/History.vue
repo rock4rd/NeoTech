@@ -207,10 +207,15 @@ backdrop-filter: blur(25px);
 }
 
 .hisheader {
-  color: #F5347F;
+  color: var(--LIght, #F5347F);
   position: relative;
-  left: 50px;
   top: 50px;
+  left: 8%;
+font-family: Suez One;
+font-size: 45px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
 }
 .sched-wrapper{
   position: relative;

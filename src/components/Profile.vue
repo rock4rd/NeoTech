@@ -9,12 +9,26 @@ import NavigationBar from './NavigationBar.vue'
     
     <div class="profcontainer">
         <div class="profheader">
-            <h1>PROFILE</h1>
+            <h1>LABORATORY SCHEDULE</h1>
         </div>
        
       <div class="prof-wrapper">
         <div class="profilepic">
            
+        </div>
+
+        <div class="credentials">
+          <table class="credtable">
+              <tbody>
+                <tr v-for="(value, label) in userInfo" :key="label">
+                  <td class="tablelabel">{{ label }}:</td>
+                  <td class="tableitem">
+                    <div :style="{ width: computeHighlightContainerWidth(value) }" class="highlight-container">{{ value }}</div>
+                  </td>
+                </tr>
+              </tbody>
+          </table>
+
         </div>
       </div>
     </div>
@@ -50,10 +64,15 @@ box-shadow: 15px 15px 10px 0px #F5347F;
 
 
 .profheader {
-  color: #F5347F;
+  color: var(--LIght, #F5347F);
   position: relative;
-  left: 50px;
   top: 50px;
+  left: 8%;
+font-family: Suez One;
+font-size: 45px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
 }
 .profilepic{
   position: relative;
@@ -65,6 +84,76 @@ box-shadow: 15px 15px 10px 0px #F5347F;
 background: var(--Soft-Grey, #DFDFDF);
 box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25);
 }
+.credentials{
+  position: relative;
+  left: 35%;
+  bottom: 2%;
+}
+.credtable {
+  width: 50%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+.tablelabel{
+  color: #B80048;
+font-size: 18px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+}
+
+.tableitem {
+  border: none;
+  padding: 8px;
+  text-align: left;
+}
+.highlight-container {
+  height: 35px;
+  border-radius: 11.853px;
+  background: rgba(0, 0, 0, 0.14);
+  box-shadow: 0px -1.185px 2.371px 0px rgba(255, 255, 255, 0.14) inset;
+  overflow: hidden; /* Ensures the shadow is not cut off */
+  display: inline-block; /* Allows the width to be based on content */
+display: flex;
+width: 633px;
+height: 43px;
+padding: 0px 11.853px 0px 9.482px;
+align-items: center;
+flex-shrink: 0;
+}
+
 
 
 </style>
+
+<script>
+export default {
+  data() {
+    return {
+      userInfo: {
+        Name: "John Doe",
+        Alias: "JD",
+        Age: "25",
+        Username: "john_doe",
+        ID: "123456",
+        Position: "Developer",
+        Email: "john.doe@example.com",
+        Address: "123 Main St, Cityville"
+      }
+    };
+  },
+  methods: {
+    computeHighlightContainerWidth(value) {
+      
+      const baseWidth = 150;
+      const additionalWidthPerCharacter = 10;
+
+      const calculatedWidth = baseWidth + value.length * additionalWidthPerCharacter;
+
+      // Ensure the calculated width is not less than the base width
+      return `${Math.max(baseWidth, calculatedWidth)}px`;
+    },
+  },
+};
+
+</script>
