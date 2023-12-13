@@ -14,7 +14,7 @@ import NavigationBar from './NavigationBar.vue'
        
       <div class="prof-wrapper">
         <div class="profilepic">
-           
+           <b class="bi bi-person proficon"></b>
         </div>
 
         <div class="credentials">
@@ -83,6 +83,11 @@ line-height: normal;
   border-radius: 20px;
 background: var(--Soft-Grey, #DFDFDF);
 box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25);
+}
+.proficon{
+  position: relative;
+  left: 25%;
+  font-size: 100px;
 }
 .credentials{
   position: relative;
