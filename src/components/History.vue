@@ -234,7 +234,7 @@ box-shadow: 15px 15px 10px 0px #F5347F;
 table {
       border-collapse: collapse;
       width: 100%;
-      max-height: 100%;
+      
     }
    
 
