@@ -200,6 +200,7 @@ import NavigationBar from './NavigationBar.vue'
     left: 3%;
     font-size: 85%; /* Adjust the font size as needed */
   width: 65%; /* Set the width to 100% or a specific value */
+  max-height: 100%;
   border-radius: 34.56px;
 background: rgba(0, 0, 0, 0.05);
 box-shadow: -1.44px 0px 5.76px 0px rgba(0, 0, 0, 0.15) inset, 0px 11.52px 8.64px 0px rgba(0, 0, 0, 0.05);
@@ -218,6 +219,7 @@ font-weight: 400;
 line-height: normal;
 }
 .sched-wrapper{
+  aspect-ratio: 1.32;
   position: relative;
     top: 10%;
     left: 13%;
@@ -232,7 +234,7 @@ box-shadow: 15px 15px 10px 0px #F5347F;
 table {
       border-collapse: collapse;
       width: 100%;
-      
+      max-height: 100%;
     }
    
 

@@ -11,22 +11,22 @@ To change your navigation bar from a top landscape to a left portrait orientatio
         
 
         <ul class="navbar-nav flex-column">
-          <li class="nav-item">
+          <li class="nav-item" :class="{ active: $route.path === '/home' }">
             <router-link to="/home" class="nav-link">
               <b class="bi bi-house-door navicon"></b> 
             </router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" :class="{ active: $route.path === '/booking' }">
             <a href="/booking" class="nav-link">
               <b class="bi bi-bell navicon"></b> 
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" :class="{ active: $route.path === '/profile' }">
             <a href="/profile" class="nav-link">
               <b class="bi bi-person navicon"></b>
             </a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" :class="{ active: $route.path === '/history' }">
             <a href="/history" class="nav-link">
               <b class="bi bi-archive navicon"></b> 
             </a>
@@ -68,7 +68,10 @@ background: rgba(255, 255, 255, 0.55);
 box-shadow: 3px 5px 3px 5px #F5347F;
   z-index: 1000;
 }
-
+.nav-item:hover {
+  background-color: #f8f9fa; /* Change the background color as needed */
+  border-radius: 30px; /* Add rounded corners for better visual appearance */
+}
 
 .navbar-brand {
   margin-bottom: 20px;
@@ -77,7 +80,17 @@ box-shadow: 3px 5px 3px 5px #F5347F;
   
 position: relative;
 right: 7%;
+transition: background-color 0.3s ease;
+cursor: pointer; /* Change cursor on hover for better usability */
   
+}
+.active {
+  background-color: #F5347F66; /* Change the background color as needed */
+  border-radius: 30px; /* Add rounded corners for better visual appearance */
+  
+  position: relative;
+  
+  transition: background-color 0.3s ease; /* Add smooth transition for background color */
 }
 .sunicon {
   font-size: 23px;
@@ -144,6 +157,7 @@ export default {
     return {
       showDropdown: false,
       isDarkMode: true,
+      activeItem: '', // Track the active item
     };
   },
   methods: {
@@ -153,7 +167,11 @@ export default {
     toggleMode() {
       this.isDarkMode = !this.isDarkMode;
     },
+      setActiveItem(item) {
+      this.activeItem = item;
+    },
   },
+  
 };
 </script>
 ```
