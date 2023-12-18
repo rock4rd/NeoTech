@@ -5,7 +5,7 @@ import Profile from './components/Profile.vue';
 import Login from './components/Login.vue';
 import Booking from './components/Booking.vue';
 import Bookreq from './components/Bookreq.vue';
-import UserView from './components/UserView';
+import UserView from './components/UserView.vue';
 
 
 const routes = [
