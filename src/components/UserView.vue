@@ -1,248 +1,465 @@
-
-
 <template>
-  
-
-    
+  <div>
     <div class="usercontainer">
-        <div class="userheader">
-            <h1>LABORATORY SCHEDULE</h1>
-        </div>
-       
+      <div class="userheader">
+        <h1>LABORATORY SCHEDULE</h1>
+      </div>
+
       <div class="user-wrapper">
-          <div  v-if="isSliderOnLeft" class="labschedule1" :class="{ 'transitioned': isTransitioned }"> 
-                <div class="tpic">
-                  <b class="bi bi-person logot"></b>
-                  
-                </div>
-                <h2 class="tname">Teachers Name</h2>
-                <div class="tcred">
-                  <table class="tcredtable">
-                        <tbody>
-                          <tr v-for="(value, label) in userInfo" :key="label">
-                            <td class="tlabel">{{ label }} :</td>
-                            <td class="titem">
-                            </td>
-                          </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <div
+         
+          class="labschedule1"
+          :class="{ 'transitioned': isTransitioned }"
+          :style="{ transform: isSliderOnLeft ? 'translateX(0)' : 'translateX(100%)' }"
+          v-if="isSliderOnLeft"
+        >
+        <div class="tpic">
+                <b class="bi bi-person logot"></b>
+                
+              </div>
+              <h2 class="tname">Teachers Name</h2>
+              <div class="tcred">
+                <table class="tcredtable">
+                      <tbody>
+                        <tr v-for="(value, label) in userInfo" :key="label">
+                          <td class="tlabel">{{ label }} :</td>
+                          <td class="titem">
+                          </td>
+                        </tr>
+                      </tbody>
+                  </table>
+              </div>
 
-                  <div class="tlabsched">
-                      <h2 class="tschedhead"> LABORATORY SCHEDULE</h2>
-           <table class="sched-table">
-      <thead>
-        <tr>
+                <div class="tlabsched">
+                    <h2 class="tschedhead"> LABORATORY SCHEDULE</h2>
+         <table class="sched-table">
+    <thead>
+      <tr>
+        
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight: bold;">Morning</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>7:00 AM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>8:00 AM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>9:00 AM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>10:00 AM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>11:00 AM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">Afternoon</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>1:00 PM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>2:00 PM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>3:00 PM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>4:00 PM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>5:00 PM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>6:00 PM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+
+      <!-- Add more rows for different times -->
+    </tbody>
+  </table>
+
+                </div>
           
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="font-weight: bold;">Morning</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>7:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>8:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>9:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>10:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>11:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td style="font-weight: bold;">Afternoon</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>1:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>2:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>3:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>4:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>5:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>6:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
+        </div>
 
-        <!-- Add more rows for different times -->
-      </tbody>
-    </table>
-
-                  </div>
-          </div>
         <a href="" @click.prevent="toggleLayout" class="slider-container">
-          <div class="slider" :class="{ 'transitioned': isTransitioned }">
-
-              <h2 class="slidertext">LABORATORY SCHEDULE</h2>
-              <div class="sliderline"> </div>
+          <div class="slider" :class="{ 'transitioned': isTransitioned }" :style="{ transform: isSliderOnLeft ? 'translateX(0%)' : 'translateX(-100%)' }">
+            <h2 class="slidertext">LABORATORY SCHEDULE</h2>
+            <div class="sliderline"> </div>
           </div>
-
         </a>
 
-        <div class="bookwrap">
+        <div class="bookwrap" :style="{ transform: isSliderOnLeft ? 'translateX(-15%)' : 'translateX(0%)' }"> 
 
-              <div class="bookcalendar">
-                    <div class="calcircle">
-                      <b class="bi bi-calendar4 calendaricon"></b>
-                    </div>
+          
 
-                    <h3>Select the date from the calendar</h3>
+<div class="bookcalendar">
+    <div class="calcircle">
+      <b class="bi bi-calendar4 calendaricon"></b>
+    </div>
 
-              </div>
+    <h3>Select the date from the calendar</h3>
 
-              <div class="booktime">
-                    <div class="timecircle">
-                      <b class="bi bi-clock clockicon"></b>
-                    </div>
+</div>
 
-                    <h3>Select time of your reservation</h3>
+<div class="booktime">
+    <div class="timecircle">
+      <b class="bi bi-clock clockicon"></b>
+    </div>
 
-              </div>
+    <h3>Select time of your reservation</h3>
 
-              <div class="bookinfo">
-                    <div class="infocircle">
-                      <b class="bi bi-person-workspace personicon"></b>
-                    </div>
+</div>
 
-                    <h3>Name</h3>
+<div class="bookinfo">
+    <div class="infocircle">
+      <b class="bi bi-person-workspace personicon"></b>
+    </div>
 
-              </div>
+    <h3>Name</h3>
 
+</div>
 
-
-
-
-
-
-
-
-
-
-
-        </div>
-
+</div>
+          <!-- Existing bookwrap code goes here -->
+          <!-- Make sure to use Vue.js bindings and methods as needed -->
         </div>
       </div>
- 
+    </div>
+
+    <div class="container" id="container" :class="{ 'right-panel-active': !isSliderOnLeft }">
+      <div class="overlay overlay-left">
+        <div class="overlay-panel">
+
+          <div class="tpic">
+                <b class="bi bi-person logot"></b>
+                
+              </div>
+              <h2 class="tname">Teachers Name</h2>
+              <div class="tcred">
+                <table class="tcredtable">
+                      <tbody>
+                        <tr v-for="(value, label) in userInfo" :key="label">
+                          <td class="tlabel">{{ label }} :</td>
+                          <td class="titem">
+                          </td>
+                        </tr>
+                      </tbody>
+                  </table>
+              </div>
+
+                <div class="tlabsched">
+                    <h2 class="tschedhead"> LABORATORY SCHEDULE</h2>
+         <table class="sched-table">
+    <thead>
+      <tr>
+        
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-weight: bold;">Morning</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>7:00 AM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>8:00 AM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>9:00 AM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>10:00 AM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>11:00 AM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">Afternoon</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>1:00 PM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>2:00 PM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>3:00 PM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>4:00 PM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>5:00 PM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>6:00 PM</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+
+      <!-- Add more rows for different times -->
+    </tbody>
+  </table>
+
+                </div>
+
+                <div class="bookwrap">
+
+          
+
+<div class="bookcalendar">
+    <div class="calcircle">
+      <b class="bi bi-calendar4 calendaricon"></b>
+    </div>
+
+    <h3>Select the date from the calendar</h3>
+
+</div>
+
+<div class="booktime">
+    <div class="timecircle">
+      <b class="bi bi-clock clockicon"></b>
+    </div>
+
+    <h3>Select time of your reservation</h3>
+
+</div>
+
+<div class="bookinfo">
+    <div class="infocircle">
+      <b class="bi bi-person-workspace personicon"></b>
+    </div>
+
+    <h3>Name</h3>
+
+</div>
+
+</div>
+          <!-- Your existing bookwrap and labschedule1 code goes here -->
+          <!-- Ensure to use the appropriate Vue.js bindings and methods -->
+
+          <!-- Add a button to toggle the layout -->
+          
+        </div>
+      </div>
+    </div>
   
 </template>
 
+<script>
+export default {
+  data() {
+    return {
+      userInfo: {
+          EMAIL: "John Doe",
+      SUBJECT: "JD",
+      TIME: "25",
+      SCHEDULE: "john_doe",
+      ROOM: "123456",
+      LOGIN: "Developer",
+      LOGOUT: "john.doe@example.com",// ... (your existing user info data)
+      },
+      isSliderOnLeft: true, // Initial position of the slider
+      isTransitioned: false, // Flag for transition effect
+    };
+  },
+  methods: {
+    toggleLayout() {
+      this.isSliderOnLeft = !this.isSliderOnLeft;
+      this.isTransitioned = true;
+
+      setTimeout(() => {
+        this.isTransitioned = false;
+      }, 500);
+    },
+    // ... (your other existing methods)
+  },
+};
+</script>
+
 <style>
+/* Your existing styles go here */
 .usercontainer {
-  position: fixed;
-  top: 0; /* Adjusted to start from the top of the viewport */
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: black;
-  background-image: url('./overallbg.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 1;
+position: fixed;
+top: 0; /* Adjusted to start from the top of the viewport */
+left: 0;
+width: 100vw;
+height: 100vh;
+background-color: black;
+background-image: url('./overallbg.jpg');
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+z-index: 1;
 }
 .user-wrapper{
-  position: relative;
-    top: 10%;
-    left: 5%;
-    height: 82%;
-    width: 90%;
-    border-radius: 34.56px 34.56px 0px 0px;
+position: relative;
+  top: 10%;
+  left: 5%;
+  height: 82%;
+  width: 90%;
+  border-radius: 34.56px 34.56px 0px 0px;
 border: 1px solid var(--LIght, #F5347F);
 background: rgba(255, 255, 255, 0.41);
 box-shadow: 15px 15px 10px 0px #F5347F;
 }
 .labschedule1{
-  height: 100%;
-  width: 70%;
-  display: flex; /* Use flexbox to align items horizontally */
- 
+height: 100%;
+width: 70%;
+display: flex; /* Use flexbox to align items horizontally */
+
+
 }
 .slider{
   bottom: 0;
@@ -251,20 +468,16 @@ box-shadow: 15px 15px 10px 0px #F5347F;
   right: 0;
   width: 30%;
   display: flex;
-flex-direction: column;
-justify-content: center;
-flex-shrink: 0;
-border-radius: 0px 34.56px 0px 0px;
-border-left: 2px solid var(--LIght, #F5347F);
-
-background: rgba(245, 52, 127, 0.36);
-
-box-shadow: -1.44px 0px 5.76px 0px rgba(255, 255, 255, 0.15) inset, 0px 11.52px 8.64px 0px rgba(0, 0, 0, 0.05);
-backdrop-filter: blur(71.99995422363281px);
-
-
-
-  
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 0px 34.56px 0px 0px;
+  border-left: 2px solid var(--LIght, #F5347F);
+  background: rgba(245, 52, 127, 0.36);
+  box-shadow: -1.44px 0px 5.76px 0px rgba(255, 255, 255, 0.15) inset, 0px 11.52px 8.64px 0px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(71.99995422363281px);
+  transform: translateX(0); /* Add initial transform */
+  transition: transform 0.5s ease-in-out; /* Add the transition property for smooth movement */
 }
 .sliderline{
   position: relative;
@@ -279,61 +492,62 @@ backdrop-filter: blur(71.99995422363281px);
 }
 .slidertext{
   color: #DD2A70;
-text-align: center;
-font-family: Roboto;
-font-size: 35px;
-font-style: normal;
-font-weight: 900;
-line-height: normal;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 35px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
 }
 .logot{
-  font-size: 120px;
-  position: relative;
-  left: 31.5%;
-  top: 10%;
+font-size: 120px;
+position: relative;
+left: 31.5%;
+top: 10%;
 }
 .tcred {
-  position: relative;
-  top: 50%;
-  right: 45%;
+position: relative;
+top: 50%;
+right: 45%;
 }
 
 .tcredtable {
-  color: black;
+color: black;
 
 }
 .tlabsched{
-  position: relative;
-  top: 10%;
-  right: 20%;
+position: relative;
+top: 10%;
+right: 20%;
 }
 
 .tlabel {
-  margin-right: 10px; /* Adjust the margin as needed */
-  font-weight: 20%;
+margin-right: 10px; /* Adjust the margin as needed */
+font-weight: 20%;
 }
 
 .titem {
-  margin-bottom: 10px; /* Adjust the margin as needed */
+margin-bottom: 10px; /* Adjust the margin as needed */
 }
 .bookwrap{
-  height: 100%;
-  width: 70%;
-  display: flex; /* Use flexbox to align items horizontally */
-  justify-content: space-between;
-  position: relative;
-  background-color: white;
-  bottom: 100%;
-  left: 30%;
+height: 100%;
+width: 70%;
+display: flex; /* Use flexbox to align items horizontally */
+justify-content: space-between;
+position: relative;
+background-color: white;
+
+left: 30%;
+
 }
 .bookwrap h3{
-  position: relative;
-  top: 12%;
-  color: #DD2A70;
+position: relative;
+top: 12%;
+color: #DD2A70;
 
 }
 .tname{
-  color: var(--LIght, #F5347F);
+color: var(--LIght, #F5347F);
 text-align: center;
 font-family: Roboto;
 font-size: 35px;
@@ -343,10 +557,10 @@ line-height: normal;
 position: relative; /* Set the position to absolute */
 top: 37.5%;
 right: 20%;
- bottom: 0; /* Align to the bottom of the containing element (tpic) */
+bottom: 0; /* Align to the bottom of the containing element (tpic) */
 }
 .tschedhead{
-  color: var(--LIght, #F5347F);
+color: var(--LIght, #F5347F);
 text-align: center;
 position: relative;
 left: 30%;
@@ -358,31 +572,31 @@ line-height: normal;
 margin-bottom: 10%;
 }
 .tpic{
-  height: 30%;
-  width: 30%;
-  position: relative;
-  top: 6%;
-  left: 4%;
-  border-radius: 20px;
-  background: var(--Soft-Grey, #DFDFDF);
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+height: 30%;
+width: 30%;
+position: relative;
+top: 6%;
+left: 4%;
+border-radius: 20px;
+background: var(--Soft-Grey, #DFDFDF);
+box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 
 }
 .tcred{
-  position: relative;
-  top: 50%;
-  right: 45%;
+position: relative;
+top: 50%;
+right: 45%;
 }
 .tcredtable{
-  color: black;
+color: black;
 }
 .bookcalendar,
 .booktime,
 .bookinfo {
-  flex: 1; /* Distribute available space equally among the three divs */
-  height: 100%; /* Set height to 100% */
-  box-sizing: border-box; /* Include padding and border in the total width/height */
-  text-align: center; /* Center text */
+flex: 1; /* Distribute available space equally among the three divs */
+height: 100%; /* Set height to 100% */
+box-sizing: border-box; /* Include padding and border in the total width/height */
+text-align: center; /* Center text */
 }
 
 .calcircle,
@@ -399,85 +613,51 @@ background-color:  #FDB0C0;
 stroke-width: 2px;
 stroke: #495E57;
 display: flex;
-  justify-content: center; /* Center content horizontally */
-  align-items: center; /* Center content vertically */
+justify-content: center; /* Center content horizontally */
+align-items: center; /* Center content vertically */
 }
 
 /* Example styling for the circle icons (adjust as needed) */
 .calcircle b,
 .timecircle b,
 .infocircle b {
-  font-size: 90px; /* Adjust font size as needed */
-  color:#FC6C85;
-  
+font-size: 90px; /* Adjust font size as needed */
+color:#FC6C85;
+
 }
 
 
 
 .userheader {
-  color: var(--LIght, #F5347F);
-  position: relative;
-  top: 50px;
-  left: 8%;
+color: var(--LIght, #F5347F);
+position: relative;
+top: 50px;
+left: 8%;
 font-family: Suez One;
 font-size: 45px;
 font-style: normal;
 font-weight: 400;
 line-height: normal;
 }
-.slider-container {
-  cursor: pointer;
+
+.container.right-panel-active .overlay-container {
+  transform: translateX(-100%);
 }
 
-.transitioned {
+.overlay-left {
+  transform: translateX(-20%);
+}
+
+.container.right-panel-active .overlay-left {
+  transform: translateX(100%);
+}
+
+/* Add styles for the transition effect on labschedule1 and bookwrap */
+.labschedule1,
+.bookwrap {
   transition: transform 0.5s ease-in-out;
 }
-
-/* Add this style for the transition effect */
-.slider.transitioned {
-  transform: translateX(-100%);
+.container.right-panel-active .slider {
+  transform: translateX(-100%); /* Adjust the transform for the active state */
 }
-
-.labschedule1.transitioned {
-  transform: translateX(-100%);
-}
-
-.tlabsched.transitioned {
-  transform: translateX(0);
-}
-
-
-
 </style>
-
-<script>
-export default {
-  data() {
-    return {
-      userInfo: {
-        EMAIL: "John Doe",
-        SUBJECT: "JD",
-        TIME: "25",
-        SCHEDULE: "john_doe",
-        ROOM: "123456",
-        LOGIN: "Developer",
-        LOGOUT: "john.doe@example.com",
-      },
-      isSliderOnLeft: true, // Initial position of the slider
-      isTransitioned: false, // Flag for transition effect
-    };
-  },
-  methods: {
-    toggleLayout() {
-      // Toggle the position of the slider
-      this.isSliderOnLeft = !this.isSliderOnLeft;
-      this.isTransitioned = true; // Set the flag to enable transition effect
-
-      // Reset the transition flag after the transition duration
-      setTimeout(() => {
-        this.isTransitioned = false;
-      }, 500);
-    },
-  },
-};
-</script>
