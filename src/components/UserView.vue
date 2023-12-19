@@ -164,6 +164,49 @@
           </div>
 
         </a>
+
+        <div class="bookwrap">
+
+              <div class="bookcalendar">
+                    <div class="calcircle">
+                      <b class="bi bi-calendar4 calendaricon"></b>
+                    </div>
+
+                    <h3>Select the date from the calendar</h3>
+
+              </div>
+
+              <div class="booktime">
+                    <div class="timecircle">
+                      <b class="bi bi-clock clockicon"></b>
+                    </div>
+
+                    <h3>Select time of your reservation</h3>
+
+              </div>
+
+              <div class="bookinfo">
+                    <div class="infocircle">
+                      <b class="bi bi-person-workspace personicon"></b>
+                    </div>
+
+                    <h3>Name</h3>
+
+              </div>
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+
         </div>
       </div>
  
@@ -199,6 +242,7 @@ box-shadow: 15px 15px 10px 0px #F5347F;
   height: 100%;
   width: 70%;
   display: flex; /* Use flexbox to align items horizontally */
+ 
 }
 .slider{
   bottom: 0;
@@ -272,7 +316,22 @@ line-height: normal;
 .titem {
   margin-bottom: 10px; /* Adjust the margin as needed */
 }
+.bookwrap{
+  height: 100%;
+  width: 70%;
+  display: flex; /* Use flexbox to align items horizontally */
+  justify-content: space-between;
+  position: relative;
+  background-color: white;
+  bottom: 100%;
+  left: 30%;
+}
+.bookwrap h3{
+  position: relative;
+  top: 12%;
+  color: #DD2A70;
 
+}
 .tname{
   color: var(--LIght, #F5347F);
 text-align: center;
@@ -316,6 +375,41 @@ margin-bottom: 10%;
 }
 .tcredtable{
   color: black;
+}
+.bookcalendar,
+.booktime,
+.bookinfo {
+  flex: 1; /* Distribute available space equally among the three divs */
+  height: 100%; /* Set height to 100% */
+  box-sizing: border-box; /* Include padding and border in the total width/height */
+  text-align: center; /* Center text */
+}
+
+.calcircle,
+.timecircle,
+.infocircle {
+height: 30%;
+width: 60%;
+border-radius: 50%;
+border: solid black 1px;
+position: relative;
+left: 20%;
+top: 10%;
+background-color:  #FDB0C0;
+stroke-width: 2px;
+stroke: #495E57;
+display: flex;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+}
+
+/* Example styling for the circle icons (adjust as needed) */
+.calcircle b,
+.timecircle b,
+.infocircle b {
+  font-size: 90px; /* Adjust font size as needed */
+  color:#FC6C85;
+  
 }
 
 
