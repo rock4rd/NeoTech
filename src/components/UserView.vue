@@ -10,8 +10,9 @@
          
           class="labschedule1"
           :class="{ 'transitioned': isTransitioned }"
-          :style="{ transform: isSliderOnLeft ? 'translateX(0)' : 'translateX(100%)' }"
+          :style="{ left: isSliderOnLeft ? '0%' : '100%', transition: 'left 1s ease-in-out' }"
           v-if="isSliderOnLeft"
+          
         >
         <div class="tpic">
                 <b class="bi bi-person logot"></b>
@@ -161,15 +162,14 @@
         </div>
 
         <a href="" @click.prevent="toggleLayout" class="slider-container">
-          <div class="slider" :class="{ 'transitioned': isTransitioned }" :style="{ transform: isSliderOnLeft ? 'translateX(0%)' : 'translateX(-100%)' }">
-            <h2 class="slidertext">LABORATORY SCHEDULE</h2>
+          <div class="slider" :class="{ 'transitioned': isTransitioned }" :style="{ transform: isSliderOnLeft ? 'translateX(0%)' : 'translateX(-234%)' }">
+            <h2 class="slidertext">{{sliderText}}</h2>
             <div class="sliderline"> </div>
           </div>
         </a>
 
-        <div class="bookwrap" :style="{ transform: isSliderOnLeft ? 'translateX(-15%)' : 'translateX(0%)' }"> 
+        <div class="bookwrap" :style="{ transform: isSliderOnLeft ? 'translateX(-20%)' : 'translateX(0%)', opacity: isSliderOnLeft ? '0' : '1', visibility: isSliderOnLeft ? 'hidden' : 'visible' }" ref="bookwrap"> 
 
-          
 
 <div class="bookcalendar">
     <div class="calcircle">
@@ -199,15 +199,14 @@
 </div>
 
 </div>
-          <!-- Existing bookwrap code goes here -->
-          <!-- Make sure to use Vue.js bindings and methods as needed -->
+          
         </div>
       </div>
     </div>
 
-    <div class="container" id="container" :class="{ 'right-panel-active': !isSliderOnLeft }">
+    <div class="container" id="container" :class="{ 'right-panel-active': !isSliderOnLeft }" >
       <div class="overlay overlay-left">
-        <div class="overlay-panel">
+        <div class="overlay-panel" :style="{ transform: isSliderOnLeft ? 'translateX(0%)' : 'translateX(100%)' }" ref="labschedule1">
 
           <div class="tpic">
                 <b class="bi bi-person logot"></b>
@@ -353,8 +352,10 @@
   </table>
 
                 </div>
-
-                <div class="bookwrap">
+              </div>
+              </div>
+            </div>
+  <div class="bookwrap" :style="{ transform: isSliderOnLeft ? 'translateX(-100%)' : 'translateX(-100%)' }">
 
           
 
@@ -386,14 +387,8 @@
 </div>
 
 </div>
-          <!-- Your existing bookwrap and labschedule1 code goes here -->
-          <!-- Ensure to use the appropriate Vue.js bindings and methods -->
-
-          <!-- Add a button to toggle the layout -->
-          
-        </div>
-      </div>
-    </div>
+        
+        
   
 </template>
 
@@ -412,20 +407,45 @@ export default {
       },
       isSliderOnLeft: true, // Initial position of the slider
       isTransitioned: false, // Flag for transition effect
+      delayDuration: 60, // Adjust the delay duration in milliseconds
+      sliderText:"LABORATORY SCHEDULE",
     };
   },
   methods: {
     toggleLayout() {
-      this.isSliderOnLeft = !this.isSliderOnLeft;
-      this.isTransitioned = true;
+      if (this.isSliderOnLeft) {
+    // If the slider is on the left, move labschedule1 to the right
+    this.$refs.labschedule1.style.transition = 'transform 0.5s ease-in-out';
+    this.$refs.labschedule1.style.transform = 'translateX(100%)';
 
-      setTimeout(() => {
-        this.isTransitioned = false;
-      }, 500);
-    },
-    // ... (your other existing methods)
-  },
-};
+    // Wait for the transition to finish, then move bookwrap to the center
+    setTimeout(() => {
+      this.isSliderOnLeft = false;
+      this.$refs.bookwrap.style.transform = 'translateX(0)';
+      this.$refs.bookwrap.style.opacity = '1';
+      this.$refs.bookwrap.style.visibility = 'visible';
+      this.isTransitioned = true;
+      this.sliderText = "BOOKING PAGE";
+    }, this.delayDuration);
+  } else {
+    // If the slider is on the right, move bookwrap to the left
+    this.$refs.bookwrap.style.transform = 'translateX(-100%)';
+    this.$refs.bookwrap.style.opacity = '0';
+    this.$refs.bookwrap.style.visibility = 'hidden';
+    this.sliderText = "LABORATORY SCHEDULE";
+    
+
+    // Wait for the transition to finish, then move labschedule1 to the center
+    setTimeout(() => {
+      this.isSliderOnLeft = true;
+      this.$refs.labschedule1.style.transition = 'transform 0.5s ease-in-out';
+      this.$refs.labschedule1.style.transform = 'translateX(0)';
+      this.isTransitioned = true;
+    }, this.delayDuration);
+  }
+},
+},
+  };
 </script>
 
 <style>
@@ -442,6 +462,7 @@ background-size: cover;
 background-position: center;
 background-repeat: no-repeat;
 z-index: 1;
+transition: transform 0.5s ease-in-out;
 }
 .user-wrapper{
 position: relative;
@@ -449,7 +470,7 @@ position: relative;
   left: 5%;
   height: 82%;
   width: 90%;
-  border-radius: 34.56px 34.56px 0px 0px;
+  border-radius: 34px;
 border: 1px solid var(--LIght, #F5347F);
 background: rgba(255, 255, 255, 0.41);
 box-shadow: 15px 15px 10px 0px #F5347F;
@@ -458,6 +479,7 @@ box-shadow: 15px 15px 10px 0px #F5347F;
 height: 100%;
 width: 70%;
 display: flex; /* Use flexbox to align items horizontally */
+transition: transform 0.5s ease-in-out;
 
 
 }
@@ -471,13 +493,13 @@ display: flex; /* Use flexbox to align items horizontally */
   flex-direction: column;
   justify-content: center;
   flex-shrink: 0;
-  border-radius: 0px 34.56px 0px 0px;
+  border-radius: 34px;
   border-left: 2px solid var(--LIght, #F5347F);
   background: rgba(245, 52, 127, 0.36);
-  box-shadow: -1.44px 0px 5.76px 0px rgba(255, 255, 255, 0.15) inset, 0px 11.52px 8.64px 0px rgba(0, 0, 0, 0.05);
   backdrop-filter: blur(71.99995422363281px);
   transform: translateX(0); /* Add initial transform */
   transition: transform 0.5s ease-in-out; /* Add the transition property for smooth movement */
+  z-index: 1000;
 }
 .sliderline{
   position: relative;
@@ -535,8 +557,8 @@ width: 70%;
 display: flex; /* Use flexbox to align items horizontally */
 justify-content: space-between;
 position: relative;
-background-color: white;
 
+transition: transform 0.5s ease-in-out;
 left: 30%;
 
 }
@@ -640,24 +662,43 @@ font-weight: 400;
 line-height: normal;
 }
 
-.container.right-panel-active .overlay-container {
-  transform: translateX(-100%);
-}
-
-.overlay-left {
-  transform: translateX(-20%);
-}
-
-.container.right-panel-active .overlay-left {
-  transform: translateX(100%);
-}
 
 /* Add styles for the transition effect on labschedule1 and bookwrap */
 .labschedule1,
 .bookwrap {
   transition: transform 0.5s ease-in-out;
+  animation-timing-function: ease-in-out;
 }
 .container.right-panel-active .slider {
-  transform: translateX(-100%); /* Adjust the transform for the active state */
+  animation: slideOut 0.5s forwards;
+}
+.container.right-panel-active .container {
+  animation: slideOut 0.5s forwards;
+}
+.container.right-panel-active .overlay-left {
+  animation: slideIn 0.5s forwards;
+}
+
+.container.right-panel-active .overlay-container {
+  animation: slideIn 0.5s forwards;
+}
+
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
 }
 </style>
