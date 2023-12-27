@@ -17,19 +17,19 @@ To change your navigation bar from a top landscape to a left portrait orientatio
             </router-link>
           </li>
           <li class="nav-item" :class="{ active: $route.path === '/booking' }">
-            <a href="/booking" class="nav-link">
+            <router-link to="/booking" class="nav-link">
               <b class="bi bi-bell navicon"></b> 
-            </a>
+            </router-link>
           </li>
           <li class="nav-item" :class="{ active: $route.path === '/profile' }">
-            <a href="/profile" class="nav-link">
+            <router-link to="/profile" class="nav-link">
               <b class="bi bi-person navicon"></b>
-            </a>
+            </router-link>
           </li>
           <li class="nav-item" :class="{ active: $route.path === '/history' }">
-            <a href="/history" class="nav-link">
+            <router-link to="/history" class="nav-link">
               <b class="bi bi-archive navicon"></b> 
-            </a>
+            </router-link>
           </li>
           <li @click="toggleMode" class="nav-item">
                   <a href="#" class="nav-link">
@@ -40,9 +40,9 @@ To change your navigation bar from a top landscape to a left portrait orientatio
           </li>
 
               <li class="nav-item">
-                <a href="/" class="nav-link"> 
+                <router-link to="/" class="nav-link"> 
                   <b class="bi bi-box-arrow-right dropdownicon"></b>
-                </a>
+                </router-link>
               </li>
 
             </ul>
