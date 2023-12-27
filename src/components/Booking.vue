@@ -19,7 +19,7 @@ import NavigationBar from './NavigationBar.vue'
         </tr>
       </thead>
       <tbody>
-        <tr v-for="notifs in notif" :key="notifs.id">
+        <tr v-for="notif in notifs" :key="notif.id" @click="handleRowClick(notif)">
     <td class="notifitem" :colspan="3">
       <div class="notif-content-container">
         <div class="notif-content">
@@ -167,7 +167,8 @@ line-height: normal;
 export default {
   data() {
     return {
-      notif: [
+      selectedNotif: null,
+      notifs: [
         { id: 1, clientName: "Zon Trisha Japay", purpose: "Special Quiz", time:"1 hour ago" },
         { id: 2, clientName: "", purpose: "", time:"1 hour ago"  },
         { id: 3, clientName: "", purpose: "", time:"1 hour ago" },
@@ -176,6 +177,13 @@ export default {
         
       ],
     };
-  }
-}
+  },
+  methods: {
+    handleRowClick(notif) {
+      this.selectedNotif = notif;
+      // Do any additional processing you need with the selected notif
+      console.log("Selected Notification:", notif);
+    },
+  },
+};
 </script>

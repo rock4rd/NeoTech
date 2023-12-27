@@ -53,45 +53,81 @@
 
    
    
-   <link rel="icon" type="image/png" :href="faviconPath" />
+  
+   
+   <div v-if="showPrompt" class="prompt show">
+      <div class="prompt-content">
+        <p>Please check and agree to the Terms of Use and Privacy Policy before proceeding.</p>
+        <button @click="closePrompt">Close</button>
+      </div>
+    </div>
 
-</div>
+    <div v-if="showWrong" class="pass-prompt show">
+      <div class="prompt-content">
+        <p>Wrong password.</p>
+        <button @click="closePrompt">Close</button>
+      </div>
+    </div>
 
+    <div v-if="showUserPrompt" class="user-prompt show">
+      <div class="prompt-content">
+        <p>Username doesn't exist.</p>
+        <button @click="closePrompt">Close</button>
+      </div>
+    </div>
 
+    <div v-if="showSuccessPrompt" class="success-prompt show">
+      <div class="prompt-content">
+        <p>Login successful! Redirecting<span class="loading-dots-container">...</span></p>
+        
+      </div>
+    </div>
+  </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      username: "",
-      password: "",
-      agreedToTerms: false,
-      faviconPath: "path/to/your/favicon.png", // Update with your favicon path
-    };
-  },
-  methods: {
-    handleInput() {
-      // Handle input changes if needed
-    },
-    login() {
-      if (!this.username || this.username !== "admin") {
-        alert("Wrong username");
-      } else if (!this.password || this.password !== "admin") {
-        alert("Wrong password");
-      } else if (!this.agreedToTerms) {
-        alert("Please accept the terms and agreements");
-      } else {
-        alert("Login successful!");
-        // Redirect or perform other actions for a successful login
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-        this.$router.push({ name: "home" });
+const router = useRouter(); // Obtain the router instance
 
-      }
-    },
-  },
+const username = ref("");
+const password = ref("");
+const agreedToTerms = ref(false);
+const showPrompt = ref(false);
+const showSuccessPrompt = ref(false);
+const showUserPrompt = ref(false);
+const showWrong = ref(false);
+
+const closePrompt = () => {
+  showPrompt.value = false;
+  showWrong.value = false;
+  showUserPrompt.value = false;
+};
+
+const closeSuccessPrompt = () => {
+  showSuccessPrompt.value = false;
+};
+
+const login = () => {
+  closePrompt(); // Close any open prompts
+
+  if (!agreedToTerms.value) {
+    showPrompt.value = true;
+  } else if (username.value !== "admin") {
+    showUserPrompt.value = true;
+  } else if (password.value !== "admin") {
+    showWrong.value = true;
+  } else {
+    showSuccessPrompt.value = true;
+    // Redirect or perform other actions for a successful login
+    setTimeout(() => {
+      router.push('/home'); // Use router.push with the correct path
+    }, 5000);
+  }
 };
 </script>
+
 
 
 <style>
@@ -140,6 +176,105 @@ export default {
    
 
   }
+  .success-overlay {
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001; /* Ensure it's above the original overlay */
+}
+
+
+
+.success-prompt h2 {
+    color: #333;
+}
+
+.success-prompt p {
+    margin: 10px 0;
+}
+.loading-dots-container {
+  display: inline-block;
+  width: 1em;
+  text-align: left;
+  font-size: 1.5em;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: loadingAnimation 1.5s infinite;
+}
+
+@keyframes loadingAnimation {
+  0% {
+    width: 0;
+  }
+  25% {
+    width: 0.25em;
+  }
+  50% {
+    width: 0.5em;
+  }
+  75% {
+    width: 0.75em;
+  }
+  100% {
+    width: 1em;
+  }
+}
+
+.success-prompt button {
+    padding: 10px 20px;
+    background: #0F9D58; /* Change the background color as needed */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    left: 46.5%
+}
+.prompt-content {
+    padding: 15px;
+    text-align: center;
+  }
+
+
+  .pass-prompt {
+    background: #EEF1EF; /* Red background for wrong password */
+    height: 18%;
+    width: 20%;
+  }
+  .pass-prompt button{
+    background: #800000; /* Red background for wrong password */
+  }
+
+  .user-prompt {
+    background: #EEF1EF;
+    height: 18%;
+    width: 20%;
+  }
+  .user-prompt button{
+    background: #800000;
+    
+  }
+
+  .success-prompt {
+    background: #EEF1EF; /* Green background for successful login */
+    height: 18%;
+    width: 20%;
+  }
+  .success-prompt button {
+    background: black; /* Green background for successful login */
+  }
+  .prompt{
+    background: #EEF1EF;
+  }
+  .prompt button{
+    background: #800000;
+  }
   input{
   width: 50%;
   padding: 8px;
@@ -151,6 +286,38 @@ export default {
   opacity: 100%;
   
   }
+  .prompt, .pass-prompt, .user-prompt, .success-prompt {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  font-weight: bold;
+  border: 1px solid black;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1001; /* Ensure it's above the original overlay */
+  opacity: 0; /* Initially set to be transparent */
+  transition: opacity 0.3s ease; /* Add a transition for opacity */
+}
+.prompt button, .pass-prompt button, .user-prompt button, .success-prompt button {
+  padding: 10px 20px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: block;
+  margin: 25px auto; /* Add this line to center the button */
+  opacity: 0; /* Initially set to be transparent */
+  transition: opacity 0.3s ease; /* Add a transition for opacity */
+}
+.prompt.show, .pass-prompt.show, .user-prompt.show, .success-prompt.show,
+.prompt.show button, .pass-prompt.show button, .user-prompt.show button, .success-prompt.show button {
+  opacity: 1; /* Make it fully visible when the "show" class is applied */
+}
+
 
 img{
     position: relative;

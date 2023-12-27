@@ -188,6 +188,7 @@
       :first-day-of-week="1"
       :format="dateFormat"
       @selected="handleDateSelection"
+      
     ></Datepicker>
 
     <!-- Display the selected date, month, and day -->
@@ -278,7 +279,7 @@
 
 </div>
 
-<div class="submit-cancel-buttons">
+<div class="next-cancel-buttons">
       
       <button class="back-button" @click="prevStep">Back <b class="bi bi-caret-left-fill buttonicons"></b></button>
       <button class="next-button" @click="nextStep">Next <b class="bi bi-caret-right-fill buttonicons"></b></button>
@@ -287,12 +288,25 @@
 
 </div>
   <div class="page2" v-if="currentStep === 2">
-      <h3>Review Your Information</h3>
-      <p>First Name: {{ firstName }}</p>
-      <p>Last Name: {{ lastName }}</p>
+    <h3>Almost Done.....</h3>
+    <div class="reviewcircle">
+        <b class="bi bi-flag-fill reviewicon"></b>
+    </div>
+          
+            <h3>Review Your Information</h3>
 
+          <div class="informations">
+            <p>Time IN: {{ selectedTimeIn }}</p>
+            <p>Time OUT: {{ selectedTimeOut }}</p>
+            <p>First Name: {{firstName }}</p>
+            <p>Last Name: {{ lastName }}</p>
+          </div>
+  <div class="submit-cancel-buttons">
       <button class="back-button" @click="prevStep">Back <b class="bi bi-caret-left-fill buttonicons"></b></button>
       <button class="submit-button" @click="nextStep">Submit <b class="bi bi-caret-right-fill buttonicons"></b></button>
+
+  </div>   
+
   </div>
 
 </div>
@@ -517,7 +531,7 @@ export default {
       delayDuration: 60, // Adjust the delay duration in milliseconds
       sliderText: "LABORATORY SCHEDULE",
       selectedDate: new Date(),
-      dateFormat: "yyyy-MM",
+      dateFormat: "yyyy-MM-dd",
       daysOfWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
       selectedDate: new Date(),
     selectedDay: null, // Add selectedDay property
@@ -653,6 +667,16 @@ border: 1px solid var(--LIght, #F5347F);
 background: rgba(255, 255, 255, 0.41);
 box-shadow: 15px 15px 10px 0px #F5347F;
 }
+.page2{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%; 
+  width: 100%;
+  position: relative;
+  bottom: 10%;
+}
 
 
 
@@ -684,8 +708,18 @@ box-shadow: 15px 15px 10px 0px #F5347F;
   border: 1px solid black;
   border-radius: 5px;
 }
-.submit-cancel-buttons {
+.next-cancel-buttons {
   
+  width: 50%;
+  height: 7%;
+  position: fixed;
+  bottom: 20px;
+  left: 52%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.submit-cancel-buttons{
   width: 50%;
   height: 7%;
   position: fixed;
@@ -707,8 +741,24 @@ box-shadow: 15px 15px 10px 0px #F5347F;
   align-items: center; /* Center text vertically */
   justify-content: center; /* Center text horizontally */
 }
+.page2 .submit-button,
+.page2 .back-button {
+  padding: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  width: 50%;
+  cursor: pointer;
+  margin-right: 10%;
+  align-items: center; /* Center text vertically */
+  justify-content: center; /* Center text horizontally */
+}
 
 .page1 .next-button {
+border-radius: 20px;
+background: #FB5A7C;
+box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+}
+.page2 .submit-button {
 border-radius: 20px;
 background: #FB5A7C;
 box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
@@ -808,6 +858,9 @@ right: 45%;
   position: relative;
   top: 6%;
 }
+.datepicker{
+  outline: none;
+}
 .caltable{
   position: relative;
   bottom: 17%;
@@ -818,6 +871,10 @@ background-color: #FDB0C0;
 border: solid 1px black;
 font-size: 70%;
 color: black;
+}
+.page2 h3{
+  justify-content: center;
+  align-items: center;
 }
 
 .tcredtable {
@@ -909,6 +966,16 @@ top: 37.5%;
 right: 20%;
 bottom: 0; /* Align to the bottom of the containing element (tpic) */
 }
+
+.informations{
+  position: relative;
+  top: 10%;
+  right: 9.5%;
+  font-size: 20px;
+  padding: 2%;
+  font-weight: bold;
+ 
+}
 .tschedhead{
 color: var(--LIght, #F5347F);
 text-align: center;
@@ -959,6 +1026,22 @@ text-align: center; /* Center text */
   background-color: #f5347f; /* Highlight selected day with a different background color */
   color: white; /* Set text color for better visibility */
 }
+.reviewcircle{
+height: 30%;
+width: 20%;
+border-radius: 50%;
+border: solid black 1px;
+position: relative;
+margin-top: 5%;
+margin-bottom: 1%;
+top: 5%;
+background-color:  #FDB0C0;
+stroke-width: 2px;
+stroke: #495E57;
+display: flex;
+justify-content: center; /* Center content horizontally */
+align-items: center; /* Center content vertically */
+}
 
 .calcircle,
 .timecircle,
@@ -981,7 +1064,8 @@ align-items: center; /* Center content vertically */
 /* Example styling for the circle icons (adjust as needed) */
 .calcircle b,
 .timecircle b,
-.infocircle b {
+.infocircle b,
+.reviewcircle b {
 font-size: 90px; /* Adjust font size as needed */
 color:#FC6C85;
 
