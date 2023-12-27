@@ -344,7 +344,14 @@ top: 200px;
 left: 350px;
 }
 .loginbtn {
+height: 20%;
+width: 15%;
+  position: relative;
+  font-weight: bold;
+  left: 2%;
     background-color: #f3efef; /* Change the background color as needed */
+justify-content: center;
+align-items: center;
     color: black; /* Change the text color as needed */
     padding: 8px 15px;
     border: solid black 1px;
@@ -360,7 +367,7 @@ left: 350px;
   align-items: center;
   position: relative;
   background-color: none;
-  width: 850px;
+  width: 97%;
   
  top: 30%;
   
@@ -373,7 +380,7 @@ left: 350px;
   margin-right: 5px;
   position: relative;
   top: 2px; /* Adjust as needed for vertical alignment */
-  right: 50px;
+  right: 25px;
   top: 8px;
 }
 

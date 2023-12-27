@@ -40,13 +40,20 @@ To change your navigation bar from a top landscape to a left portrait orientatio
           </li>
 
               <li class="nav-item">
-                <router-link to="/" class="nav-link"> 
+                <button class="nav-link" @click="logout"> 
                   <b class="bi bi-box-arrow-right dropdownicon"></b>
-                </router-link>
+                </button>
               </li>
 
             </ul>
        
+            </div>
+            <div v-if="showlogoutPrompt" class="logout-prompt show">
+                <div class="prompt-content">
+                  <p>Are you sure you want to logout?.</p>
+                  <button @click="closePrompt">Cancel</button>
+                  <button @click="confirmLogout">Yes</button>
+                </div>
             </div>
          
       </div>
@@ -147,32 +154,74 @@ cursor: pointer; /* Change cursor on hover for better usability */
   color: #333;
   display: block;
 }
+.logout-prompt{
+  height: 18%;
+  width: 23%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  font-weight: bold;
+  border: 1px solid black;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1001; /* Ensure it's above the original overlay */
+  transition: opacity 0.3s ease; /* Add a transition for opacity */
+  background-color: #EEF1EF;
+}
+.logout-prompt button{
+  padding: 10px 20px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  background-color: #800000;
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 15px; /* Add margin to create space between buttons */
+  transition: opacity 0.3s ease;
+  
+}
 </style>
 
-<script>
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-export default {
-  data() {
-    return {
-      showDropdown: false,
-      isDarkMode: true,
-      activeItem: '', // Track the active item
-    };
-  },
-  methods: {
-    toggleDropdown() {
-      this.showDropdown = !this.showDropdown;
-    },
-    toggleMode() {
-      this.isDarkMode = !this.isDarkMode;
-    },
-      setActiveItem(item) {
-      this.activeItem = item;
-    },
-  },
-  
+const router = useRouter();
+
+const showDropdown = ref(false);
+const isDarkMode = ref(true);
+const activeItem = ref('');
+const showlogoutPrompt = ref(false);
+
+const closePrompt = () => {
+  showlogoutPrompt.value = false;
+};
+
+const confirmLogout = () => {
+  // Perform logout actions here, e.g., clear user session, etc.
+  // Redirect to the login page
+  router.push('/');
+};
+
+const logout = () => {
+  showlogoutPrompt.value = true;
+};
+
+const toggleDropdown = () => {
+  showDropdown.value = !showDropdown.value;
+};
+
+const toggleMode = () => {
+  isDarkMode.value = !isDarkMode.value;
+};
+
+const setActiveItem = (item) => {
+  activeItem.value = item;
 };
 </script>
-```
 
