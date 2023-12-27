@@ -39,38 +39,38 @@ import NavigationBar from './NavigationBar.vue'
           <td></td>
           <td></td>
           <td></td>
-          <td></td>
+          <td class="highlighted3"></td>
           <td></td>
         </tr>
         <tr>
           <td>8:00 AM</td>
           <td></td>
+          <td class="highlighted1"></td>
           <td></td>
-          <td></td>
-          <td></td>
+          <td class="highlighted3"></td>
           <td></td>
         </tr>
         <tr>
           <td>9:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td class="highlighted"></td>
+          <td class="highlighted1">Badiang</td>
+          <td class="highlighted2"></td>
+          <td class="highlighted3">Balaman</td>
           <td></td>
         </tr>
         <tr>
           <td>10:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td class="highlighted">Bolo</td>
+          <td class="highlighted1"></td>
+          <td class="highlighted2">Cloribel</td>
+          <td class="highlighted3"></td>
           <td></td>
         </tr>
         <tr>
           <td>11:00 AM</td>
+          <td class="highlighted"></td>
           <td></td>
-          <td></td>
-          <td></td>
+          <td class="highlighted2"></td>
           <td></td>
           <td></td>
         </tr>
@@ -100,7 +100,7 @@ import NavigationBar from './NavigationBar.vue'
         </tr>
         <tr>
           <td>2:00 PM</td>
-          <td></td>
+          <td class="highlighted"></td>
           <td></td>
           <td></td>
           <td></td>
@@ -108,7 +108,7 @@ import NavigationBar from './NavigationBar.vue'
         </tr>
         <tr>
           <td>3:00 PM</td>
-          <td></td>
+          <td class="highlighted">Beltran</td>
           <td></td>
           <td></td>
           <td></td>
@@ -116,7 +116,7 @@ import NavigationBar from './NavigationBar.vue'
         </tr>
         <tr>
           <td>4:00 PM</td>
-          <td></td>
+          <td class="highlighted"></td>
           <td></td>
           <td></td>
           <td></td>
@@ -191,6 +191,15 @@ import NavigationBar from './NavigationBar.vue'
   background-position: center;
   background-repeat: no-repeat;
   z-index: 1;
+  }
+  .highlighted, .highlighted3{
+    background-color: yellow;
+  }
+  .highlighted1{
+      background-color: greenyellow;
+  }
+  .highlighted2{
+    background-color:green;
   }
   .itemscontainer{
     position: relative;

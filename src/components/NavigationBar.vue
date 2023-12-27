@@ -180,9 +180,18 @@ cursor: pointer; /* Change cursor on hover for better usability */
   background-color: #800000;
   cursor: pointer;
   display: inline-block;
-  margin: 0 15px; /* Add margin to create space between buttons */
-  transition: opacity 0.3s ease;
+  margin: 0 10px;
+  transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* Add box-shadow to the transition */
   
+}
+.logout-prompt button:first-child {
+  margin-right: 10px;
+}
+.logout-prompt button:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* Add a box-shadow for the aura effect */
+  background-color: #f11010;
 }
 </style>
 

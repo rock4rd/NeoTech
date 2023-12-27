@@ -28,7 +28,11 @@
         <div class="button">
           
             <button @click="login" class="loginbtn">Login</button>
-
+                <div class="guestbutton">
+                  <router-link to="userview">
+                     User/Guest
+                  </router-link>
+                </div>
             
 
         </div>
@@ -208,6 +212,11 @@ const login = () => {
   overflow: hidden;
   animation: loadingAnimation 1.5s infinite;
 }
+.guestbutton{
+  position: relative;
+  left: 5%;
+  top: 5px;
+}
 
 @keyframes loadingAnimation {
   0% {
@@ -311,7 +320,16 @@ const login = () => {
   display: block;
   margin: 25px auto; /* Add this line to center the button */
   opacity: 0; /* Initially set to be transparent */
-  transition: opacity 0.3s ease; /* Add a transition for opacity */
+  transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* Add box-shadow to the transition */
+
+}
+.prompt button:hover
+.pass-prompt button:hover
+.user-prompt button:hover
+.success-prompt button:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* Add a box-shadow for the aura effect */
 }
 .prompt.show, .pass-prompt.show, .user-prompt.show, .success-prompt.show,
 .prompt.show button, .pass-prompt.show button, .user-prompt.show button, .success-prompt.show button {

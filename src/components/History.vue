@@ -38,40 +38,40 @@ import NavigationBar from './NavigationBar.vue'
           <td>7:00 AM</td>
           <td></td>
           <td></td>
-          <td></td>
+          <td class="highlighted"></td>
           <td></td>
           <td></td>
         </tr>
         <tr>
           <td>8:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td class="highlighted"></td>
+          <td class="highlighted2"></td>
+          <td class="highlighted">Manero</td>
           <td></td>
           <td></td>
         </tr>
         <tr>
           <td>9:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td class="highlighted">BOLO</td>
+          <td class="highlighted2"></td>
+          <td class="highlighted"></td>
+          <td class="highlighted2"></td>
           <td></td>
         </tr>
         <tr>
           <td>10:00 AM</td>
+          <td class="highlighted"></td>
+          <td class="highlighted2">BADIANG</td>
           <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td class="highlighted2">Beltran</td>
           <td></td>
         </tr>
         <tr>
           <td>11:00 AM</td>
           <td></td>
+          <td class="highlighted2"></td>
           <td></td>
-          <td></td>
-          <td></td>
+          <td class="highlighted2"></td>
           <td></td>
         </tr>
         <tr>
@@ -92,32 +92,32 @@ import NavigationBar from './NavigationBar.vue'
         </tr>
         <tr>
           <td>1:00 PM</td>
+          <td class="highlighted"></td>
           <td></td>
-          <td></td>
-          <td></td>
+          <td class="highlighted"></td>
           <td></td>
           <td></td>
         </tr>
         <tr>
           <td>2:00 PM</td>
+          <td class="highlighted">Beltran</td>
           <td></td>
-          <td></td>
-          <td></td>
+          <td class="highlighted">Cloribel</td>
           <td></td>
           <td></td>
         </tr>
         <tr>
           <td>3:00 PM</td>
+          <td class="highlighted"></td>
           <td></td>
-          <td></td>
-          <td></td>
+          <td class="highlighted"></td>
           <td></td>
           <td></td>
         </tr>
         <tr>
           <td>4:00 PM</td>
           <td></td>
-          <td></td>
+          <td class="highlighted2"></td>
           <td></td>
           <td></td>
           <td></td>
@@ -125,7 +125,7 @@ import NavigationBar from './NavigationBar.vue'
         <tr>
           <td>5:00 PM</td>
           <td></td>
-          <td></td>
+          <td class="highlighted2">Balaman</td>
           <td></td>
           <td></td>
           <td></td>
@@ -133,7 +133,7 @@ import NavigationBar from './NavigationBar.vue'
         <tr>
           <td>6:00 PM</td>
           <td></td>
-          <td></td>
+          <td class="highlighted2"></td>
           <td></td>
           <td></td>
           <td></td>

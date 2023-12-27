@@ -303,11 +303,32 @@
           </div>
   <div class="submit-cancel-buttons">
       <button class="back-button" @click="prevStep">Back <b class="bi bi-caret-left-fill buttonicons"></b></button>
-      <button class="submit-button" @click="nextStep">Submit <b class="bi bi-caret-right-fill buttonicons"></b></button>
+      <button class="submit-button" @click="submitStep">Submit <b class="bi bi-caret-right-fill buttonicons"></b></button>
 
   </div>   
 
   </div>
+
+    <div class="page3" v-if="currentStep === 3">
+
+      <h3>Successfully Booked!</h3>
+          <div  class="checkcircle">
+            <b class="bi bi-check-circle checkicon"></b>
+          </div>
+
+          <h3>Please wait for the confirmation from the Admin</h3>
+            <div class="done-buttons">
+            <button class="done-button" @click="redirectlogin">Done <b class="bi bi-check2 checkicon2"></b></button>
+            </div>
+
+    </div>
+    
+    <div v-if="showSuccessPrompt" class="success-prompt show">
+      <div class="prompt-content">
+        <p> Redirecting<span class="loading-dots-container">...</span></p>
+        
+      </div>
+    </div>
 
 </div>
           
@@ -507,6 +528,8 @@
 import MyCalendar from './MyCalendar.vue';
 import Datepicker from 'vue3-datepicker';
 import Timepicker from 'vue3-timepicker';
+import { useRouter } from 'vue-router';
+import { ref } from 'vue';
 
 
 export default {
@@ -540,6 +563,8 @@ export default {
     firstName: "", // Bind to user input for first name
     lastName: "",  // Bind to user input for last name
     currentStep: 1,
+    
+    countdown: 5,
     };
   },
   computed: {
@@ -589,7 +614,7 @@ export default {
      // Calculate and update the days of the week
     const year = selectedDate.getFullYear();
     const month = selectedDate.getMonth();
-
+    const showSuccessPrompt = ref(false);
     const firstDayOfMonth = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
@@ -612,10 +637,37 @@ export default {
       // Check if the day is the selected day
       return this.selectedDate.getDate() === day;
     },
+    startRedirecting() {
+      this.showSuccessPrompt.value = true;
+      this.countdown = 5;
+
+      const countdownInterval = setInterval(() => {
+        this.countdown--;
+
+        if (this.countdown === 0) {
+          clearInterval(countdownInterval);
+          this.redirectlogin();
+        }
+      }, 1000); // 1000 milliseconds = 1 second
+    },
+    redirectlogin() {
+  setTimeout(() => {
+    // Redirect to the login page after 5 seconds
+    this.$router.push('/');
+  }, 5000); // 5000 milliseconds = 5 seconds
+},
     nextStep() {
       // Implement logic to handle the next step
       // For example, you can increment the currentStep
       this.currentStep++;
+
+      // You may add additional logic based on your requirements
+    },
+    submitStep() {
+      // Implement logic to handle the next step
+      // For example, you can increment the currentStep
+      this.currentStep++;
+
 
       // You may add additional logic based on your requirements
     },
@@ -677,6 +729,16 @@ box-shadow: 15px 15px 10px 0px #F5347F;
   position: relative;
   bottom: 10%;
 }
+.page3{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%; 
+  width: 100%;
+  position: relative;
+  bottom: 15%;
+}
 
 
 
@@ -729,6 +791,17 @@ box-shadow: 15px 15px 10px 0px #F5347F;
   align-items: center;
   gap: 10px;
 }
+.done-buttons{
+  width: 50%;
+  height: 10%;
+  position: fixed;
+  bottom: 20px;
+  left: 55%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
 
 .page1 .next-button,
 .page1 .back-button {
@@ -753,10 +826,24 @@ box-shadow: 15px 15px 10px 0px #F5347F;
   justify-content: center; /* Center text horizontally */
 }
 
+
 .page1 .next-button {
 border-radius: 20px;
 background: #FB5A7C;
 box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+}
+.page3 .done-button{
+border-radius: 20px;
+background: #FB5A7C;
+box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+padding: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  width: 50%;
+  cursor: pointer;
+  margin-right: 10%;
+  align-items: center; /* Center text vertically */
+  justify-content: center; /* Center text horizontally */
 }
 .page2 .submit-button {
 border-radius: 20px;
@@ -876,6 +963,11 @@ color: black;
   justify-content: center;
   align-items: center;
 }
+.page3 h3{
+  justify-content: center;
+  align-items: center;
+
+}
 
 .tcredtable {
 color: black;
@@ -988,6 +1080,11 @@ font-weight: 900;
 line-height: normal;
 margin-bottom: 10%;
 }
+.checkicon{
+  font-size: 200px;
+  justify-content: center;
+
+}
 .tpic{
 height: 30%;
 width: 30%;
@@ -1042,6 +1139,22 @@ display: flex;
 justify-content: center; /* Center content horizontally */
 align-items: center; /* Center content vertically */
 }
+.checkcircle{
+  height: 30%;
+width: 20%;
+border-radius: 50%;
+border: solid black 1px;
+position: relative;
+margin-top: 5%;
+margin-bottom: 1%;
+top: 5%;
+background-color:  #FDB0C0;
+stroke-width: 2px;
+stroke: #495E57;
+display: flex;
+justify-content: center; /* Center content horizontally */
+align-items: center; /* Center content vertically */
+}
 
 .calcircle,
 .timecircle,
@@ -1065,7 +1178,8 @@ align-items: center; /* Center content vertically */
 .calcircle b,
 .timecircle b,
 .infocircle b,
-.reviewcircle b {
+.reviewcircle b
+.checkcircle b {
 font-size: 90px; /* Adjust font size as needed */
 color:#FC6C85;
 

@@ -19,7 +19,7 @@ import NavigationBar from './NavigationBar.vue'
         </tr>
       </thead>
       <tbody>
-        <tr v-for="notif in notifs" :key="notif.id" @click="handleRowClick(notif)">
+        <tr v-for="notifs in notif" :key="notifs.id">
     <td class="notifitem" :colspan="3">
       <div class="notif-content-container">
         <div class="notif-content">
@@ -51,7 +51,7 @@ import NavigationBar from './NavigationBar.vue'
   width: 100vw;
   height: 100vh;
   background-color: black;
-  background-image: url('/overallbg.jpg');
+  background-image: url('./overallbg.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -168,7 +168,7 @@ export default {
   data() {
     return {
       selectedNotif: null,
-      notifs: [
+      notif: [
         { id: 1, clientName: "Zon Trisha Japay", purpose: "Special Quiz", time:"1 hour ago" },
         { id: 2, clientName: "", purpose: "", time:"1 hour ago"  },
         { id: 3, clientName: "", purpose: "", time:"1 hour ago" },
