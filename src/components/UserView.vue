@@ -168,16 +168,49 @@
           </div>
         </a>
 
-        <div class="bookwrap" :style="{ transform: isSliderOnLeft ? 'translateX(-20%)' : 'translateX(0%)', opacity: isSliderOnLeft ? '0' : '1', visibility: isSliderOnLeft ? 'hidden' : 'visible' }" ref="bookwrap"> 
+<div class="bookwrap" :style="{ transform: isSliderOnLeft ? 'translateX(-20%)' : 'translateX(0%)', opacity: isSliderOnLeft ? '0' : '1', visibility: isSliderOnLeft ? 'hidden' : 'visible' }" ref="bookwrap"> 
 
 
-<div class="bookcalendar">
+   <div class="page1" v-if="currentStep === 1">      
+<div class="bookcalendar" >
     <div class="calcircle">
       <b class="bi bi-calendar4 calendaricon"></b>
     </div>
 
     <h3>Select the date from the calendar</h3>
+    
+    <div class="calendarcontainer">
+      <div>
+    <label for="datepicker">Select Date:</label>
+    <Datepicker
+      v-model="selectedDate"
+      :type="'month'"
+      :first-day-of-week="1"
+      :format="dateFormat"
+      @selected="handleDateSelection"
+    ></Datepicker>
 
+    <!-- Display the selected date, month, and day -->
+    
+      </div>
+
+  </div>
+      <div class="caltable">
+        <table>
+    <thead>
+      <tr>
+        <th v-for="dayOfWeek in daysOfWeek" :key="dayOfWeek">{{ dayOfWeek }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="week in calendar" :key="week">
+        <td v-for="day in week" :key="day" :class="{ 'selected': day === selectedDay }">
+          {{ day }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+        </div>
 </div>
 
 <div class="booktime">
@@ -187,6 +220,32 @@
 
     <h3>Select time of your reservation</h3>
 
+    <div class="timepickercontainer">
+    <div class="timepicker">
+      <label for="timeInPicker" class="labelpick">Time In:</label>
+      <input
+        id="timeInPicker"
+        type="time"
+        v-model="selectedTimeIn"
+        class="custom-timepicker"
+      />
+    </div>
+
+    <div class="timepicker">
+      <label for="timeOutPicker" class="labelpick">Time Out:</label>
+      <input
+        id="timeOutPicker"
+        type="time"
+        v-model="selectedTimeOut"
+        class="custom-timepicker"
+      />
+    </div>
+
+    <div>
+      <p class="labeltime">Time In: {{ selectedTimeIn }}</p>
+      <p class="labeltime">Time Out: {{ selectedTimeOut }}</p>
+    </div>
+  </div>
 </div>
 
 <div class="bookinfo">
@@ -194,9 +253,47 @@
       <b class="bi bi-person-workspace personicon"></b>
     </div>
 
-    <h3>Name</h3>
+    <h3>User Information</h3>
+  <div class="userinform">
+    <div class="name-inputs">
+      <label for="firstName" class="labelinput1">First Name:</label>
+      <input
+        id="firstName"
+        type="text"
+        v-model="firstName"
+        class="name-input"
+        placeholder="Enter your first name"
+      />
+
+      <label for="lastName" class="labelinput1">Last Name:</label>
+      <input
+        id="lastName"
+        type="text"
+        v-model="lastName"
+        class="name-input"
+        placeholder="Enter your last name"
+      />
+    </div>
+  </div>
 
 </div>
+
+<div class="submit-cancel-buttons">
+      
+      <button class="back-button" @click="prevStep">Back <b class="bi bi-caret-left-fill buttonicons"></b></button>
+      <button class="next-button" @click="nextStep">Next <b class="bi bi-caret-right-fill buttonicons"></b></button>
+</div>
+
+
+</div>
+  <div class="page2" v-if="currentStep === 2">
+      <h3>Review Your Information</h3>
+      <p>First Name: {{ firstName }}</p>
+      <p>Last Name: {{ lastName }}</p>
+
+      <button class="back-button" @click="prevStep">Back <b class="bi bi-caret-left-fill buttonicons"></b></button>
+      <button class="submit-button" @click="nextStep">Submit <b class="bi bi-caret-right-fill buttonicons"></b></button>
+  </div>
 
 </div>
           
@@ -393,63 +490,144 @@
 </template>
 
 <script>
+import MyCalendar from './MyCalendar.vue';
+import Datepicker from 'vue3-datepicker';
+import Timepicker from 'vue3-timepicker';
+
+
 export default {
+  components: {
+    MyCalendar,
+    Datepicker,
+    Timepicker,
+  },
   data() {
     return {
       userInfo: {
-          EMAIL: "John Doe",
-      SUBJECT: "JD",
-      TIME: "25",
-      SCHEDULE: "john_doe",
-      ROOM: "123456",
-      LOGIN: "Developer",
-      LOGOUT: "john.doe@example.com",// ... (your existing user info data)
+        EMAIL: "John Doe",
+        SUBJECT: "JD",
+        TIME: "25",
+        SCHEDULE: "john_doe",
+        ROOM: "123456",
+        LOGIN: "Developer",
+        LOGOUT: "john.doe@example.com", // ... (your existing user info data)
       },
       isSliderOnLeft: true, // Initial position of the slider
       isTransitioned: false, // Flag for transition effect
       delayDuration: 60, // Adjust the delay duration in milliseconds
-      sliderText:"LABORATORY SCHEDULE",
+      sliderText: "LABORATORY SCHEDULE",
+      selectedDate: new Date(),
+      dateFormat: "yyyy-MM",
+      daysOfWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      selectedDate: new Date(),
+    selectedDay: null, // Add selectedDay property
+    selectedTimeIn: null,
+    selectedTimeOut: null,
+    firstName: "", // Bind to user input for first name
+    lastName: "",  // Bind to user input for last name
+    currentStep: 1,
     };
+  },
+  computed: {
+    calendar() {
+      // Implement the logic to generate the calendar based on selectedDate
+      // This might involve calculating the days of the month, days of the week, etc.
+      // The actual implementation depends on your requirements and the data structure used.
+      return [[]]; // Replace with your actual calendar data
+    },
   },
   methods: {
     toggleLayout() {
       if (this.isSliderOnLeft) {
-    // If the slider is on the left, move labschedule1 to the right
-    this.$refs.labschedule1.style.transition = 'transform 0.5s ease-in-out';
-    this.$refs.labschedule1.style.transform = 'translateX(100%)';
+        // If the slider is on the left, move labschedule1 to the right
+        this.$refs.labschedule1.style.transition = "transform 0.5s ease-in-out";
+        this.$refs.labschedule1.style.transform = "translateX(100%)";
 
-    // Wait for the transition to finish, then move bookwrap to the center
-    setTimeout(() => {
-      this.isSliderOnLeft = false;
-      this.$refs.bookwrap.style.transform = 'translateX(0)';
-      this.$refs.bookwrap.style.opacity = '1';
-      this.$refs.bookwrap.style.visibility = 'visible';
-      this.isTransitioned = true;
-      this.sliderText = "BOOKING PAGE";
-    }, this.delayDuration);
-  } else {
-    // If the slider is on the right, move bookwrap to the left
-    this.$refs.bookwrap.style.transform = 'translateX(-100%)';
-    this.$refs.bookwrap.style.opacity = '0';
-    this.$refs.bookwrap.style.visibility = 'hidden';
-    this.sliderText = "LABORATORY SCHEDULE";
+        // Wait for the transition to finish, then move bookwrap to the center
+        setTimeout(() => {
+          this.isSliderOnLeft = false;
+          this.$refs.bookwrap.style.transform = "translateX(0)";
+          this.$refs.bookwrap.style.opacity = "1";
+          this.$refs.bookwrap.style.visibility = "visible";
+          this.isTransitioned = true;
+          this.sliderText = "BOOKING PAGE";
+        }, this.delayDuration);
+      } else {
+        // If the slider is on the right, move bookwrap to the left
+        this.$refs.bookwrap.style.transform = "translateX(-100%)";
+        this.$refs.bookwrap.style.opacity = "0";
+        this.$refs.bookwrap.style.visibility = "hidden";
+        this.sliderText = "LABORATORY SCHEDULE";
+
+        // Wait for the transition to finish, then move labschedule1 to the center
+        setTimeout(() => {
+          this.isSliderOnLeft = true;
+          this.$refs.labschedule1.style.transition = "transform 0.5s ease-in-out";
+          this.$refs.labschedule1.style.transform = "translateX(0)";
+          this.isTransitioned = true;
+        }, this.delayDuration);
+      }
+    },
+
+    // Add a method to handle date selection
+    handleDateSelection(selectedDate) {
+      this.selectedDate = selectedDate;
+     // Calculate and update the days of the week
+    const year = selectedDate.getFullYear();
+    const month = selectedDate.getMonth();
+
+    const firstDayOfMonth = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Create an array representing the days of the month
+    const daysOfMonth = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+    // Create an array to represent the days of the week, including padding for the first week
+    const daysOfWeek = [...Array(firstDayOfMonth).fill(null), ...daysOfMonth];
+
+    // Split the daysOfWeek array into chunks of 7 to represent weeks
+    const weeks = Array.from({ length: Math.ceil(daysOfWeek.length / 7) }, (_, i) =>
+      daysOfWeek.slice(i * 7, (i + 1) * 7)
+    );
+
+    // Update the calendar with the calculated weeks
+    this.calendar = weeks;
     
+    },
+    isDaySelected(day) {
+      // Check if the day is the selected day
+      return this.selectedDate.getDate() === day;
+    },
+    nextStep() {
+      // Implement logic to handle the next step
+      // For example, you can increment the currentStep
+      this.currentStep++;
 
-    // Wait for the transition to finish, then move labschedule1 to the center
-    setTimeout(() => {
-      this.isSliderOnLeft = true;
-      this.$refs.labschedule1.style.transition = 'transform 0.5s ease-in-out';
-      this.$refs.labschedule1.style.transform = 'translateX(0)';
-      this.isTransitioned = true;
-    }, this.delayDuration);
-  }
-},
-},
-  };
+      // You may add additional logic based on your requirements
+    },
+    prevStep() {
+      // Implement logic to handle going back a step
+      // For example, you can decrement the currentStep
+      if (this.currentStep > 1) {
+        this.currentStep--;
+
+        // You may add additional logic based on your requirements
+      }
+    },
+  },
+};
+  
+
 </script>
+
 
 <style>
 /* Your existing styles go here */
+.usercontainer html, body{
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
 .usercontainer {
 position: fixed;
 top: 0; /* Adjusted to start from the top of the viewport */
@@ -475,6 +653,84 @@ border: 1px solid var(--LIght, #F5347F);
 background: rgba(255, 255, 255, 0.41);
 box-shadow: 15px 15px 10px 0px #F5347F;
 }
+
+
+
+.labelpick {
+  font-size: 20px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+.buttonicons{
+  font-size: 20px;
+  margin-left: 10%;
+}
+.labeltime{
+  position: relative;
+  top: 10%;
+  left: 10%;
+  font-weight: bold;
+  margin-top: 13%;
+  margin-right: 20%;
+  display: inline-block;
+}
+
+.custom-timepicker {
+  width: 120px;
+  height: 30px;
+  font-size: 14px;
+  padding: 5px;
+  margin-bottom: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+.submit-cancel-buttons {
+  
+  width: 50%;
+  height: 7%;
+  position: fixed;
+  bottom: 20px;
+  left: 52%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page1 .next-button,
+.page1 .back-button {
+  padding: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  width: 50%;
+  cursor: pointer;
+  margin-right: 10%;
+  align-items: center; /* Center text vertically */
+  justify-content: center; /* Center text horizontally */
+}
+
+.page1 .next-button {
+border-radius: 20px;
+background: #FB5A7C;
+box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+}
+
+.back-button {
+border-radius: 20px;
+background: #FDB0C0;
+box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+}
+
+.selected-times {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.labtime {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
 .labschedule1{
 height: 100%;
 width: 70%;
@@ -482,6 +738,20 @@ display: flex; /* Use flexbox to align items horizontally */
 transition: transform 0.5s ease-in-out;
 
 
+}
+.timepicker{
+  height: 20%;
+  width: 90%;
+  position: relative;
+  top: 10%;
+  left: 5%;
+  margin-top: -10%;
+}
+.custom-timepicker {
+  /* Add your custom styles here */
+  width: 100%; /* Adjust width as needed */
+  margin-top: 5px; /* Adjust margin as needed */
+  /* Add any other styles to match the color and appearance of your other components */
 }
 .slider{
   bottom: 0;
@@ -532,6 +802,23 @@ position: relative;
 top: 50%;
 right: 45%;
 }
+.timepickercontainer{
+  height: 100%;
+  width:100%;
+  position: relative;
+  top: 6%;
+}
+.caltable{
+  position: relative;
+  bottom: 17%;
+  left: 5%;
+height: 35%;
+width: 90%;
+background-color: #FDB0C0;
+border: solid 1px black;
+font-size: 70%;
+color: black;
+}
 
 .tcredtable {
 color: black;
@@ -557,15 +844,56 @@ width: 70%;
 display: flex; /* Use flexbox to align items horizontally */
 justify-content: space-between;
 position: relative;
-
 transition: transform 0.5s ease-in-out;
 left: 30%;
 
 }
+.page1{
+height: 100%;
+width: 100%;
+display: flex; /* Use flexbox to align items horizontally */
+justify-content: space-between;
+position: relative;
+transition: transform 0.5s ease-in-out;
+
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+.name-inputs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.labelinput1{
+  font-size: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.name-input {
+  width: 70%;
+  height: 35px;
+  font-size: 14px;
+  padding: 5px;
+  margin-bottom: 50px;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+.userinform{
+  height: 100%;
+  width: 100%;
+  position: relative;
+  top: 15%;
+}
 .bookwrap h3{
 position: relative;
-top: 12%;
+top: 8%;
 color: #DD2A70;
+font-weight: bold;
 
 }
 .tname{
@@ -604,6 +932,13 @@ background: var(--Soft-Grey, #DFDFDF);
 box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 
 }
+.calendarcontainer{
+  height: 40%;
+  width: 90%;
+  position: relative;
+  top: 10%;
+  left: 5%;
+}
 .tcred{
 position: relative;
 top: 50%;
@@ -620,6 +955,10 @@ height: 100%; /* Set height to 100% */
 box-sizing: border-box; /* Include padding and border in the total width/height */
 text-align: center; /* Center text */
 }
+.selected {
+  background-color: #f5347f; /* Highlight selected day with a different background color */
+  color: white; /* Set text color for better visibility */
+}
 
 .calcircle,
 .timecircle,
@@ -630,7 +969,7 @@ border-radius: 50%;
 border: solid black 1px;
 position: relative;
 left: 20%;
-top: 10%;
+top: 5%;
 background-color:  #FDB0C0;
 stroke-width: 2px;
 stroke: #495E57;
@@ -645,6 +984,7 @@ align-items: center; /* Center content vertically */
 .infocircle b {
 font-size: 90px; /* Adjust font size as needed */
 color:#FC6C85;
+
 
 }
 

@@ -16,7 +16,9 @@
     "moment": "^2.29.4",
     "vue": "^3.3.4",
     "vue-full-calendar": "^3.0.0",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "vue3-datepicker": "^0.4.0",
+    "vue3-timepicker": "^1.0.0-beta.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
