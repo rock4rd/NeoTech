@@ -186,7 +186,7 @@ import NavigationBar from './NavigationBar.vue'
   width: 100vw;
   height: 100vh;
   background-color: black;
-  background-image: url('/overallbg.jpg');
+  background-image: url('../overallbg.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
