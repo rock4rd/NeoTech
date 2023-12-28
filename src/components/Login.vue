@@ -200,7 +200,7 @@ const login = () => {
 }
 
 .success-prompt p {
-    margin: 10px 0;
+    margin-top: 50px;
 }
 .loading-dots-container {
   display: inline-block;
@@ -274,6 +274,7 @@ const login = () => {
     background: #EEF1EF; /* Green background for successful login */
     height: 18%;
     width: 20%;
+    
   }
   .success-prompt button {
     background: black; /* Green background for successful login */
