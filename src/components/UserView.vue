@@ -2,7 +2,7 @@
   <div>
     <div class="usercontainer">
       <div class="userheader">
-        <h1>LABORATORY SCHEDULE</h1>
+        <h1>LAB CONTROL SYSTEM</h1>
       </div>
 
       <div class="user-wrapper">

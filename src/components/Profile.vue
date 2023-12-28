@@ -9,7 +9,7 @@ import NavigationBar from './NavigationBar.vue'
     
     <div class="profcontainer">
         <div class="profheader">
-            <h1>LABORATORY SCHEDULE</h1>
+            <h1>PROFILE</h1>
         </div>
        
       <div class="prof-wrapper">
