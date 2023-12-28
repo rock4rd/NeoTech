@@ -200,7 +200,7 @@ const login = () => {
 }
 
 .success-prompt p {
-    margin-top: 50px;
+    margin-top: 30px;
 }
 .loading-dots-container {
   display: inline-block;
