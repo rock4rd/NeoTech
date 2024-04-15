@@ -92,6 +92,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 
 const router = useRouter(); // Obtain the router instance
 
@@ -113,24 +114,37 @@ const closeSuccessPrompt = () => {
   showSuccessPrompt.value = false;
 };
 
-const login = () => {
+const login = async () => {
   closePrompt(); // Close any open prompts
 
   if (!agreedToTerms.value) {
     showPrompt.value = true;
-  } else if (username.value !== "admin") {
-    showUserPrompt.value = true;
-  } else if (password.value !== "admin") {
-    showWrong.value = true;
   } else {
-    showSuccessPrompt.value = true;
-    // Redirect or perform other actions for a successful login
-    setTimeout(() => {
-      router.push('/home'); // Use router.push with the correct path
-    }, 5000);
+    try {
+      const response = await axios.post('http://your-fastapi-url/admin/login', {
+        username: username.value,
+        password: password.value
+      });
+
+      if (response.status === 200) {
+        // Login successful
+        showSuccessPrompt.value = true;
+        // Redirect or perform other actions for a successful login
+        setTimeout(() => {
+          router.push('/home'); // Use router.push with the correct path
+        }, 5000);
+      } else {
+        // Invalid username or password
+        showWrong.value = true;
+      }
+    } catch (error) {
+      console.error('Login failed:', error.message);
+    }
   }
 };
 </script>
+
+
 
 
 
