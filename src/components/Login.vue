@@ -90,59 +90,60 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 import axios from 'axios';
+import { ref } from 'vue';
 
-const router = useRouter(); // Obtain the router instance
+const username = ref('');
+const password = ref('');
+const prompt = ref({
+  visible: false,
+  message: '',
+  type: ''
+});
 
-const username = ref("");
-const password = ref("");
-const agreedToTerms = ref(false);
-const showPrompt = ref(false);
-const showSuccessPrompt = ref(false);
-const showUserPrompt = ref(false);
-const showWrong = ref(false);
+const attemptLogin = () => {
+  const formData = new FormData();
+  formData.append('username', username.value);
+  formData.append('password', password.value);
 
-const closePrompt = () => {
-  showPrompt.value = false;
-  showWrong.value = false;
-  showUserPrompt.value = false;
-};
-
-const closeSuccessPrompt = () => {
-  showSuccessPrompt.value = false;
-};
-
-const login = async () => {
-  closePrompt(); // Close any open prompts
-
-  if (!agreedToTerms.value) {
-    showPrompt.value = true;
-  } else {
-    try {
-      const response = await axios.post('http://your-fastapi-url/admin/login', {
-        username: username.value,
-        password: password.value
-      });
-
-      if (response.status === 200) {
-        // Login successful
-        showSuccessPrompt.value = true;
-        // Redirect or perform other actions for a successful login
-        setTimeout(() => {
-          router.push('/home'); // Use router.push with the correct path
-        }, 5000);
+  axios.post('http://127.0.0.1:8000/api/administrator/login/', formData)
+    .then(response => {
+      if (response.data) {
+        console.log("Success");
+        // Assuming you're using Vue Router for navigation
+        $router.push('/home');
       } else {
-        // Invalid username or password
-        showWrong.value = true;
+        console.log("error");
+        showStyledPrompt('Incorrect username or password', 'error');
       }
-    } catch (error) {
-      console.error('Login failed:', error.message);
-    }
-  }
+    })
+    .catch(error => {
+      console.error('Error during login:', error);
+      if (error.response && error.response.status === 401) {
+        showStyledPrompt('Incorrect username or password', 'error');
+      } else {
+        showStyledPrompt('An error occurred. Please try again later.', 'error');
+      }
+    });
 };
+
+const showStyledPrompt = (message, type) => {
+  prompt.value.message = message;
+  prompt.value.type = type;
+  prompt.value.visible = true;
+
+  setTimeout(() => {
+    hideStyledPrompt();
+  }, 3000);
+};
+
+const hideStyledPrompt = () => {
+  prompt.value.visible = false;
+};
+
+
 </script>
+
 
 
 
