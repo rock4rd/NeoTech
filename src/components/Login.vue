@@ -89,45 +89,59 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+<script>
+import axios from 'axios';
+export default {
+  data() {
+    return {
+      username: '',
+      password: '',
+      agreedToTerms: false,
+      showPrompt: false,
+      showSuccessPrompt: false,
+      showUserPrompt: false,
+      showWrong: false
+    };
+  },
+  methods: {
+    closePrompt() {
+      this.showPrompt = false;
+      this.showWrong = false;
+      this.showUserPrompt = false;
+    },
+    attemptLogin() {
+      this.closePrompt(); // Close any open prompts
 
-const router = useRouter(); // Obtain the router instance
+      if (!this.agreedToTerms) {
+        this.showPrompt = true;
+      } else {
+        const formData = new FormData();
+        formData.append('username', this.username);
+        formData.append('password', this.password);
 
-const username = ref("");
-const password = ref("");
-const agreedToTerms = ref(false);
-const showPrompt = ref(false);
-const showSuccessPrompt = ref(false);
-const showUserPrompt = ref(false);
-const showWrong = ref(false);
-
-const closePrompt = () => {
-  showPrompt.value = false;
-  showWrong.value = false;
-  showUserPrompt.value = false;
-};
-
-const closeSuccessPrompt = () => {
-  showSuccessPrompt.value = false;
-};
-
-const login = () => {
-  closePrompt(); // Close any open prompts
-
-  if (!agreedToTerms.value) {
-    showPrompt.value = true;
-  } else if (username.value !== "admin") {
-    showUserPrompt.value = true;
-  } else if (password.value !== "admin") {
-    showWrong.value = true;
-  } else {
-    showSuccessPrompt.value = true;
-    // Redirect or perform other actions for a successful login
-    setTimeout(() => {
-      router.push('/home'); // Use router.push with the correct path
-    }, 5000);
+        axios.post('http://127.0.0.1:8000/api/admin/login/', formData)
+          .then(response => {
+            if (response.status === 200) {
+              console.log("Success");
+              this.showSuccessPrompt = true;
+              setTimeout(() => {
+                this.$router.push('/home'); // Redirect to home after successful login
+              }, 5000);
+            } else {
+              console.log("Error");
+              this.showWrong = true;
+            }
+          })
+          .catch(error => {
+            console.error('Error during login:', error);
+            if (error.response && error.response.status === 401) {
+              this.showWrong = true;
+            } else {
+              this.showPrompt = true;
+            }
+          });
+      }
+    }
   }
 };
 </script>
@@ -440,4 +454,36 @@ font-weight: 400;
 line-height: normal;
 font-variant: all-small-caps;
 }
+
+
+
+
+@media screen and (max-width: 768px) {
+  .container {
+    width: 90%; /* Adjust as needed */
+    right: auto; /* Remove right positioning */
+  }
+  .user, .pass {
+    left: 0; /* Adjust as needed */
+    top: 0; /* Adjust as needed */
+  }
+  .header img {
+    left: 0; /* Adjust as needed */
+    height: 50px; /* Adjust as needed */
+    width: 50px; /* Adjust as needed */
+  }
+  .button {
+    top: 100px; /* Adjust as needed */
+    left: 0; /* Adjust as needed */
+    text-align: center;
+  }
+  .loginbtn {
+    top: 0px;
+    left: 150px;
+    text-align: center;
+  }
+}
+
+
+
 </style>

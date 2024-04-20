@@ -284,7 +284,7 @@ box-shadow: 15px 15px 10px 0px #F5347F;
     color: black;
     font-weight: bold;
     position: relative;
-    left: 80px;
+    left: 90px;
     bottom: 100px;
     
   }
@@ -303,6 +303,7 @@ box-shadow: 15px 15px 10px 0px #F5347F;
   justify-content: space-between;
   align-items: center;
   margin-right: 10%;
+  font-size: medium;
   
 }
 
@@ -339,9 +340,25 @@ box-shadow: 15px 15px 10px 0px #F5347F;
   
 }
 
-
-
-  
+/* Media query for smaller screens */
+@media only screen and (max-width: 1500px) {
+  .schedcontainer {
+    /* Adjust the styles for smaller screens */
+    left: 5%;
+    width: 90%;
+  }
+  .lab-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .headir {
+    font-weight: bold;
+    position: relative;
+    left: 10px;
+    bottom: 100px;
+    word-wrap: break-word;
+  }
+}
 
 </style>
 

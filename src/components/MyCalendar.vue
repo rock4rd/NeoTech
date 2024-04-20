@@ -51,5 +51,13 @@
   
   <style>
   /* Add your styles here */
+  /* Media query for smaller screens */
+@media only screen and (max-width: 768px) {
+  .bookingcontainer {
+    /* Adjust the styles for smaller screens */
+    left: 5%;
+    width: 90%;
+  }
+}
   </style>
   

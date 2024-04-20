@@ -30,13 +30,13 @@ To change your navigation bar from a top landscape to a left portrait orientatio
             <router-link to="/history" class="nav-link">
               <b class="bi bi-archive navicon"></b> 
             </router-link>
-          </li>
-          <li @click="toggleMode" class="nav-item">
+
+<!--           <li @click="toggleMode" class="nav-item">
                   <a href="#" class="nav-link">
-                    <b class="bi" :class="{ 'bi-sun sunicon': isDarkMode, 'bi-moon moonicon': !isDarkMode }"></b>
+                    <b class="bi" :class="{ '': isDarkMode, 'bi-moon moonicon': !isDarkMode }"></b>
+                   bi-sun sunicon 
                    
-                   
-                  </a>
+                  </a>-->
           </li>
 
               <li class="nav-item">
@@ -66,10 +66,13 @@ To change your navigation bar from a top landscape to a left portrait orientatio
 /* Custom styles for the sidebar */
 .sidebar {
   height: 50%;
+  min-width: 60px;
+  max-width: 60px;
   width: 3%; /* Adjust the width as needed */
   position: relative;
   top: 300px;
   left: 5%;
+  right: 5%;
   border-radius: 118.526px;
 background: rgba(255, 255, 255, 0.55);
 box-shadow: 3px 5px 3px 5px #F5347F;
@@ -99,12 +102,13 @@ cursor: pointer; /* Change cursor on hover for better usability */
   
   transition: background-color 0.3s ease; /* Add smooth transition for background color */
 }
-.sunicon {
+/*.sunicon {
   font-size: 23px;
 }
 .moonicon{
   font-size: 23px;
 }
+*/
 
 .nav-link {
   color: black;
@@ -193,6 +197,16 @@ cursor: pointer; /* Change cursor on hover for better usability */
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* Add a box-shadow for the aura effect */
   background-color: #f11010;
 }
+
+/* Media query for smaller screens */
+@media only screen and (max-width: 768px) {
+  .bookingcontainer {
+    /* Adjust the styles for smaller screens */
+    left: 5%;
+    width: 90%;
+  }
+}
+
 </style>
 
 <script setup>
@@ -203,7 +217,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 const router = useRouter();
 
 const showDropdown = ref(false);
-const isDarkMode = ref(true);
+//const isDarkMode = ref(true);
 const activeItem = ref('');
 const showlogoutPrompt = ref(false);
 
@@ -225,9 +239,9 @@ const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
 };
 
-const toggleMode = () => {
+/*const toggleMode = () => {
   isDarkMode.value = !isDarkMode.value;
-};
+};*/
 
 const setActiveItem = (item) => {
   activeItem.value = item;

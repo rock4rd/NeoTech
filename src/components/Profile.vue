@@ -59,6 +59,9 @@ import NavigationBar from './NavigationBar.vue'
 border: 1px solid var(--LIght, #F5347F);
 background: rgba(255, 255, 255, 0.41);
 box-shadow: 15px 15px 10px 0px #F5347F;
+
+
+
 }
 
 
@@ -76,9 +79,11 @@ line-height: normal;
 }
 .profilepic{
   position: relative;
+  min-width: 150px;
+  max-width: 150px;
   top: 20%;
   left: 10%;
-  height: 25%;
+  height: 20%;
   width: 15%;
   border-radius: 20px;
 background: var(--Soft-Grey, #DFDFDF);
@@ -86,7 +91,8 @@ box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25);
 }
 .proficon{
   position: relative;
-  left: 25%;
+  align-items: center;
+  left: 20%;
   font-size: 100px;
 }
 .credentials{
@@ -111,6 +117,11 @@ line-height: normal;
   border: none;
   padding: 8px;
   text-align: left;
+
+  @media only screen and (max-width: 768px) {
+    padding: 5px; /* Adjust padding for smaller screens */
+    font-size: 18px; /* Adjust font size for smaller screens */
+  }
 }
 .highlight-container {
   height: 35px;
@@ -127,7 +138,14 @@ align-items: center;
 flex-shrink: 0;
 }
 
-
+/* Media query for smaller screens */
+@media only screen and (max-width: 768px) {
+  .bookingcontainer {
+    /* Adjust the styles for smaller screens */
+    left: 5%;
+    width: 90%;
+  }
+}
 
 </style>
 

@@ -335,6 +335,35 @@ button {
   background-color: #ff69b4; /* Example color for selected month */
   color: #fff;
 }
+
+/* Media query for smaller screens */
+@media only screen and (max-width: 1200px) {
+  .hiscontainer {
+    /* Adjust the styles for smaller screens */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+  }
+  .sched-wrapper {
+    top: 5%;
+    left: 5%;
+    width: 90%;
+    height: 100%;
+  }
+  .calendar {
+    /* Adjust the styles for smaller screens */
+    margin-top: auto;
+    top: 2%;
+    left: 20%;
+    width: 90%;
+  }
+  .schedtable {
+    margin-top: 0%;
+    margin-left: 10%;
+  }
+}
+
 </style>
 <script>
 import moment from 'moment';

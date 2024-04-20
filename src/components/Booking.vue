@@ -19,7 +19,7 @@ import NavigationBar from './NavigationBar.vue'
         </tr>
       </thead>
       <tbody>
-        <tr v-for="notifs in notif" :key="notifs.id">
+        <tr v-for="notifs in notif" :key="notifs.id" @click="handleRowClick(notifs)">
     <td class="notifitem" :colspan="3">
       <div class="notif-content-container">
         <div class="notif-content">
@@ -160,6 +160,14 @@ line-height: normal;
   color:black
 }
 
+/* Media query for smaller screens */
+@media only screen and (max-width: 768px) {
+  .bookingcontainer {
+    /* Adjust the styles for smaller screens */
+    left: 5%;
+    width: 90%;
+  }
+}
 
 </style>
 <script>
