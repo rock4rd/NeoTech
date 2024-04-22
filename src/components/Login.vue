@@ -39,7 +39,7 @@
         <div class="terms-checkbox">
 
 <input type="checkbox" class="termsCheckbox" v-model="agreedToTerms">
-<label for="termsCheckbox" class="termsLabel">I agree to the <a href="https://www.uic.edu.ph/terms-of-use/" target="_blank ">Terms of Use</a> and <a href="https://www.uic.edu.ph/privacy-policy/" target="_blank">Privacy Policy </a> of the University of Immaculate Conception</label>
+<p for="termsCheckbox" class="termsLabel">I agree to the <a href="https://www.uic.edu.ph/terms-of-use/" target="_blank ">Terms of Use</a> and <a href="https://www.uic.edu.ph/privacy-policy/" target="_blank">Privacy Policy </a> of the University of Immaculate Conception</p>
 
 </div>
    </div>
@@ -55,10 +55,6 @@
 
    </div>
 
-   
-   
-  
-   
    <div v-if="showPrompt" class="prompt show">
       <div class="prompt-content">
         <p>Please check and agree to the Terms of Use and Privacy Policy before proceeding.</p>
@@ -375,6 +371,7 @@ width: 40%;
 position: relative;
 top: 200px;
 left: 350px;
+
 }
 .loginbtn {
 height: 20%;
@@ -395,7 +392,7 @@ align-items: center;
 .loginbtn:hover {
     background-color: #2980b9 ; /* Change the hover background color as needed */
 }
-.terms-checkbox {
+/*.terms-checkbox {
   display: flex;
   align-items: center;
   position: relative;
@@ -406,21 +403,30 @@ align-items: center;
   
  
   border: none;
-  padding: 10px; /* Adjust padding as needed */
+  padding: 10px;  Adjust padding as needed 
+}*/
+
+.terms-checkbox {
+  position: relative;
+  top: 250px;
+  margin-left: 15%;
+  display: flex;
 }
 
 .termsCheckbox {
-  margin-right: 5px;
   position: relative;
-  top: 2px; /* Adjust as needed for vertical alignment */
-  right: 25px;
-  top: 8px;
+  top: 0; /* Adjust as needed for vertical alignment */
+  width: auto;
+  margin-right: 10px;
+  margin-left: 1px;
+ /* top: 8px;*/
 }
 
 .terms-checkbox label {
   position: relative;
-  margin: 0; /* Remove default margin */
+  margin: 20px; /* Remove default margin */
   right: 80px;
+  top: 300px;
   white-space: nowrap;
 }
 .helloworld{
@@ -429,7 +435,6 @@ align-items: center;
   bottom: 60%;
   height: 30%;
   width: 30%;
-  
 }
 .helloworld h2{
   position: relative;
@@ -458,14 +463,14 @@ font-variant: all-small-caps;
 
 
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1200px) {
   .container {
     width: 90%; /* Adjust as needed */
     right: auto; /* Remove right positioning */
   }
   .user, .pass {
-    left: 0; /* Adjust as needed */
-    top: 0; /* Adjust as needed */
+    left: 10px; /* Adjust as needed */
+    top: 70px; /* Adjust as needed */
   }
   .header img {
     left: 0; /* Adjust as needed */
@@ -476,10 +481,15 @@ font-variant: all-small-caps;
     top: 100px; /* Adjust as needed */
     left: 0; /* Adjust as needed */
     text-align: center;
+    
   }
   .loginbtn {
     top: 0px;
     left: 150px;
+    text-align: center;
+  }
+  .helloworld {
+    bottom: 85%;
     text-align: center;
   }
 }

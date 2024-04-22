@@ -1241,8 +1241,8 @@ line-height: normal;
 }
 
 /* Media query for smaller screens */
-@media only screen and (max-width: 768px) {
-  .bookingcontainer {
+@media only screen and (max-width: 1500px) {
+  .usercontainer {
     /* Adjust the styles for smaller screens */
     left: 5%;
     width: 90%;
