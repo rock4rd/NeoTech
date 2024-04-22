@@ -428,4 +428,37 @@ font-weight: 400;
 line-height: normal;
 font-variant: all-small-caps;
 }
+
+
+@media screen and (max-width: 1200px) {
+  .container {
+    width: 90%; /* Adjust as needed */
+    right: auto; /* Remove right positioning */
+  }
+  .user, .pass {
+    left: 10px; /* Adjust as needed */
+    top: 70px; /* Adjust as needed */
+  }
+  .header img {
+    left: 0; /* Adjust as needed */
+    height: 50px; /* Adjust as needed */
+    width: 50px; /* Adjust as needed */
+  }
+  .button {
+    top: 100px; /* Adjust as needed */
+    left: 0; /* Adjust as needed */
+    text-align: center;
+    
+  }
+  .loginbtn {
+    top: 0px;
+    left: 150px;
+    text-align: center;
+  }
+  .helloworld {
+    bottom: 85%;
+    text-align: center;
+  }
+}
+
 </style>
