@@ -38,8 +38,9 @@
         </div>
         <div class="terms-checkbox">
 
-<input type="checkbox" class="termsCheckbox" v-model="agreedToTerms">
+          <input type="checkbox" class="termsCheckbox" v-model="agreedToTerms">
 <p for="termsCheckbox" class="termsLabel">I agree to the <a href="https://www.uic.edu.ph/terms-of-use/" target="_blank ">Terms of Use</a> and <a href="https://www.uic.edu.ph/privacy-policy/" target="_blank">Privacy Policy </a> of the University of Immaculate Conception</p>
+
 
 </div>
    </div>
@@ -84,6 +85,49 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter(); // Obtain the router instance
+
+const username = ref("");
+const password = ref("");
+const agreedToTerms = ref(false);
+const showPrompt = ref(false);
+const showSuccessPrompt = ref(false);
+const showUserPrompt = ref(false);
+const showWrong = ref(false);
+
+const closePrompt = () => {
+  showPrompt.value = false;
+  showWrong.value = false;
+  showUserPrompt.value = false;
+};
+
+const closeSuccessPrompt = () => {
+  showSuccessPrompt.value = false;
+};
+
+const login = () => {
+  closePrompt(); // Close any open prompts
+
+  if (!agreedToTerms.value) {
+    showPrompt.value = true;
+  } else if (username.value !== "admin") {
+    showUserPrompt.value = true;
+  } else if (password.value !== "admin") {
+    showWrong.value = true;
+  } else {
+    showSuccessPrompt.value = true;
+    // Redirect or perform other actions for a successful login
+    setTimeout(() => {
+      router.push('/home'); // Use router.push with the correct path
+    }, 5000);
+  }
+}
+</script> 
 
 <script>
 import axios from 'axios';
