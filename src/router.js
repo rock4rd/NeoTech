@@ -7,6 +7,7 @@ import Booking from './components/Booking.vue';
 import Bookreq from './components/Bookreq.vue';
 import UserView from './components/UserView.vue';
 
+
 const routes = [
     { path: '/', component: Login },
     { path: '/history', component: History },
@@ -15,6 +16,7 @@ const routes = [
     { path: '/bookreq', component: Bookreq },
     { path: '/userview', component: UserView },
     { path: '/home', component: Home, name: "home" },
+
 ];
 
 const router = createRouter({

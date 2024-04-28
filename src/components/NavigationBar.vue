@@ -199,11 +199,10 @@ cursor: pointer; /* Change cursor on hover for better usability */
 }
 
 /* Media query for smaller screens */
-@media only screen and (max-width: 768px) {
-  .bookingcontainer {
-    /* Adjust the styles for smaller screens */
-    left: 5%;
-    width: 90%;
+@media only screen and (max-width: 1500px) {
+  .logout-prompt {
+    width: 40%;
+    padding: 15px;
   }
 }
 

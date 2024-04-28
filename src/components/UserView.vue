@@ -181,7 +181,7 @@
     
     <div class="calendarcontainer">
       <div>
-    <label for="datepicker">Select Date:</label>
+    <label for="datepicker" class="labelpick">Select Date:</label>
     <Datepicker
       v-model="selectedDate"
       :type="'month'"
@@ -274,6 +274,15 @@
         class="name-input"
         placeholder="Enter your last name"
       />
+
+      <label for="purpose" class="labelinput1">Purpose:</label>
+      <input
+        id="purpose"
+        type="text"
+        v-model="purpose"
+        class="name-input"
+        placeholder="Enter your purpose"
+      />
     </div>
   </div>
 
@@ -282,7 +291,8 @@
 <div class="next-cancel-buttons">
       
       <button class="back-button" @click="prevStep">Back <b class="bi bi-caret-left-fill buttonicons"></b></button>
-      <button class="next-button" @click="nextStep">Next <b class="bi bi-caret-right-fill buttonicons"></b></button>
+      <button class="next-button" @click="validateAndNext">Next <b class="bi bi-caret-right-fill buttonicons"></b></button>
+
 </div>
 
 
@@ -296,6 +306,8 @@
             <h3>Review Your Information</h3>
 
           <div class="informations">
+            <p>Selected DATE: {{ selectedDay }}</p>
+            <p>Purpose: {{ purpose }}</p>
             <p>Time IN: {{ selectedTimeIn }}</p>
             <p>Time OUT: {{ selectedTimeOut }}</p>
             <p>First Name: {{firstName }}</p>
@@ -551,15 +563,16 @@ export default {
       },
       isSliderOnLeft: true, // Initial position of the slider
       isTransitioned: false, // Flag for transition effect
-      delayDuration: 60, // Adjust the delay duration in milliseconds
+      delayDuration: 100, // Adjust the delay duration in milliseconds
       sliderText: "LABORATORY SCHEDULE",
       selectedDate: new Date(),
       dateFormat: "yyyy-MM-dd",
-      daysOfWeek: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      daysOfWeek: [""],
       selectedDate: new Date(),
     selectedDay: null, // Add selectedDay property
     selectedTimeIn: null,
     selectedTimeOut: null,
+    purpose: "",
     firstName: "", // Bind to user input for first name
     lastName: "",  // Bind to user input for last name
     currentStep: 1,
@@ -680,6 +693,14 @@ export default {
         // You may add additional logic based on your requirements
       }
     },
+    validateAndNext() {
+    if (!this.selectedDate || !this.selectedTimeIn || !this.selectedTimeOut || !this.firstName || !this.lastName || !this.purpose) {
+      alert('Please fill in all the fields.');
+      return;
+    }
+
+    this.nextStep();
+  }
   },
 };
   
@@ -931,13 +952,14 @@ transition: transform 0.5s ease-in-out;
 .logot{
 font-size: 120px;
 position: relative;
-left: 31.5%;
-top: 10%;
+left: 10%;
+bottom: 5px;
 }
 .tcred {
-position: relative;
+position:fixed ;
 top: 50%;
-right: 45%;
+
+margin-left: 20%;
 }
 .timepickercontainer{
   height: 100%;
@@ -947,17 +969,6 @@ right: 45%;
 }
 .datepicker{
   outline: none;
-}
-.caltable{
-  position: relative;
-  bottom: 17%;
-  left: 5%;
-height: 35%;
-width: 90%;
-background-color: #FDB0C0;
-border: solid 1px black;
-font-size: 70%;
-color: black;
 }
 .page2 h3{
   justify-content: center;
@@ -976,7 +987,7 @@ color: black;
 .tlabsched{
 position: relative;
 top: 10%;
-right: 20%;
+left: 20%;
 }
 
 .tlabel {
@@ -1014,7 +1025,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .labelinput1{
@@ -1052,17 +1063,16 @@ font-family: Roboto;
 font-size: 35px;
 font-style: normal;
 font-weight: 900;
-line-height: normal;
-position: relative; /* Set the position to absolute */
-top: 37.5%;
-right: 20%;
+position:fixed ; /* Set the position to absolute */
+top: 41%;
+left: 9%;
 bottom: 0; /* Align to the bottom of the containing element (tpic) */
 }
 
 .informations{
   position: relative;
   top: 10%;
-  right: 9.5%;
+  right: 20%;
   font-size: 20px;
   padding: 2%;
   font-weight: bold;
@@ -1072,12 +1082,13 @@ bottom: 0; /* Align to the bottom of the containing element (tpic) */
 color: var(--LIght, #F5347F);
 text-align: center;
 position: relative;
+margin-right: 1%;
 left: 30%;
 font-family: Roboto;
 font-size: 35px;
 font-style: normal;
 font-weight: 900;
-line-height: normal;
+
 margin-bottom: 10%;
 }
 .checkicon{
@@ -1086,14 +1097,16 @@ margin-bottom: 10%;
 
 }
 .tpic{
-height: 30%;
-width: 30%;
 position: relative;
-top: 6%;
-left: 4%;
-border-radius: 20px;
+  min-width: 150px;
+  max-width: 150px;
+  top: 10%;
+  left: 10%;
+  height: 20%;
+  width: 15%;
+  border-radius: 20px;
 background: var(--Soft-Grey, #DFDFDF);
-box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.25);
 
 }
 .calendarcontainer{
@@ -1104,9 +1117,9 @@ box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   left: 5%;
 }
 .tcred{
-position: relative;
+position: fixed;
 top: 50%;
-right: 45%;
+margin-left: 4%;
 }
 .tcredtable{
 color: black;
@@ -1118,13 +1131,15 @@ flex: 1; /* Distribute available space equally among the three divs */
 height: 100%; /* Set height to 100% */
 box-sizing: border-box; /* Include padding and border in the total width/height */
 text-align: center; /* Center text */
+margin-right: 2px;
+margin-left: 1px;
 }
 .selected {
   background-color: #f5347f; /* Highlight selected day with a different background color */
   color: white; /* Set text color for better visibility */
 }
 .reviewcircle{
-height: 30%;
+height: 25%;
 width: 20%;
 border-radius: 50%;
 border: solid black 1px;
@@ -1159,8 +1174,8 @@ align-items: center; /* Center content vertically */
 .calcircle,
 .timecircle,
 .infocircle {
-height: 30%;
-width: 60%;
+height: 20%;
+width: 50%;
 border-radius: 50%;
 border: solid black 1px;
 position: relative;
@@ -1178,10 +1193,10 @@ align-items: center; /* Center content vertically */
 .calcircle b,
 .timecircle b,
 .infocircle b,
-.reviewcircle b
+.reviewcircle b,
 .checkcircle b {
-font-size: 90px; /* Adjust font size as needed */
-color:#FC6C85;
+font-size: 60px; /* Adjust font size as needed */
+color:#f7526e;
 
 
 }
@@ -1240,13 +1255,41 @@ line-height: normal;
   }
 }
 
-/* Media query for smaller screens */
-@media only screen and (max-width: 1500px) {
-  .usercontainer {
-    /* Adjust the styles for smaller screens */
-    left: 5%;
-    width: 90%;
+@media only screen and (max-width: 768px){
+.tlabel {
+  margin-left: 50px;
+}
+.tname {
+  margin-left: 10px;
+  object-position: center;
+}
+}
+
+/* Add a new class for the collapsed state of the sidebar */
+.collapsed {
+  width: 0;
+}
+
+/* Use a media query to set the styles for the collapsed state */
+@media screen and (max-width: 1300px) {
+  .slider {
+    width: 0;
+  }
+
+  .user-wrapper {
+    width: 94%;
+  }
+
+  .bookwrap {
+    width: 100%;
+    left: 0;
+  }
+
+  .container.right-panel-active {
+    transform: translateX(0);
   }
 }
+
+
 
 </style>

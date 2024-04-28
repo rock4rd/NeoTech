@@ -157,7 +157,7 @@ import NavigationBar from './NavigationBar.vue'
         </div>
 
         <div class="laboratory">
-    <h2 class="headir">LABORATORY ROOM</h2>
+    <p class="headir">LABORATORY ROOM</p>
     <table class="labtable">
       <thead></thead>
       <tbody>
@@ -283,6 +283,7 @@ box-shadow: 15px 15px 10px 0px #F5347F;
   .headir{
     color: black;
     font-weight: bold;
+    font-size: 30px;
     position: relative;
     left: 90px;
     bottom: 100px;
@@ -357,6 +358,7 @@ box-shadow: 15px 15px 10px 0px #F5347F;
     left: 10px;
     bottom: 100px;
     word-wrap: break-word;
+    margin-right: 40%;
   }
 }
 

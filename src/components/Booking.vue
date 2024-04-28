@@ -38,6 +38,33 @@ import NavigationBar from './NavigationBar.vue'
   </div> 
   </div>
 
+  <div v-if="selectedNotif" class="popup-container">
+  <div class="popup-background"></div>
+  <div class="popup-content">
+    <h2>Booking Details</h2>
+    <div class="field">
+      <label for="name">Name:</label>
+      <span id="name">{{ selectedNotif.clientName }}</span>
+    </div>
+    <div class="field">
+      <label for="purpose">Purpose:</label>
+      <span id="purpose">{{ selectedNotif.purpose }}</span>
+    </div>
+    <div class="field">
+      <label for="timeIn">Time In:</label>
+      <span id="timeIn">{{ selectedNotif.timeIn }}</span>
+    </div>
+    <div class="field">
+      <label for="timeOut">Time Out:</label>
+      <span id="timeOut">{{ selectedNotif.timeOut }}</span>
+    </div>
+    <!-- Add other fields like date, note, etc. as needed -->
+    <div class="buttons">
+      <button @click="acceptBooking" class="accept-button">Accept</button>
+            <button @click="declineBooking" class="decline-button">Decline</button>
+    </div>
+  </div>
+</div>
 
 
 </template>
@@ -169,6 +196,104 @@ line-height: normal;
   }
 }
 
+.popup-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.popup-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.popup-content h2 {
+  margin-bottom: 10px;
+}
+
+.popup-content .field {
+  margin-bottom: 10px;
+}
+
+.popup-content .buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.popup-content .buttons button {
+  background-color: #fff;
+  border: 2px solid #000;
+  box-sizing: border-box;
+  color: #000;
+  cursor: pointer;
+  
+  font-family: Inter,sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  height: 48px;
+  justify-content: center;
+  letter-spacing: -.8px;
+  line-height: 24px;
+  min-width: 140px;
+  outline: 0;
+  padding: 0 17px;
+  text-align: center;
+  text-decoration: none;
+  transition: all .3s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.popup-content .buttons button:focus {
+  color: #171e29;
+}
+
+.popup-content .buttons button:hover {
+  border-color: #06f;
+  color: #06f;
+  
+}
+
+.popup-content .buttons button:active {
+  border-color: #06f;
+  color: #06f;
+  
+}
+
+/* Styles for accept button */
+.popup-content .buttons button.accept-button {
+  
+  color: #000000;
+  border-color: rgb(255, 255, 255); /* Set border color to match background */
+}
+
+.popup-content .buttons button.accept-button:hover,
+.popup-content .buttons button.accept-button:active {
+  border-color: rgb(0, 255, 123); /* Change border color on hover and active */
+}
+
+/* Styles for decline button */
+.popup-content .buttons button.decline-button {
+  
+  color: #000000;
+  border-color: rgb(255, 255, 255); /* Set border color to match background */
+}
+
+.popup-content .buttons button.decline-button:hover,
+.popup-content .buttons button.decline-button:active {
+  border-color: rgb(255, 17, 0); /* Change border color on hover and active */
+}
+
 </style>
 <script>
 
@@ -177,7 +302,7 @@ export default {
     return {
       selectedNotif: null,
       notif: [
-        { id: 1, clientName: "Zon Trisha Japay", purpose: "Special Quiz", time:"1 hour ago" },
+        { id: 1, clientName: "Zon Trisha Japay", purpose: "Special Exam", time:"1 hour ago" },
         { id: 2, clientName: "", purpose: "", time:"1 hour ago"  },
         { id: 3, clientName: "", purpose: "", time:"1 hour ago" },
         { id: 4, clientName: "", purpose: "", time:"1 hour ago" },
@@ -191,6 +316,19 @@ export default {
       this.selectedNotif = notif;
       // Do any additional processing you need with the selected notif
       console.log("Selected Notification:", notif);
+
+    },
+      acceptBooking() {
+      console.log("Booking accepted!");
+      // Add logic to handle accepting the booking
+      this.selectedNotif = null; // Close the popup
+    },
+
+    declineBooking() {
+      console.log("Booking declined!");
+      // Add logic to handle declining the booking
+      this.selectedNotif = null; // Close the popup
+    
     },
   },
 };
