@@ -1,11 +1,12 @@
-import { createApp } from 'vue'
-// import './style.css'
-import App from './App.vue'
-import 'mdb-vue-ui-kit/css/mdb.min.css';
+// Import the necessary functions and components
+import { createApp } from 'vue';
+import App from './App.vue'; // Import the root component of your Vue app
+import 'mdb-vue-ui-kit/css/mdb.min.css'; // Import the MDB Vue UI Kit CSS
+import Datepicker from 'vue3-datepicker'; // Import the Datepicker component
 import router from './router'; // Import the router configuration
-//import 'bootstrap/dsit/css/bootstrap.css'
-//import bootstrap from 'bootstrap/dist/js/bootstrap.bundle.js'
 
-// createApp(App).mount('#app')
-createApp(App).use(router).mount('#app');
-//use(bootstrap)
+// Create the Vue app instance, use the router, and mount the app to the DOM
+createApp(App)
+  .use(router) // Use the router configuration
+  .component('Datepicker', Datepicker) // Register the Datepicker component globally
+  .mount('#app'); // Mount the app to the DOM, targeting the element with id="app"

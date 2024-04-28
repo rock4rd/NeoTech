@@ -330,7 +330,7 @@
 
           <h3>Please wait for the confirmation from the Admin</h3>
             <div class="done-buttons">
-            <button class="done-button" @click="redirectlogin">Done <b class="bi bi-check2 checkicon2"></b></button>
+            <button class="done-button" @click="submitBooking">Done <b class="bi bi-check2 checkicon2"></b></button>
             </div>
 
     </div>
@@ -565,19 +565,17 @@ export default {
       isTransitioned: false, // Flag for transition effect
       delayDuration: 100, // Adjust the delay duration in milliseconds
       sliderText: "LABORATORY SCHEDULE",
-      selectedDate: new Date(),
+      selectedDate: new Date(), // Initialize selectedDate as a Date object
       dateFormat: "yyyy-MM-dd",
       daysOfWeek: [""],
-      selectedDate: new Date(),
-    selectedDay: null, // Add selectedDay property
-    selectedTimeIn: null,
-    selectedTimeOut: null,
-    purpose: "",
-    firstName: "", // Bind to user input for first name
-    lastName: "",  // Bind to user input for last name
-    currentStep: 1,
-    
-    countdown: 5,
+      selectedDay: null,
+      selectedTimeIn: null,
+      selectedTimeOut: null,
+      purpose: "",
+      firstName: "", // Bind to user input for first name
+      lastName: "",  // Bind to user input for last name
+      currentStep: 1,
+      countdown: 5,
     };
   },
   computed: {
@@ -621,35 +619,33 @@ export default {
       }
     },
 
-    // Add a method to handle date selection
     handleDateSelection(selectedDate) {
-      this.selectedDate = selectedDate;
-     // Calculate and update the days of the week
-    const year = selectedDate.getFullYear();
-    const month = selectedDate.getMonth();
-    const showSuccessPrompt = ref(false);
-    const firstDayOfMonth = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
+  // Update the selectedDate to a string in "yyyy-MM-dd" format
+  this.selectedDate = selectedDate.toISOString().split('T')[0];
 
-    // Create an array representing the days of the month
-    const daysOfMonth = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+  // Calculate and update the days of the week
+  const year = selectedDate.getFullYear();
+  const month = selectedDate.getMonth();
+  const firstDayOfMonth = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysOfMonth = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+  const daysOfWeek = [...Array(firstDayOfMonth).fill(null), ...daysOfMonth];
+  const weeks = Array.from({ length: Math.ceil(daysOfWeek.length / 7) }, (_, i) =>
+    daysOfWeek.slice(i * 7, (i + 1) * 7)
+  );
 
-    // Create an array to represent the days of the week, including padding for the first week
-    const daysOfWeek = [...Array(firstDayOfMonth).fill(null), ...daysOfMonth];
+  // Update the calendar with the calculated weeks
+  this.calendar = weeks;
+},
 
-    // Split the daysOfWeek array into chunks of 7 to represent weeks
-    const weeks = Array.from({ length: Math.ceil(daysOfWeek.length / 7) }, (_, i) =>
-      daysOfWeek.slice(i * 7, (i + 1) * 7)
-    );
 
-    // Update the calendar with the calculated weeks
-    this.calendar = weeks;
-    
-    },
     isDaySelected(day) {
       // Check if the day is the selected day
-      return this.selectedDate.getDate() === day;
+      return parseInt(this.selectedDate.split('-')[2]) === day;
     },
+
+
+
     startRedirecting() {
       this.showSuccessPrompt.value = true;
       this.countdown = 5;
