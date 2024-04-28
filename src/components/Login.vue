@@ -1,40 +1,40 @@
-<script setup>
-
-</script>
 <template>
+  <div class="background-container">
+    <div class="container">
+      <div class="header">
+        <img src="/logo1.png" alt="logo">
+      </div>
 
+      <div class="user">
+        <label for="username"><i class="bi bi-person"></i> USERNAME</label>
+        <input type="text" class="userInput" id="username" name="username" v-model="username" @input="handleInput" required autocomplete="username">
+      </div>
 
-<div class="background-container">
+      <div class="pass">
+        <label for="password"><i class="bi bi-lock"></i> PASSWORD</label>
+        <input type="password" class="passInput" id="password" name="password" v-model="password" @input="handleInput" required autocomplete="current-password">
+      </div>
 
-   
-  
-      <div class="container" >
-           <div class="header">
-              
-            <img src="/logo1.png" alt="logo">
-    
-            </div>
-
-        <div class="user">
-            <label for="userInput"><i class="bi bi-person"></i> USERNAME</label>
-            <input type="text" class="userInput" v-model="username" @input="handleInput">
+      <div class="button">
+        <button @click="attemptLogin" class="loginbtn">Login</button>
+        <div class="guestbutton">
+          <router-link to="userview">User/Guest</router-link>
         </div>
+      </div>
 
-        <div class="pass">
-            <label for="passInput" class="bi bi-lock"> PASSWORD</label>
-            <input type="password" class="passInput" v-model="password" @input="handleInput">
-        </div>
+      <div class="terms-checkbox">
+        <input type="checkbox" class="termsCheckbox" v-model="agreedToTerms" id="termsCheckbox">
+        <label for="termsCheckbox" class="termsLabel">I agree to the <a href="https://www.uic.edu.ph/terms-of-use/" target="_blank">Terms of Use</a> and <a href="https://www.uic.edu.ph/privacy-policy/" target="_blank">Privacy Policy</a> of the University of Immaculate Conception</label>
+      </div>
+    </div>
 
-        <div class="button">
-          
-            <button @click="login" class="loginbtn">Login</button>
-                <div class="guestbutton">
-                  <router-link to="userview">
-                     User/Guest
-                  </router-link>
-                </div>
-            
+    <div class="helloworld">
+      <h2 class="helloheader">Lab Control System</h2>
+      <p>Welcome to Lab Control System</p>
+      <p>Experience streamlined laboratory management with the Lab Control System, providing a user-friendly interface for efficient equipment control, experiment coordination, and data organization.</p>
+    </div>
 
+<<<<<<< HEAD
         </div>
         <div class="terms-checkbox">
 
@@ -57,6 +57,9 @@
    </div>
 
    <div v-if="showPrompt" class="prompt show">
+=======
+    <div v-if="showPrompt" class="prompt show">
+>>>>>>> 24dec32db0720275ef8f053b641376d7497a9c82
       <div class="prompt-content">
         <p>Please check and agree to the Terms of Use and Privacy Policy before proceeding.</p>
         <button @click="closePrompt">Close</button>
@@ -80,51 +83,65 @@
     <div v-if="showSuccessPrompt" class="success-prompt show">
       <div class="prompt-content">
         <p>Login successful! Redirecting<span class="loading-dots-container">...</span></p>
-        
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+<script>
+import axios from 'axios';
 
-const router = useRouter(); // Obtain the router instance
+export default {
+  data() {
+    return {
+      username: '',
+      password: '',
+      agreedToTerms: false,
+      showPrompt: false,
+      showSuccessPrompt: false,
+      showUserPrompt: false,
+      showWrong: false
+    };
+  },
+  methods: {
+    closePrompt() {
+      this.showPrompt = false;
+      this.showWrong = false;
+      this.showUserPrompt = false;
+    },
+    attemptLogin() {
+      this.closePrompt(); // Close any open prompts
 
-const username = ref("");
-const password = ref("");
-const agreedToTerms = ref(false);
-const showPrompt = ref(false);
-const showSuccessPrompt = ref(false);
-const showUserPrompt = ref(false);
-const showWrong = ref(false);
+      if (!this.agreedToTerms) {
+        this.showPrompt = true;
+      } else {
+        const formData = new FormData();
+        formData.append('username', this.username);
+        formData.append('password', this.password);
 
-const closePrompt = () => {
-  showPrompt.value = false;
-  showWrong.value = false;
-  showUserPrompt.value = false;
-};
-
-const closeSuccessPrompt = () => {
-  showSuccessPrompt.value = false;
-};
-
-const login = () => {
-  closePrompt(); // Close any open prompts
-
-  if (!agreedToTerms.value) {
-    showPrompt.value = true;
-  } else if (username.value !== "admin") {
-    showUserPrompt.value = true;
-  } else if (password.value !== "admin") {
-    showWrong.value = true;
-  } else {
-    showSuccessPrompt.value = true;
-    // Redirect or perform other actions for a successful login
-    setTimeout(() => {
-      router.push('/home'); // Use router.push with the correct path
-    }, 5000);
+        axios.post('http://127.0.0.1:8000/api/admin/login/', formData)
+          .then(response => {
+            if (response.status === 200) {
+              console.log("Success");
+              this.showSuccessPrompt = true;
+              setTimeout(() => {
+                this.$router.push('/home'); // Redirect to home after successful login
+              }, 5000);
+            } else {
+              console.log("Error");
+              this.showWrong = true;
+            }
+          })
+          .catch(error => {
+            console.error('Error during login:', error);
+            if (error.response && error.response.status === 401) {
+              this.showWrong = true;
+            } else {
+              this.showPrompt = true;
+            }
+          });
+      }
+    }
   }
 }
 </script> 
@@ -185,7 +202,6 @@ export default {
   }
 };
 </script>
-
 
 
 <style>
@@ -505,8 +521,11 @@ font-variant: all-small-caps;
 }
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 24dec32db0720275ef8f053b641376d7497a9c82
 @media screen and (max-width: 1200px) {
   .container {
     width: 90%; /* Adjust as needed */
@@ -538,6 +557,9 @@ font-variant: all-small-caps;
   }
 }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 24dec32db0720275ef8f053b641376d7497a9c82
 </style>
