@@ -33,33 +33,10 @@
       <p>Welcome to Lab Control System</p>
       <p>Experience streamlined laboratory management with the Lab Control System, providing a user-friendly interface for efficient equipment control, experiment coordination, and data organization.</p>
     </div>
+    </div>
 
-<<<<<<< HEAD
-        </div>
-        <div class="terms-checkbox">
-
-          <input type="checkbox" class="termsCheckbox" v-model="agreedToTerms">
-<p for="termsCheckbox" class="termsLabel">I agree to the <a href="https://www.uic.edu.ph/terms-of-use/" target="_blank ">Terms of Use</a> and <a href="https://www.uic.edu.ph/privacy-policy/" target="_blank">Privacy Policy </a> of the University of Immaculate Conception</p>
-
-
-</div>
-   </div>
-
-   <div class="helloworld">
-
-    <h2 class="helloheader">Lab Control System</h2>
-
-        <p>Welcome to Lab Control System</p>
-        <p>Experience streamlined laboratory management with the Lab Control System, providing a user-friendly interface for efficient equipment control, experiment coordination, and data organization.
-
-        </p>
-
-   </div>
-
-   <div v-if="showPrompt" class="prompt show">
-=======
+   
     <div v-if="showPrompt" class="prompt show">
->>>>>>> 24dec32db0720275ef8f053b641376d7497a9c82
       <div class="prompt-content">
         <p>Please check and agree to the Terms of Use and Privacy Policy before proceeding.</p>
         <button @click="closePrompt">Close</button>
@@ -85,7 +62,7 @@
         <p>Login successful! Redirecting<span class="loading-dots-container">...</span></p>
       </div>
     </div>
-  </div>
+ 
 </template>
 
 <script>
@@ -110,98 +87,43 @@ export default {
       this.showUserPrompt = false;
     },
     attemptLogin() {
-      this.closePrompt(); // Close any open prompts
+  this.closePrompt(); // Close any open prompts
 
-      if (!this.agreedToTerms) {
-        this.showPrompt = true;
-      } else {
-        const formData = new FormData();
-        formData.append('username', this.username);
-        formData.append('password', this.password);
+  if (!this.agreedToTerms) {
+    this.showPrompt = true;
+  } else {
+    const formData = new FormData();
+    formData.append('username', this.username);
+    formData.append('password', this.password);
 
-        axios.post('http://127.0.0.1:8000/api/admin/login/', formData)
-          .then(response => {
-            if (response.status === 200) {
-              console.log("Success");
-              this.showSuccessPrompt = true;
-              setTimeout(() => {
-                this.$router.push('/home'); // Redirect to home after successful login
-              }, 5000);
-            } else {
-              console.log("Error");
-              this.showWrong = true;
-            }
-          })
-          .catch(error => {
-            console.error('Error during login:', error);
-            if (error.response && error.response.status === 401) {
-              this.showWrong = true;
-            } else {
-              this.showPrompt = true;
-            }
-          });
-      }
-    }
+    axios.post('http://127.0.0.1:8000/api/admin/login/', formData)
+      .then(response => {
+        if (response.status === 200) {
+          console.log("Success");
+          this.showSuccessPrompt = true;
+          setTimeout(() => {
+            this.$router.push('/home'); // Redirect to home after successful login
+          }, 5000);
+        } else {
+          console.log("Error");
+          this.showWrong = true; // Show prompt for wrong password
+        }
+      })
+      .catch(error => {
+        console.error('Error during login:', error);
+        if (error.response && error.response.status === 401) {
+          this.showWrong = true; // Show prompt for wrong password
+        } else {
+          this.showUserPrompt = true; // Show prompt for non-existing username
+        }
+      });
   }
 }
-</script> 
-
-<script>
-import axios from 'axios';
-export default {
-  data() {
-    return {
-      username: '',
-      password: '',
-      agreedToTerms: false,
-      showPrompt: false,
-      showSuccessPrompt: false,
-      showUserPrompt: false,
-      showWrong: false
-    };
-  },
-  methods: {
-    closePrompt() {
-      this.showPrompt = false;
-      this.showWrong = false;
-      this.showUserPrompt = false;
-    },
-    attemptLogin() {
-      this.closePrompt(); // Close any open prompts
-
-      if (!this.agreedToTerms) {
-        this.showPrompt = true;
-      } else {
-        const formData = new FormData();
-        formData.append('username', this.username);
-        formData.append('password', this.password);
-
-        axios.post('http://127.0.0.1:8000/api/admin/login/', formData)
-          .then(response => {
-            if (response.status === 200) {
-              console.log("Success");
-              this.showSuccessPrompt = true;
-              setTimeout(() => {
-                this.$router.push('/home'); // Redirect to home after successful login
-              }, 5000);
-            } else {
-              console.log("Error");
-              this.showWrong = true;
-            }
-          })
-          .catch(error => {
-            console.error('Error during login:', error);
-            if (error.response && error.response.status === 401) {
-              this.showWrong = true;
-            } else {
-              this.showPrompt = true;
-            }
-          });
-      }
-    }
   }
-};
+}
 </script>
+
+
 
 
 <style>
@@ -467,15 +389,21 @@ align-items: center;
 }*/
 
 .terms-checkbox {
-  position: relative;
-  top: 250px;
-  margin-left: 15%;
   display: flex;
+  align-items: center;
+  position: relative;
+  background-color: none;
+  width: 97%;
+  left: 10%;
+  top: 30%;
+  border: none;
+  padding: 10px;  
+
 }
 
 .termsCheckbox {
   position: relative;
-  top: 0; /* Adjust as needed for vertical alignment */
+  top: 5px; /* Adjust as needed for vertical alignment */
   width: auto;
   margin-right: 10px;
   margin-left: 1px;
@@ -483,11 +411,7 @@ align-items: center;
 }
 
 .terms-checkbox label {
-  position: relative;
-  margin: 20px; /* Remove default margin */
-  right: 80px;
-  top: 300px;
-  white-space: nowrap;
+  margin-left: 5px;
 }
 .helloworld{
   position: relative;
@@ -520,12 +444,6 @@ line-height: normal;
 font-variant: all-small-caps;
 }
 
-
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 24dec32db0720275ef8f053b641376d7497a9c82
 @media screen and (max-width: 1200px) {
   .container {
     width: 90%; /* Adjust as needed */
@@ -556,10 +474,4 @@ font-variant: all-small-caps;
     text-align: center;
   }
 }
-
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 24dec32db0720275ef8f053b641376d7497a9c82
 </style>

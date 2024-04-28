@@ -700,10 +700,35 @@ export default {
     }
 
     this.nextStep();
-  }
   },
+  async submitBooking() {
+      if (!this.selectedDate || !this.selectedTimeIn || !this.selectedTimeOut || !this.firstName || !this.lastName || !this.purpose) {
+        alert('Please fill in all the fields.');
+        return;
+      }
+
+      const bookingData = {
+        firstName: this.firstName,
+        lastName: this.lastName,
+        purpose: this.purpose,
+        date: this.selectedDate,
+        timeIn: this.selectedTimeIn,
+        timeOut: this.selectedTimeOut
+      };
+
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/api/guest/', bookingData);
+        console.log('Booking submitted successfully:', response.data);
+        // Optionally, perform any additional actions upon successful submission
+      } catch (error) {
+        console.error('Error submitting booking:', error);
+        // Optionally, display an error message to the user
+      }
+    }
+  }
 };
   
+
 
 </script>
 
