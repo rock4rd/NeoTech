@@ -196,7 +196,7 @@ const date = ref()
         :first-day-of-week="1"
         :format="dateFormat"
         @selected="handleDateSelection"
-        
+        id="datepicker"
       ></Datepicker>
 
       
@@ -232,22 +232,21 @@ const date = ref()
       <div class="timepickercontainer">
       <div class="timepicker">
         <label for="timeInPicker" class="labelpick">Time In:</label>
-        <input
-          id="timeInPicker"
-          type="time"
-          v-model="selectedTimeIn"
-          class="custom-timepicker"
-        />
-      </div>
+<input
+  id="timeInPicker"
+  type="time"
+  v-model="selectedTimeIn"
+  class="custom-timepicker"
+/>
 
-      <div class="timepicker">
-        <label for="timeOutPicker" class="labelpick">Time Out:</label>
-        <input
-          id="timeOutPicker"
-          type="time"
-          v-model="selectedTimeOut"
-          class="custom-timepicker"
-        />
+<label for="timeOutPicker" class="labelpick">Time Out:</label>
+<input
+  id="timeOutPicker"
+  type="time"
+  v-model="selectedTimeOut"
+  class="custom-timepicker"
+/>
+
       </div>
 
       <div>
@@ -266,31 +265,32 @@ const date = ref()
     <div class="userinform">
       <div class="name-inputs">
         <label for="firstName" class="labelinput1">First Name:</label>
-        <input
-          id="firstName"
-          type="text"
-          v-model="firstName"
-          class="name-input"
-          placeholder="Enter your first name"
-        />
+<input
+  id="firstName"
+  type="text"
+  v-model="firstName"
+  class="name-input"
+  placeholder="Enter your first name"
+/>
 
-        <label for="lastName" class="labelinput1">Last Name:</label>
-        <input
-          id="lastName"
-          type="text"
-          v-model="lastName"
-          class="name-input"
-          placeholder="Enter your last name"
-        />
+<label for="lastName" class="labelinput1">Last Name:</label>
+<input
+  id="lastName"
+  type="text"
+  v-model="lastName"
+  class="name-input"
+  placeholder="Enter your last name"
+/>
 
-        <label for="purpose" class="labelinput1">Purpose:</label>
-        <input
-          id="purpose"
-          type="text"
-          v-model="purpose"
-          class="name-input"
-          placeholder="Enter your purpose"
-        />
+<label for="purpose" class="labelinput1">Purpose:</label>
+<input
+  id="purpose"
+  type="text"
+  v-model="purpose"
+  class="name-input"
+  placeholder="Enter your purpose"
+/>
+
       </div>
     </div>
 
@@ -544,197 +544,137 @@ const date = ref()
     
   </template>
 
-  <script>
-  import MyCalendar from './MyCalendar.vue';
-  import Timepicker from 'vue3-timepicker';
-  import { ref } from 'vue';
+<script>
+import MyCalendar from './MyCalendar.vue';
+import Timepicker from 'vue3-timepicker';
+import axios from 'axios';
+import { ref } from 'vue';
 
-
-  export default {
-    components: {
-      MyCalendar,
-      Datepicker,
-      Timepicker,
-    },
-    data() {
-      return {
-        userInfo: {
-          EMAIL: "John Doe",
-          SUBJECT: "JD",
-          TIME: "25",
-          SCHEDULE: "john_doe",
-          ROOM: "123456",
-          LOGIN: "Developer",
-          LOGOUT: "john.doe@example.com", // ... (your existing user info data)
-        },
-        isSliderOnLeft: true, // Initial position of the slider
-        isTransitioned: false, // Flag for transition effect
-        delayDuration: 100, // Adjust the delay duration in milliseconds
-        sliderText: "LABORATORY SCHEDULE",
-        selectedDate: new Date(), // Initialize selectedDate as a Date object
-        dateFormat: "yyyy-MM-dd",
-        daysOfWeek: [""],
-        selectedDay: null,
-        selectedTimeIn: null,
-        selectedTimeOut: null,
-        purpose: "",
-        firstName: "", // Bind to user input for first name
-        lastName: "",  // Bind to user input for last name
-        currentStep: 1,
-        countdown: 5,
-      };
-    },
-    computed: {
-      calendar() {
-        // Implement the logic to generate the calendar based on selectedDate
-        // This might involve calculating the days of the month, days of the week, etc.
-        // The actual implementation depends on your requirements and the data structure used.
-        return [[]]; // Replace with your actual calendar data
-      },
-    },
-    methods: {
-      toggleLayout() {
-        if (this.isSliderOnLeft) {
-          // If the slider is on the left, move labschedule1 to the right
-          this.$refs.labschedule1.style.transition = "transform 0.5s ease-in-out";
-          this.$refs.labschedule1.style.transform = "translateX(100%)";
-
-          // Wait for the transition to finish, then move bookwrap to the center
-          setTimeout(() => {
-            this.isSliderOnLeft = false;
-            this.$refs.bookwrap.style.transform = "translateX(0)";
-            this.$refs.bookwrap.style.opacity = "1";
-            this.$refs.bookwrap.style.visibility = "visible";
-            this.isTransitioned = true;
-            this.sliderText = "BOOKING PAGE";
-          }, this.delayDuration);
-        } else {
-          // If the slider is on the right, move bookwrap to the left
-          this.$refs.bookwrap.style.transform = "translateX(-100%)";
-          this.$refs.bookwrap.style.opacity = "0";
-          this.$refs.bookwrap.style.visibility = "hidden";
-          this.sliderText = "LABORATORY SCHEDULE";
-
-          // Wait for the transition to finish, then move labschedule1 to the center
-          setTimeout(() => {
-            this.isSliderOnLeft = true;
-            this.$refs.labschedule1.style.transition = "transform 0.5s ease-in-out";
-            this.$refs.labschedule1.style.transform = "translateX(0)";
-            this.isTransitioned = true;
-          }, this.delayDuration);
-        }
-      },
-
-      handleDateSelection(selectedDate) {
-  // Update the selectedDate directly
-  this.selectedDate = selectedDate;
-  this.selectedDate = `${year}-${month}-${day}`;
-  
-  // Calculate and update the days of the week
-  const year = selectedDate.getFullYear();
-  const month = selectedDate.getMonth();
-  const firstDayOfMonth = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const daysOfMonth = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-  const daysOfWeek = [...Array(firstDayOfMonth).fill(null), ...daysOfMonth];
-  const weeks = Array.from({ length: Math.ceil(daysOfWeek.length / 7) }, (_, i) =>
-    daysOfWeek.slice(i * 7, (i + 1) * 7)
-
-    
-  );
-
-  // Update the calendar with the calculated weeks
-  this.calendar = weeks;
-},
-
-      isDaySelected(day) {
-        // Check if the day is the selected day
-        return parseInt(this.selectedDate.split('-')[2]) === day;
-      },
-
-
-
-      startRedirecting() {
-        this.showSuccessPrompt.value = true;
-        this.countdown = 5;
-
-        const countdownInterval = setInterval(() => {
-          this.countdown--;
-
-          if (this.countdown === 0) {
-            clearInterval(countdownInterval);
-            this.redirectlogin();
-          }
-        }, 1000); // 1000 milliseconds = 1 second
-      },
-      redirectlogin() {
-    setTimeout(() => {
-      // Redirect to the login page after 5 seconds
-      this.$router.push('/');
-    }, 5000); // 5000 milliseconds = 5 seconds
+export default {
+  components: {
+    MyCalendar,
+    Timepicker,
   },
-      nextStep() {
-        // Implement logic to handle the next step
-        // For example, you can increment the currentStep
-        this.currentStep++;
-
-        // You may add additional logic based on your requirements
+  data() {
+    return {
+      userInfo: {
+        EMAIL: "John Doe",
+        SUBJECT: "JD",
+        TIME: "25",
+        SCHEDULE: "john_doe",
+        ROOM: "123456",
+        LOGIN: "Developer",
+        LOGOUT: "john.doe@example.com",
       },
-      submitStep() {
-        // Implement logic to handle the next step
-        // For example, you can increment the currentStep
-        this.currentStep++;
+      isSliderOnLeft: true,
+      isTransitioned: false,
+      delayDuration: 100,
+      sliderText: "LABORATORY SCHEDULE",
+      selectedDate: new Date(),
+      dateFormat: "yyyy-MM-dd",
+      daysOfWeek: [""],
+      selectedDay: "",
+      selectedTimeIn: "",
+      selectedTimeOut: "",
+      purpose: "",
+      firstName: "",
+      lastName: "",
+      currentStep: 1,
+      countdown: 5,
+    };
+  },
+  computed: {
+    calendar() {
+      return [[]]; // Replace with your actual calendar data
+    },
+  },
+  methods: {
+    toggleLayout() {
+      if (this.isSliderOnLeft) {
+        this.animateSlider("100%", "translateX(0)", "visible", "BOOKING PAGE");
+      } else {
+        this.animateSlider("-100%", "translateX(0)", "visible", "LABORATORY SCHEDULE");
+      }
+    },
+    animateSlider(slideValue, wrapTransform, wrapVisibility, text) {
+      this.$refs.labschedule1.style.transition = "transform 0.5s ease-in-out";
+      this.$refs.labschedule1.style.transform = `translateX(${slideValue})`;
 
+      setTimeout(() => {
+        this.isSliderOnLeft = !this.isSliderOnLeft;
+        this.$refs.bookwrap.style.transform = wrapTransform;
+        this.$refs.bookwrap.style.opacity = "1";
+        this.$refs.bookwrap.style.visibility = wrapVisibility;
+        this.isTransitioned = true;
+        this.sliderText = text;
+      }, this.delayDuration);
+    },
+    async submitBooking() { 
+    if (!this.selectedDate || !this.selectedTimeIn || !this.selectedTimeOut || !this.firstName || !this.lastName || !this.purpose) {
+        alert('Please fill in all the fields.');
+        return;
+    }
 
-        // You may add additional logic based on your requirements
-      },
-      prevStep() {
-        // Implement logic to handle going back a step
-        // For example, you can decrement the currentStep
-        if (this.currentStep > 1) {
-          this.currentStep--;
+    // Format selectedDate to match server's expected format (YYYY-MM-DD)
+    const formattedDate = this.selectedDate.toISOString().split('T')[0];
 
-          // You may add additional logic based on your requirements
+    const bookingData = {
+        date: formattedDate,
+        timeIn: this.selectedTimeIn,
+        timeOut: this.selectedTimeOut,
+        firstName: this.firstName,
+        lastName: this.lastName,
+        purpose: this.purpose,
+    };
+
+    try {
+        const response = await axios.post('http://127.0.0.1:8000/api/bookings/', bookingData);
+        console.log('Booking submitted successfully:', response.data);
+        // Optionally, perform any additional actions upon successful submission
+    } catch (error) {
+        console.error('Error submitting booking:', error);
+        // Optionally, display an error message to the user
+    }
+},
+    startRedirecting() {
+      this.showSuccessPrompt.value = true;
+      this.countdown = 5;
+
+      const countdownInterval = setInterval(() => {
+        this.countdown--;
+
+        if (this.countdown === 0) {
+          clearInterval(countdownInterval);
+          this.redirectlogin();
         }
-      },
-      validateAndNext() {
+      }, 1000);
+    },
+    redirectlogin() {
+      setTimeout(() => {
+        this.$router.push('/');
+      }, 5000);
+    },
+    nextStep() {
+      this.currentStep++;
+    },
+    submitStep() {
+      this.currentStep++;
+    },
+    prevStep() {
+      if (this.currentStep > 1) {
+        this.currentStep--;
+      }
+    },
+    validateAndNext() {
       if (!this.selectedDate || !this.selectedTimeIn || !this.selectedTimeOut || !this.firstName || !this.lastName || !this.purpose) {
         alert('Please fill in all the fields.');
         return;
       }
-
       this.nextStep();
     },
-    async submitBooking() {
-        if (!this.selectedDate || !this.selectedTimeIn || !this.selectedTimeOut || !this.firstName || !this.lastName || !this.purpose) {
-          alert('Please fill in all the fields.');
-          return;
-        }
-
-        const bookingData = {
-          firstName: this.firstName,
-          lastName: this.lastName,
-          purpose: this.purpose,
-          date: this.selectedDate,
-          timeIn: this.selectedTimeIn,
-          timeOut: this.selectedTimeOut
-        };
-
-        try {
-          const response = await axios.post('http://127.0.0.1:8000/api/guest/', bookingData);
-          console.log('Booking submitted successfully:', response.data);
-          // Optionally, perform any additional actions upon successful submission
-        } catch (error) {
-          console.error('Error submitting booking:', error);
-          // Optionally, display an error message to the user
-        }
-      }
-    }
-  };
-    
-
-
-  </script>
+  }
+};
+</script>
 
 
   <style>
