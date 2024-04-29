@@ -96,7 +96,7 @@ export default {
     formData.append('username', this.username);
     formData.append('password', this.password);
 
-    axios.post('http://127.0.0.1:8000/api/admin/login/', formData)
+    axios.post('http://127.0.0.1:8000/api/users/login/', formData)
       .then(response => {
         if (response.status === 200) {
           console.log("Success");
