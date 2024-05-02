@@ -557,18 +557,9 @@ export default {
   },
   data() {
     return {
-      userInfo: {
-        EMAIL: "John Doe",
-        SUBJECT: "JD",
-        TIME: "25",
-        SCHEDULE: "john_doe",
-        ROOM: "123456",
-        LOGIN: "Developer",
-        LOGOUT: "john.doe@example.com",
-      },
       isSliderOnLeft: true,
       isTransitioned: false,
-      delayDuration: 100,
+      delayDuration: 100, // Adjust as needed
       sliderText: "LABORATORY SCHEDULE",
       selectedDate: new Date(),
       dateFormat: "yyyy-MM-dd",
@@ -580,7 +571,6 @@ export default {
       firstName: "",
       lastName: "",
       currentStep: 1,
-      countdown: 5,
     };
   },
   computed: {
@@ -590,13 +580,11 @@ export default {
   },
   methods: {
     toggleLayout() {
-      if (this.isSliderOnLeft) {
-        this.animateSlider("100%", "translateX(0)", "visible", "BOOKING PAGE");
-      } else {
-        this.animateSlider("-100%", "translateX(0)", "visible", "LABORATORY SCHEDULE");
-      }
-    },
-    animateSlider(slideValue, wrapTransform, wrapVisibility, text) {
+      const slideValue = this.isSliderOnLeft ? "100%" : "-100%";
+      const wrapTransform = "translateX(0)";
+      const wrapVisibility = "visible";
+      const text = this.isSliderOnLeft ? "BOOKING PAGE" : "LABORATORY SCHEDULE";
+
       this.$refs.labschedule1.style.transition = "transform 0.5s ease-in-out";
       this.$refs.labschedule1.style.transform = `translateX(${slideValue})`;
 
@@ -609,45 +597,30 @@ export default {
         this.sliderText = text;
       }, this.delayDuration);
     },
-    async submitBooking() { 
-    if (!this.selectedDate || !this.selectedTimeIn || !this.selectedTimeOut || !this.firstName || !this.lastName || !this.purpose) {
+    async submitBooking() {
+      if (!this.selectedDate || !this.selectedTimeIn || !this.selectedTimeOut || !this.firstName || !this.lastName || !this.purpose) {
         alert('Please fill in all the fields.');
         return;
-    }
+      }
 
-    // Format selectedDate to match server's expected format (YYYY-MM-DD)
-    const formattedDate = this.selectedDate.toISOString().split('T')[0];
-
-    const bookingData = {
+      const formattedDate = this.selectedDate.toISOString().split('T')[0];
+      const bookingData = {
         date: formattedDate,
         timeIn: this.selectedTimeIn,
         timeOut: this.selectedTimeOut,
         firstName: this.firstName,
         lastName: this.lastName,
         purpose: this.purpose,
-    };
+      };
 
-    try {
+      try {
         const response = await axios.post('http://127.0.0.1:8000/api/bookings/', bookingData);
         console.log('Booking submitted successfully:', response.data);
         // Optionally, perform any additional actions upon successful submission
-    } catch (error) {
+      } catch (error) {
         console.error('Error submitting booking:', error);
-        // Optionally, display an error message to the user
-    }
-},
-    startRedirecting() {
-      this.showSuccessPrompt.value = true;
-      this.countdown = 5;
-
-      const countdownInterval = setInterval(() => {
-        this.countdown--;
-
-        if (this.countdown === 0) {
-          clearInterval(countdownInterval);
-          this.redirectlogin();
-        }
-      }, 1000);
+        alert('Error submitting booking. Please try again later.');
+      }
     },
     redirectlogin() {
       setTimeout(() => {
