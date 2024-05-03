@@ -194,7 +194,7 @@ const date = ref()
         v-model="selectedDate"
         :type="'month'"
         :first-day-of-week="1"
-        :format="dateFormat"
+        :format="customFormat"
         @selected="handleDateSelection"
         id="datepicker"
       ></Datepicker>
@@ -299,7 +299,7 @@ const date = ref()
   <div class="next-cancel-buttons">
         
         <button class="back-button" @click="prevStep">Back <b class="bi bi-caret-left-fill buttonicons"></b></button>
-        <button class="next-button" @click="validateAndNext">Next <b class="bi bi-caret-right-fill buttonicons"></b></button>
+        <button class="next-button" @click="validateAndNext" >Next <b class="bi bi-caret-right-fill buttonicons"></b></button>
 
   </div>
 
@@ -314,7 +314,7 @@ const date = ref()
               <h3>Review Your Information</h3>
 
             <div class="informations">
-              <p>Selected DATE: {{ selectedDate }}</p>
+              <p>Selected DATE: {{ selectedDate.toDateString() }}</p>
               <p>Purpose: {{ purpose }}</p>
               <p>Time IN: {{ selectedTimeIn }}</p>
               <p>Time OUT: {{ selectedTimeOut }}</p>
@@ -549,6 +549,7 @@ import MyCalendar from './MyCalendar.vue';
 import Timepicker from 'vue3-timepicker';
 import axios from 'axios';
 import { ref } from 'vue';
+import { onMounted } from 'vue';
 
 export default {
   components: {
@@ -557,12 +558,14 @@ export default {
   },
   data() {
     return {
+      userInfo: {},
+      showSuccessPrompt: false,
       isSliderOnLeft: true,
       isTransitioned: false,
       delayDuration: 100, // Adjust as needed
       sliderText: "LABORATORY SCHEDULE",
-      selectedDate: new Date(),
-      dateFormat: "yyyy-MM-dd",
+      selectedDate: null,
+      customFormat: 'yyyy-MM-dd', // Define your custom date format here
       daysOfWeek: [""],
       selectedDay: "",
       selectedTimeIn: "",
@@ -597,30 +600,63 @@ export default {
         this.sliderText = text;
       }, this.delayDuration);
     },
-    async submitBooking() {
-      if (!this.selectedDate || !this.selectedTimeIn || !this.selectedTimeOut || !this.firstName || !this.lastName || !this.purpose) {
-        alert('Please fill in all the fields.');
-        return;
-      }
+    handleDateSelection(date) {
+    this.selectedDate = date;
+  },
+  async submitBooking() {
+  console.log('Selected Date:', this.selectedDate);
+  
+  // Ensure selectedTimeIn includes seconds
+  const timeInParts = this.selectedTimeIn.split(':');
+  const formattedTimeIn = `${timeInParts[0].padStart(2, '0')}:${timeInParts[1]}:00`;
+  console.log('Formatted Time In:', formattedTimeIn);
 
-      const formattedDate = this.selectedDate.toISOString().split('T')[0];
-      const bookingData = {
-        date: formattedDate,
-        timeIn: this.selectedTimeIn,
-        timeOut: this.selectedTimeOut,
-        firstName: this.firstName,
-        lastName: this.lastName,
-        purpose: this.purpose,
-      };
+  // Ensure selectedTimeOut includes seconds
+  const timeOutParts = this.selectedTimeOut.split(':');
+  const formattedTimeOut = `${timeOutParts[0].padStart(2, '0')}:${timeOutParts[1]}:00`;
+  console.log('Formatted Time Out:', formattedTimeOut);
 
-      try {
-        const response = await axios.post('http://127.0.0.1:8000/api/bookings/', bookingData);
-        console.log('Booking submitted successfully:', response.data);
-        // Optionally, perform any additional actions upon successful submission
-      } catch (error) {
-        console.error('Error submitting booking:', error);
-        alert('Error submitting booking. Please try again later.');
-      }
+  console.log('First Name:', this.firstName);
+  console.log('Last Name:', this.lastName);
+  console.log('Purpose:', this.purpose);
+
+  if (!this.selectedDate || !this.selectedTimeIn || !this.selectedTimeOut || !this.firstName || !this.lastName || !this.purpose) {
+    console.log('One or more fields are empty.');
+    alert('Please fill in all the fields.');
+    return;
+  }
+
+  // Format the selected date to "YYYY-MM-DD"
+  const formattedDate = this.selectedDate.toISOString().split('T')[0];
+  console.log('Formatted Date:', formattedDate);
+
+  // Prepare form data
+  const formData = new FormData();
+  formData.append('daterequested', formattedDate);
+  formData.append('timeIn', formattedTimeIn);
+  formData.append('timeOut', formattedTimeOut);
+  formData.append('Firstname', this.firstName);
+  formData.append('Lastname', this.lastName);
+  formData.append('purpose', this.purpose);
+
+  try {
+    const response = await axios.post('http://127.0.0.1:8000/api/bookings/', formData);
+    console.log('Booking submitted successfully:', response.data);
+    // Optionally, perform any additional actions upon successful submission
+    // For example, transition to the next step or display a success message
+  } catch (error) {
+    console.error('Error submitting booking:', error);
+    alert('Error submitting booking. Please try again later.');
+    // Optionally, display an error message to the user
+  
+}
+
+
+
+    
+
+
+
     },
     redirectlogin() {
       setTimeout(() => {
