@@ -8,6 +8,7 @@ import Bookreq from './components/Bookreq.vue';
 import UserView from './components/UserView.vue';
 
 
+
 const routes = [
     { path: '/', component: Login },
     { path: '/history', component: History },
@@ -16,6 +17,12 @@ const routes = [
     { path: '/bookreq', component: Bookreq },
     { path: '/userview', component: UserView },
     { path: '/home', component: Home, name: "home" },
+    {
+        path: '/profile/:username/:password',
+        name: 'profile',
+        component: Profile,
+        props: true // Make sure props are passed to the component
+      },
 
 ];
 

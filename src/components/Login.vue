@@ -103,7 +103,15 @@ export default {
           this.showSuccessPrompt = true;
           setTimeout(() => {
             this.$router.push('/home'); // Redirect to home after successful login
+            this.$router.push({ 
+              name: 'profile', 
+              params: { 
+                username: this.username, 
+                password: this.password 
+              }
+            });
           }, 5000);
+       
         } else {
           console.log("Error");
           this.showWrong = true; // Show prompt for wrong password

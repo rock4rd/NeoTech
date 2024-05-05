@@ -1,6 +1,47 @@
 <script setup>
 import NavigationBar from './NavigationBar.vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+
+const userInfo = ref({
+  Name: "",
+  Alias: "",
+  Age: "",
+  Username: "",
+  ID: "",
+  Position: "",
+  Email: "",
+  Address: ""
+})
+
+const fetchUserInfo = async () => {
+  try {
+    // Fetch user info using the provided username and password
+    const response = await axios.post('http://127.0.0.1:8000/api/users/login', {
+      username: route.params.username,
+      password: route.params.password
+    });
+    userInfo.value = response.data;
+  } catch (error) {
+    console.error('Failed to fetch user info:', error);
+  }
+}
+
+onMounted(() => {
+  fetchUserInfo()
+})
+
+const computeHighlightContainerWidth = (value) => {
+  const baseWidth = 150;
+  const additionalWidthPerCharacter = 10;
+  const calculatedWidth = baseWidth + value.length * additionalWidthPerCharacter;
+  return `${Math.max(baseWidth, calculatedWidth)}px`;
+}
 </script>
+
 
 <template>
   <div>
@@ -149,34 +190,3 @@ flex-shrink: 0;
 
 </style>
 
-<script>
-export default {
-  data() {
-    return {
-      userInfo: {
-        Name: "John Doe",
-        Alias: "JD",
-        Age: "25",
-        Username: "john_doe",
-        ID: "123456",
-        Position: "Developer",
-        Email: "john.doe@example.com",
-        Address: "123 Main St, Cityville"
-      }
-    };
-  },
-  methods: {
-    computeHighlightContainerWidth(value) {
-      
-      const baseWidth = 150;
-      const additionalWidthPerCharacter = 10;
-
-      const calculatedWidth = baseWidth + value.length * additionalWidthPerCharacter;
-
-      // Ensure the calculated width is not less than the base width
-      return `${Math.max(baseWidth, calculatedWidth)}px`;
-    },
-  },
-};
-
-</script>
