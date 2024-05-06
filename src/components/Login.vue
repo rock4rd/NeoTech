@@ -101,15 +101,10 @@ export default {
         if (response.status === 200) {
           console.log("Success");
           this.showSuccessPrompt = true;
+          localStorage.setItem('username', this.username);
+          console.log('Username stored in local storage:', localStorage.getItem('username'));
           setTimeout(() => {
             this.$router.push('/home'); // Redirect to home after successful login
-            this.$router.push({ 
-              name: 'profile', 
-              params: { 
-                username: this.username, 
-                password: this.password 
-              }
-            });
           }, 5000);
        
         } else {

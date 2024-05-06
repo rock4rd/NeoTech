@@ -18,17 +18,17 @@ const routes = [
     { path: '/userview', component: UserView },
     { path: '/home', component: Home, name: "home" },
     {
-        path: '/profile/:username/:password',
+        path: '/profile/:username',
         name: 'profile',
-        component: Profile,
-        props: true // Make sure props are passed to the component
+        component: Profile
+        
       },
 
 ];
 
 const router = createRouter({
     history: createWebHistory(),
-    routes,
+    routes
 });
 
 export default router;

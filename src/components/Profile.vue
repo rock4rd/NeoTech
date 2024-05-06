@@ -6,6 +6,8 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
+const username = ref(route.params.username);
+
 const userInfo = ref({
   Name: "",
   Alias: "",
@@ -19,11 +21,18 @@ const userInfo = ref({
 
 const fetchUserInfo = async () => {
   try {
-    // Fetch user info using the provided username and password
-    const response = await axios.post('http://127.0.0.1:8000/api/users/login', {
-      username: route.params.username,
-      password: route.params.password
-    });
+
+    
+    console.log('Username stored in local storage:', localStorage.getItem('username'));
+
+    const formData = new FormData();
+    formData.append('username', localStorage.getItem('username'));
+    
+
+    // Fetch user info using FormData
+    const response = await axios.post('http://127.0.0.1:8000/api/users/login/profile', formData);
+
+    // Update userInfo with response data
     userInfo.value = response.data;
   } catch (error) {
     console.error('Failed to fetch user info:', error);
@@ -32,6 +41,7 @@ const fetchUserInfo = async () => {
 
 onMounted(() => {
   fetchUserInfo()
+  username.value = localStorage.getItem('username') || '';
 })
 
 const computeHighlightContainerWidth = (value) => {
