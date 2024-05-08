@@ -18,19 +18,14 @@ import NavigationBar from './NavigationBar.vue'
           <th class="header-item">Time</th>
         </tr>
       </thead>
-      <tbody>
-        <tr v-for="notifs in notif" :key="notifs.id" @click="handleRowClick(notifs)">
-    <td class="notifitem" :colspan="3">
-      <div class="notif-content-container">
-        <div class="notif-content">
-          <div class="clientName">{{ notifs.clientName }}</div>
-          <div class="purpose">{{ notifs.purpose }}</div>
-          <div class="time">{{ notifs.time }}</div>
-        </div>
-      </div>
-    </td>
-  </tr>
-      </tbody>
+      <tbody >
+        <tr v-for="notif in notif" :key="notif.id" @click="handleRowClick(notif)" class="notifItem">
+        <td>{{ notif['Full name'] }}</td>
+        <td>{{ notif['Purpose'] }}</td>
+        <td>{{ notif['Created AT'] }}</td>
+        </tr>
+</tbody>
+
      </table>
 
       
@@ -44,19 +39,19 @@ import NavigationBar from './NavigationBar.vue'
     <h2>Booking Details</h2>
     <div class="field">
       <label for="name">Name:</label>
-      <span id="name">{{ selectedNotif.clientName }}</span>
+      <span id="name">{{ selectedNotif['Full name'] }}</span>
     </div>
     <div class="field">
       <label for="purpose">Purpose:</label>
-      <span id="purpose">{{ selectedNotif.purpose }}</span>
+      <span id="purpose">{{ selectedNotif['Purpose'] }}</span>
     </div>
     <div class="field">
       <label for="timeIn">Time In:</label>
-      <span id="timeIn">{{ selectedNotif.timeIn }}</span>
+      <span id="timeIn">{{ selectedNotif['TimeIN'] }}</span>
     </div>
     <div class="field">
       <label for="timeOut">Time Out:</label>
-      <span id="timeOut">{{ selectedNotif.timeOut }}</span>
+      <span id="timeOut">{{ selectedNotif['TimeOut']}}</span>
     </div>
     <!-- Add other fields like date, note, etc. as needed -->
     <div class="buttons">
@@ -93,6 +88,7 @@ import NavigationBar from './NavigationBar.vue'
     grid: none;
     font-size: 100%; /* Adjust the font size as needed */
   width: 100%; /* Set the width to 100% or a specific value */
+  border-collapse: collapse;
   }
 
 .bookingcontainer{
@@ -105,6 +101,9 @@ import NavigationBar from './NavigationBar.vue'
 border: 1px solid var(--LIght, #F5347F);
 background: rgba(255, 255, 255, 0.41);
 box-shadow: 15px 15px 10px 0px #F5347F;
+display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .bookhead{
   color: var(--LIght, #F5347F);
@@ -118,13 +117,29 @@ font-style: normal;
 font-weight: 400;
 line-height: normal;
 }
+tbody{
+ position: relative;
+  top: 20%;
+}
 .headerz th {
+  flex: 1; /* Allow items to flexibly occupy space */
   color: #DD2A70;
   border: none;
   background-color: transparent;
-  padding: 15px;
+  padding: 10px;
   text-align: left;
+  
 }
+.headerz {
+  display: flex;
+  justify-content: space-between; /* Spread header items equally */
+  position: relative; /* Set position to relative */
+  top: 0; /* Align with the top of the container */
+  width: 100%; /* Occupy the full width */
+  z-index: 2; /* Ensure header is above background image */
+  
+}
+
   .notif-content-container {
     position: relative;
     left: 10%;
@@ -143,10 +158,42 @@ line-height: normal;
   padding: 10px;
   width: 100%; /* Adjusted to 100% */
 }
-.header-item {
-  padding: px; /* Add padding for better spacing */
-  text-align: left; /* Align text to the left */
+.header-item:first-child {
+  position: fixed;
+  left: 18%; /* Move the first child to the right */
+  /* Align text to the left */
 }
+
+
+.header-item:nth-child(2) {
+  position: fixed;
+  left: 50%;/* Move the middle child to the right */
+}
+.header-item:last-child {
+  position: fixed;
+  left: 82.5%; /* Align text to the right */
+}
+.notifItem td {
+  
+ 
+    padding: 10px;
+    text-align: left;
+    
+}
+.notifItem td:first-child{
+  position: relative;
+  left: 6%;
+}
+.notifItem td:nth-child(2) {
+    position: fixed;
+    left:50%;
+  }
+
+  .notifItem td:last-child {
+   position: relative;
+    left: 33%;
+  }
+
 .time {
   margin-right: -13%;
 }
@@ -161,10 +208,6 @@ line-height: normal;
 .notif-content {
   width: 80%; /* Adjust the width as needed */
 }
-.headerz th:first-child {
- position: relative;
- left: 10%;
-}
 
 /* Remove unnecessary styles */
 .notifdata {
@@ -177,14 +220,20 @@ line-height: normal;
 }
 
 .notifitem {
-  position: relative;
+  position: fixed;
+  justify-content: space-between;
+  
   
 }
 
 /* Remove unnecessary styles */
-.clientName, .purpose, .time {
+.notifitem .clientName, .purpose, .time {
   position: relative; /* Remove this line if not needed */
-  color:black
+  color:black;
+  padding-right: 100px;
+  margin-bottom: 20%;
+  
+  
 }
 
 /* Media query for smaller screens */
@@ -221,6 +270,12 @@ line-height: normal;
 
 .popup-content .field {
   margin-bottom: 10px;
+}
+
+.notif-item {
+  background-color: rgba(128, 128, 128, 0.5); /* RGBA color with 50% opacity */
+  border-radius: 10px; /* Adjust the border radius as needed */
+  margin-bottom: 10px; /* Add margin to separate each notification */
 }
 
 .popup-content .buttons {
@@ -295,40 +350,95 @@ line-height: normal;
 }
 
 </style>
+
 <script>
+import NavigationBar from './NavigationBar.vue'
+import axios from 'axios';
+
+
+// Function to convert duration in seconds to hours, minutes, and AM/PM format
+function formatDurationToAMPM(durationInSeconds) {
+    const hours = Math.floor(durationInSeconds / 3600);
+    const minutes = Math.floor((durationInSeconds % 3600) / 60);
+    
+    // Calculate AM/PM
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    
+    // Convert hours to 12-hour format
+    const formattedHours = hours % 12 || 12;
+    
+    // Format the output
+    const formattedDuration = `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
+
+    return formattedDuration;
+}
+
+// Example usage
+const durationInSeconds = 7260; // PT7260S
+const formattedDuration = formatDurationToAMPM(durationInSeconds);
+console.log(formattedDuration); // Output: "2:01 AM"
+
+
+function timeAgo(timestamp) {
+  const currentDate = new Date();
+  const createdAtDate = new Date(timestamp);
+  const timeDifference = currentDate - createdAtDate;
+  const seconds = Math.floor(timeDifference / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+
+  if (hours > 0) {
+    return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
+  } else if (minutes > 0) {
+    return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
+  } else {
+    return "Just now";
+  }
+}
 
 export default {
   data() {
     return {
       selectedNotif: null,
-      notif: [
-        { id: 1, clientName: "Zon Trisha Japay", purpose: "Special Exam", time:"1 hour ago" },
-        { id: 2, clientName: "", purpose: "", time:"1 hour ago"  },
-        { id: 3, clientName: "", purpose: "", time:"1 hour ago" },
-        { id: 4, clientName: "", purpose: "", time:"1 hour ago" },
-        { id: 5, clientName: "", purpose: "", time:"1 hour ago" },
-        
-      ],
+      notif: []
     };
   },
+  mounted() {
+    this.fetchData();
+  },
   methods: {
+    async fetchData() {
+  try {
+    const response = await axios.get('http://localhost:8000/api/bookings/');
+    this.notif = response.data;
+   
+    this.notif.forEach(notification => {
+      console.log(notification['Full name']);
+      console.log(notification['TimeIN']);
+      console.log(notification['TimeOut']);
+      console.log(formatDurationToAMPM(notification['TimeIN']));
+      notification['Created AT'] = timeAgo(notification['Created AT']);
+      notification['TimeIN'] = formatDurationToAMPM(notification['TimeIN']);
+      notification['TimeOut'] = formatDurationToAMPM(notification['TimeOut']);
+
+    });
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+  }
+},
     handleRowClick(notif) {
       this.selectedNotif = notif;
-      // Do any additional processing you need with the selected notif
       console.log("Selected Notification:", notif);
-
     },
-      acceptBooking() {
+    acceptBooking() {
       console.log("Booking accepted!");
       // Add logic to handle accepting the booking
       this.selectedNotif = null; // Close the popup
     },
-
     declineBooking() {
       console.log("Booking declined!");
       // Add logic to handle declining the booking
       this.selectedNotif = null; // Close the popup
-    
     },
   },
 };
