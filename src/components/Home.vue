@@ -1,187 +1,219 @@
 <script setup>
-import NavigationBar from './NavigationBar.vue'
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
+// Import NavigationBar component
+import NavigationBar from './NavigationBar.vue';
+
+// Define reactive variables
+const schedules = ref([]);
+const labs = ref([]);
+
+// Define time slots
+const timeSlots = [
+  '7:00 AM','8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 NN',
+  '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM'
+];
+
+// Helper function to format time
+const formatTime = (ptTime) => {
+  console.log('Input time:', ptTime); // Log the input time
+  const seconds = parseInt(ptTime.replace('PT', '').replace('S', ''), 10);
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  console.log('Formatted time:', formattedTime); // Log the formatted time
+  return formattedTime;
+};
+
+// Function to fetch schedules
+const fetchSchedules = async () => {
+  try {
+    const response = await axios.get('http://127.0.0.1:8000/api/schedule/');
+    console.log('Response Data:', response.data);
+    schedules.value = response.data.map(schedule => ({
+      ...schedule,
+      timein: formatTime(schedule.timein),
+      timeout: formatTime(schedule.timeout),
+    }));
+  } catch (error) {
+    console.error('Error fetching schedules:', error.response ? error.response.data : error.message);
+  }
+};
+
+// Function to fetch lab statuses
+const fetchLabs = async () => {
+  try {
+    const response = await axios.get('http://127.0.0.1:8000/api/labstatus/');
+    labs.value = response.data;
+  } catch (error) {
+    console.error('Error fetching labs:', error.response ? error.response.data : error.message);
+  }
+};
+
+// Function to get schedules for a specific time and day
+const getSchedulesForTimeDay = (time, day) => {
+  console.log('Selected Time:', time);
+  console.log('Selected Day:', day);
+  
+  // Helper function to check if a schedule overlaps with the given time slot
+  const doesOverlap = (scheduleTimeInMinutes, scheduleTimeOutMinutes, slotTime) => {
+    return slotTime >= scheduleTimeInMinutes && slotTime < scheduleTimeOutMinutes;
+  };
+
+  const slotTime = convertTimeToMinutes(time);
+
+  const filteredSchedules = schedules.value.filter(schedule => {
+    const scheduleTimeInMinutes = convertTimeToMinutes(schedule.timein);
+    const scheduleTimeOutMinutes = convertTimeToMinutes(schedule.timeout);
+    
+    console.log('Schedule Time In Minutes:', scheduleTimeInMinutes);
+    console.log('Schedule Time Out Minutes:', scheduleTimeOutMinutes);
+    console.log('Slot Time:', slotTime);
+    console.log('Schedule Day:', schedule.dayofweek.trim());
+    
+    const isScheduleMatching = (
+      doesOverlap(scheduleTimeInMinutes, scheduleTimeOutMinutes, slotTime) ||
+      (scheduleTimeInMinutes >= slotTime && scheduleTimeInMinutes <= slotTime + 60) || // Check if start time or end time is within slot
+      (scheduleTimeOutMinutes > slotTime && scheduleTimeOutMinutes <= slotTime + 60)  // Check if end time is within slot
+    ) && schedule.dayofweek.trim() === day.trim();
+    
+    console.log('Is Schedule Matching:', isScheduleMatching);
+    
+    return isScheduleMatching;
+  });
+
+  return filteredSchedules;
+};
+
+// Function to check if a time slot is within a schedule's time frame
+const isSlotWithinSchedule = (slotTime, scheduleTimeIn, scheduleTimeOut) => {
+  const slotMinutes = convertTimeToMinutes(slotTime);
+  const scheduleTimeInMinutes = convertTimeToMinutes(scheduleTimeIn);
+  const scheduleTimeOutMinutes = convertTimeToMinutes(scheduleTimeOut);
+
+  return slotMinutes >= scheduleTimeInMinutes && slotMinutes < scheduleTimeOutMinutes;
+};
+
+
+
+
+// Helper function to convert time to minutes for easier comparison
+const convertTimeToMinutes = (time) => {
+  console.log('Input Time:', time);
+  // Split time into hours, minutes, and AM/PM if applicable
+  const [timePart, ampm] = time.split(' ');
+  const [hours, minutes] = timePart.split(':').map(Number);
+  console.log('Hours:', hours);
+  console.log('Minutes:', minutes);
+  // Convert 12-hour format to 24-hour format
+  const adjustedHours = (ampm === 'PM' && hours !== 12) ? hours + 12 : hours;
+  const totalMinutes = adjustedHours * 60 + minutes;
+  console.log('Total Minutes:', totalMinutes);
+  return totalMinutes;
+};
+
+// Fetch data when the component is mounted
+onMounted(() => {
+  fetchSchedules();
+  fetchLabs();
+});
+
+// Helper function to get highlight class based on status
+const getHighlightClass = (status) => {
+  switch (status) {
+    case 'Badiang':
+      return 'highlighted1';
+    case 'Cloribel':
+      return 'highlighted2';
+    case 'Balaman':
+      return 'highlighted3';
+    default:
+      return status ? 'highlighted' : '';
+  }
+};
+
+// Helper function to get status color based on status
+const getStatusColor = (status) => {
+  return status === 'Occupied' ? 'red' : 'green';
+};
 </script>
+
+
 <template>
-    <div>
+  <div>
     <NavigationBar />
     <div class="homecontainer">
-        <div class="homeheader">
-            <p class="phead">LIVE DATE & TIME <b class="bi bi-record2 rec"></b></p>
-        </div>
-        <div class="itemscontainer">
+      <div class="itemscontainer">
         <h2 class="schedhead">SCHEDULE</h2>
-
         <div class="schedhome">
-           
-
-           <table class="sched-table">
-      <thead>
-        <tr>
-          <th>Times</th>
-          <th>Monday</th>
-          <th>Tuesday</th>
-          <th>Wednesday</th>
-          <th>Thursday</th>
-          <th>Friday</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="font-weight: bold;">Morning</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>7:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td class="highlighted3"></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>8:00 AM</td>
-          <td></td>
-          <td class="highlighted1"></td>
-          <td></td>
-          <td class="highlighted3"></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>9:00 AM</td>
-          <td class="highlighted"></td>
-          <td class="highlighted1">Badiang</td>
-          <td class="highlighted2"></td>
-          <td class="highlighted3">Balaman</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>10:00 AM</td>
-          <td class="highlighted">Bolo</td>
-          <td class="highlighted1"></td>
-          <td class="highlighted2">Cloribel</td>
-          <td class="highlighted3"></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>11:00 AM</td>
-          <td class="highlighted"></td>
-          <td></td>
-          <td class="highlighted2"></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td style="font-weight: bold;">Afternoon</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>1:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>2:00 PM</td>
-          <td class="highlighted"></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>3:00 PM</td>
-          <td class="highlighted">Beltran</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>4:00 PM</td>
-          <td class="highlighted"></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>5:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>6:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-
-        <!-- Add more rows for different times -->
-      </tbody>
-    </table>
-
-
-
-
-
-           
-            
-            
+          <table class="sched-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Loop through each time slot -->
+              <tr v-for="time in timeSlots" :key="time">
+                <td>{{ time }}</td>
+                <!-- Loop through each day of the week -->
+                <td v-for="day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']" :key="day">
+                  <!-- Filter schedules for the current time and day -->
+                  <div v-if="getSchedulesForTimeDay(time, day).length > 0">
+                    <!-- Loop through filtered schedules -->
+                    <template v-for="schedule in getSchedulesForTimeDay(time, day)" :key="schedule.schedule_id">
+                      <!-- Display schedule information -->
+                      <div>{{ schedule.userid }} - {{ schedule.timein }} to {{ schedule.timeout }}</div>
+                    </template>
+                  </div>
+                  <!-- If no schedules are found, display an empty div -->
+                  <div v-else></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        
-        <div class="divider">
-
-        </div>
-
+        <div class="divider"></div>
         <div class="laboratory">
-    <p class="headir">LABORATORY ROOM</p>
-    <table class="labtable">
-      <thead></thead>
-      <tbody>
-        <tr v-for="lab in labs" :key="lab.id">
-          <td>
-            <div class="lab-content">
-              <div class="labroom">{{ lab.roomNumber }}</div>
-              <div class="status">{{ lab.status }}</div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
+          <p class="headir">LABORATORY ROOM</p>
+          <table class="labtable">
+            <tbody>
+              <!-- Loop through each lab -->
+              <tr v-for="lab in labs" :key="lab.labstatusid">
+                <td>
+                  <div class="lab-content">
+                    <!-- Display lab information -->
+                    <div class="labroom">{{ lab.labname }}</div>
+                    <div class="status" :style="{ color: getStatusColor(lab.occupied ? 'Occupied' : 'Available') }">
+                      {{ lab.occupied ? 'Occupied' : 'Available' }}
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
-  
 </template>
+
+
+
+
+
+
+
 <style>
 .homecontainer {
   position: fixed;
-  top: 0; /* Adjusted to start from the top of the viewport */
+  top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
@@ -191,105 +223,97 @@ import NavigationBar from './NavigationBar.vue'
   background-position: center;
   background-repeat: no-repeat;
   z-index: 1;
-  }
-  .highlighted, .highlighted3{
-    background-color: yellow;
-  }
-  .highlighted1{
-      background-color: greenyellow;
-  }
-  .highlighted2{
-    background-color:green;
-  }
-  .itemscontainer{
-    position: relative;
-    top: 10%;
-    left: 13%;
-    height: 75%;
-    width: 80%;
-    border-radius: 34.56px 34.56px 0px 0px;
-border: 1px solid var(--LIght, #F5347F);
-background: rgba(255, 255, 255, 0.41);
-box-shadow: 15px 15px 10px 0px #F5347F;
-  }
-  .schedhome{
-    position: relative;
-    background-color: white;
-    left: 30px;
-    top: 30px;
-    color: white;
-    height: 82%;
-    width: 45%;
-  
-    
-  overflow-y: auto; /* Add a scrollbar when the content exceeds the height */
-    
-  }
-  .sched-table{
-    color: black;
-    border: none;
-    grid: none;
-    
-    font-size: 90%; /* Adjust the font size as needed */
-  width: 100%; /* Set the width to 100% or a specific value */
-  }
-  
-  .rec{
-    color:red;
-    font-weight: bold;
-    
-  }
-  .schedcontainer{
-    position: relative;
-    height: 650px;
-    width: 500px;
-    left: 10%;
-    top: 4%;
-    color: white;
-  }
-  .divider{
-    position: relative;
-    height: 90%;
-    width: 5px;
-    bottom: 85%;
-    background-color: black;
-    left: 49%;
-  }
-  .schedhead{
-    color: black;
-    font-weight: bold;
-    position: relative;
-    left: 17%;
-    top: 3%;
-    
-  }
-  .homeheader{
-    position:relative;
-    left: 43%;
-    height: 50px;
-    width: 300px;
-    top: 60px;
-    background-color: #ff69b4 ;
-    color: white;
-    border-radius: 20px;
-    margin-top: 20px;
-  }
-  .phead{
-    position: relative;
-    top: 15px;
-    left: 70px;
-    font-weight: 20%;
-  }
-  .headir{
-    color: black;
-    font-weight: bold;
-    font-size: 30px;
-    position: relative;
-    left: 90px;
-    bottom: 100px;
-    
-  }
-  .laboratory {
+}
+.highlighted, .highlighted3 {
+  background-color: yellow;
+}
+.highlighted1 {
+  background-color: greenyellow;
+}
+.highlighted2 {
+  background-color: green;
+}
+.itemscontainer {
+  position: relative;
+  top: 10%;
+  left: 13%;
+  height: 75%;
+  width: 80%;
+  border-radius: 34.56px 34.56px 0px 0px;
+  border: 1px solid var(--LIght, #F5347F);
+  background: rgba(255, 255, 255, 0.41);
+  box-shadow: 15px 15px 10px 0px #F5347F;
+}
+.schedhome {
+  position: relative;
+  background-color: white;
+  left: 30px;
+  top: 30px;
+  color: white;
+  height: 82%;
+  width: 45%;
+  overflow-y: auto;
+}
+.sched-table {
+  color: black;
+  border: none;
+  grid: none;
+  font-size: 90%;
+  width: 100%;
+}
+.rec {
+  color: red;
+  font-weight: bold;
+}
+.schedcontainer {
+  position: relative;
+  height: 650px;
+  width: 500px;
+  left: 10%;
+  top: 4%;
+  color: white;
+}
+.divider {
+  position: relative;
+  height: 90%;
+  width: 5px;
+  bottom: 85%;
+  background-color: black;
+  left: 49%;
+}
+.schedhead {
+  color: black;
+  font-weight: bold;
+  position: relative;
+  left: 17%;
+  top: 3%;
+}
+.homeheader {
+  position: relative;
+  left: 43%;
+  height: 50px;
+  width: 300px;
+  top: 60px;
+  background-color: #ff69b4;
+  color: white;
+  border-radius: 20px;
+  margin-top: 20px;
+}
+.phead {
+  position: relative;
+  top: 15px;
+  left: 70px;
+  font-weight: 20%;
+}
+.headir {
+  color: black;
+  font-weight: bold;
+  font-size: 30px;
+  position: relative;
+  left: 90px;
+  bottom: 100px;
+}
+.laboratory {
   position: relative;
   height: 300px;
   width: 500px;
@@ -298,16 +322,13 @@ box-shadow: 15px 15px 10px 0px #F5347F;
   color: white;
   font-size: 70%;
 }
-
 .lab-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-right: 10%;
   font-size: medium;
-  
 }
-
 .labroom {
   height: 50px;
   width: 200px;
@@ -318,33 +339,27 @@ box-shadow: 15px 15px 10px 0px #F5347F;
   margin-bottom: 20px;
   padding: 14px;
 }
-
-
 .laboratory .labtable {
   border-collapse: separate;
-  border-spacing: 1px; /* Adjust the spacing as needed */
+  border-spacing: 1px;
 }
-
 .laboratory .labtable th,
 .laboratory .labtable td {
-  border: none; /* Remove borders */
-  padding: 5px; /* Add padding to cells */
+  border: none;
+  padding: 5px;
 }
-.status{
-    position: relative;
-    bottom: 10px;
-    font-weight: bold;
+.status {
+  position: relative;
+  bottom: 10px;
+  font-weight: bold;
 }
-.labtable{
+.labtable {
   position: relative;
   bottom: 15%;
-  
 }
-
 /* Media query for smaller screens */
 @media only screen and (max-width: 1500px) {
   .schedcontainer {
-    /* Adjust the styles for smaller screens */
     left: 5%;
     width: 90%;
   }
@@ -358,47 +373,7 @@ box-shadow: 15px 15px 10px 0px #F5347F;
     left: 10px;
     bottom: 100px;
     word-wrap: break-word;
-    margin-right: 40%;
+   
   }
 }
-
 </style>
-
-<script>
-export default {
-  data() {
-    return {
-      labs: [
-        { id: 1, roomNumber: "201", status: "Occupied" },
-        { id: 2, roomNumber: "202", status: "Occupied" },
-        { id: 3, roomNumber: "203", status: "Available" },
-        { id: 4, roomNumber: "204", status: "Available" },
-        { id: 1, roomNumber: "205", status: "Available" },
-        
-      ],
-    };
-  },
-  methods: {
-    updateStatusColor() {
-      this.$nextTick(() => {
-        const statusElements = this.$el.querySelectorAll(".labtable .status");
-
-        statusElements.forEach((statusElement) => {
-          const status = statusElement.textContent.trim();
-
-          // Change the text color based on the status
-          if (status === "Occupied") {
-            statusElement.style.color = "red";
-          } else if (status === "Available") {
-            statusElement.style.color = "green";
-          }
-        });
-      });
-    },
-  },
-  mounted() {
-    this.updateStatusColor();
-  },
-};
-</script>
-
