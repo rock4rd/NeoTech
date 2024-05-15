@@ -4,33 +4,66 @@ import axios from 'axios';
 
 // Import NavigationBar component
 import NavigationBar from './NavigationBar.vue';
+import Popup from './Popup.vue';
+
 
 // Define reactive variables
 const schedules = ref([]);
 const labs = ref([]);
+const isPopupVisible = ref(false);
+const selectedTime = ref(''); // Define selectedTime here
+const selectedDay = ref('');
 
 // Define time slots
 const timeSlots = [
-  '7:00 AM','8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 NN',
+  '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 NN',
   '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM'
 ];
 
 // Helper function to format time
 const formatTime = (ptTime) => {
-  console.log('Input time:', ptTime); // Log the input time
   const seconds = parseInt(ptTime.replace('PT', '').replace('S', ''), 10);
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
-  const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-  console.log('Formatted time:', formattedTime); // Log the formatted time
-  return formattedTime;
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+};
+const togglePopup = () => {
+  isPopupVisible.value = !isPopupVisible.value;
+};
+const showPopup = (time, day) => {
+  console.log("Clicked Time:", time);
+  console.log("Clicked Day:", day);
+  // Check if the clicked cell is highlighted
+  if (hasSchedulesForTimeDay(time, day)) {
+    selectedTime.value = time;
+    selectedDay.value = day;
+    isPopupVisible.value = true;
+  }
+
+
+  // Check if the schedule exists and if the cell is highlighted
+  if (schedule && hasSchedulesForTimeDay(time, day)) {
+    // Extract timein, timeout, and participant from the schedule
+    const { timein, timeout, participant } = schedule;
+    selectedTime.value = timein;
+    selectedDay.value = day;
+    selectedParticipant.value = participant; // Assuming you have a ref for participant
+    isPopupVisible.value = true;
+  }
+};
+
+
+
+
+// Function to hide pop-up
+const hidePopup = () => {
+  isPopupVisible.value = false;
 };
 
 // Function to fetch schedules
 const fetchSchedules = async () => {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/schedule/');
-    console.log('Response Data:', response.data);
     schedules.value = response.data.map(schedule => ({
       ...schedule,
       timein: formatTime(schedule.timein),
@@ -51,48 +84,22 @@ const fetchLabs = async () => {
   }
 };
 
-// Function to get schedules for a specific time and day
-const getSchedulesForTimeDay = (time, day) => {
-  console.log('Selected Time:', time);
-  console.log('Selected Day:', day);
-  
-  // Helper function to check if a schedule overlaps with the given time slot
-  const doesOverlap = (scheduleTimeInMinutes, scheduleTimeOutMinutes, slotTime) => {
-    return slotTime >= scheduleTimeInMinutes && slotTime < scheduleTimeOutMinutes;
-  };
-
+// Function to check if there are schedules for a specific time and day
+const hasSchedulesForTimeDay = (time, day) => {
   const slotTime = convertTimeToMinutes(time);
 
-  const filteredSchedules = schedules.value.filter(schedule => {
+  const doesOverlap = (scheduleTimeInMinutes, scheduleTimeOutMinutes, slotTime) => {
+    const slotEnd = slotTime + 60;
+    return (scheduleTimeInMinutes < slotEnd && scheduleTimeOutMinutes >= slotTime);
+  };
+
+  return schedules.value.some(schedule => {
+    console.log("Schedule Day:", schedule.dayofweek.trim());
+    console.log("Selected Day:", day.trim());
     const scheduleTimeInMinutes = convertTimeToMinutes(schedule.timein);
     const scheduleTimeOutMinutes = convertTimeToMinutes(schedule.timeout);
-    
-    console.log('Schedule Time In Minutes:', scheduleTimeInMinutes);
-    console.log('Schedule Time Out Minutes:', scheduleTimeOutMinutes);
-    console.log('Slot Time:', slotTime);
-    console.log('Schedule Day:', schedule.dayofweek.trim());
-    
-    const isScheduleMatching = (
-      doesOverlap(scheduleTimeInMinutes, scheduleTimeOutMinutes, slotTime) ||
-      (scheduleTimeInMinutes >= slotTime && scheduleTimeInMinutes <= slotTime + 60) || // Check if start time or end time is within slot
-      (scheduleTimeOutMinutes > slotTime && scheduleTimeOutMinutes <= slotTime + 60)  // Check if end time is within slot
-    ) && schedule.dayofweek.trim() === day.trim();
-    
-    console.log('Is Schedule Matching:', isScheduleMatching);
-    
-    return isScheduleMatching;
+    return doesOverlap(scheduleTimeInMinutes, scheduleTimeOutMinutes, slotTime) && schedule.dayofweek.trim() === day.trim();
   });
-
-  return filteredSchedules;
-};
-
-// Function to check if a time slot is within a schedule's time frame
-const isSlotWithinSchedule = (slotTime, scheduleTimeIn, scheduleTimeOut) => {
-  const slotMinutes = convertTimeToMinutes(slotTime);
-  const scheduleTimeInMinutes = convertTimeToMinutes(scheduleTimeIn);
-  const scheduleTimeOutMinutes = convertTimeToMinutes(scheduleTimeOut);
-
-  return slotMinutes >= scheduleTimeInMinutes && slotMinutes < scheduleTimeOutMinutes;
 };
 
 
@@ -100,17 +107,10 @@ const isSlotWithinSchedule = (slotTime, scheduleTimeIn, scheduleTimeOut) => {
 
 // Helper function to convert time to minutes for easier comparison
 const convertTimeToMinutes = (time) => {
-  console.log('Input Time:', time);
-  // Split time into hours, minutes, and AM/PM if applicable
   const [timePart, ampm] = time.split(' ');
   const [hours, minutes] = timePart.split(':').map(Number);
-  console.log('Hours:', hours);
-  console.log('Minutes:', minutes);
-  // Convert 12-hour format to 24-hour format
-  const adjustedHours = (ampm === 'PM' && hours !== 12) ? hours + 12 : hours;
-  const totalMinutes = adjustedHours * 60 + minutes;
-  console.log('Total Minutes:', totalMinutes);
-  return totalMinutes;
+  const adjustedHours = (ampm === 'PM' && hours !== 12) ? hours + 12 : (ampm === 'AM' && hours === 12) ? 0 : hours;
+  return adjustedHours * 60 + minutes;
 };
 
 // Fetch data when the component is mounted
@@ -119,17 +119,21 @@ onMounted(() => {
   fetchLabs();
 });
 
-// Helper function to get highlight class based on status
-const getHighlightClass = (status) => {
-  switch (status) {
-    case 'Badiang':
-      return 'highlighted1';
-    case 'Cloribel':
-      return 'highlighted2';
-    case 'Balaman':
-      return 'highlighted3';
+// Helper function to get highlight class based on day
+const getHighlightClassForDay = (day) => {
+  switch (day) {
+    case 'Monday':
+      return 'highlighted-monday';
+    case 'Tuesday':
+      return 'highlighted-tuesday';
+    case 'Wednesday':
+      return 'highlighted-wednesday';
+    case 'Thursday':
+      return 'highlighted-thursday';
+    case 'Friday':
+      return 'highlighted-friday';
     default:
-      return status ? 'highlighted' : '';
+      return '';
   }
 };
 
@@ -137,6 +141,8 @@ const getHighlightClass = (status) => {
 const getStatusColor = (status) => {
   return status === 'Occupied' ? 'red' : 'green';
 };
+
+
 </script>
 
 
@@ -163,17 +169,10 @@ const getStatusColor = (status) => {
               <tr v-for="time in timeSlots" :key="time">
                 <td>{{ time }}</td>
                 <!-- Loop through each day of the week -->
-                <td v-for="day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']" :key="day">
-                  <!-- Filter schedules for the current time and day -->
-                  <div v-if="getSchedulesForTimeDay(time, day).length > 0">
-                    <!-- Loop through filtered schedules -->
-                    <template v-for="schedule in getSchedulesForTimeDay(time, day)" :key="schedule.schedule_id">
-                      <!-- Display schedule information -->
-                      <div>{{ schedule.userid }} - {{ schedule.timein }} to {{ schedule.timeout }}</div>
-                    </template>
-                  </div>
-                  <!-- If no schedules are found, display an empty div -->
-                  <div v-else></div>
+                <td v-for="day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']" :key="day"
+                    :class="{ [getHighlightClassForDay(day)]: hasSchedulesForTimeDay(time, day) }"
+                    @click="showPopup(time, day)">
+                  <!-- Apply class conditionally based on schedules -->
                 </td>
               </tr>
             </tbody>
@@ -201,13 +200,11 @@ const getStatusColor = (status) => {
         </div>
       </div>
     </div>
+    <!-- Pop-up component -->
+    <Popup v-if="isPopupVisible" :time="selectedTime" :day="selectedDay" :timeout="selectedTimeOut" @close="hidePopup" />
+
   </div>
 </template>
-
-
-
-
-
 
 
 <style>
@@ -224,14 +221,20 @@ const getStatusColor = (status) => {
   background-repeat: no-repeat;
   z-index: 1;
 }
-.highlighted, .highlighted3 {
-  background-color: yellow;
+.highlighted-monday {
+  background-color: lightblue;
 }
-.highlighted1 {
-  background-color: greenyellow;
+.highlighted-tuesday {
+  background-color: lightgreen;
 }
-.highlighted2 {
-  background-color: green;
+.highlighted-wednesday {
+  background-color: lightcoral;
+}
+.highlighted-thursday {
+  background-color: lightgoldenrodyellow;
+}
+.highlighted-friday {
+  background-color: lightpink;
 }
 .itemscontainer {
   position: relative;
@@ -298,6 +301,25 @@ const getStatusColor = (status) => {
   color: white;
   border-radius: 20px;
   margin-top: 20px;
+}
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
 }
 .phead {
   position: relative;
@@ -373,7 +395,8 @@ const getStatusColor = (status) => {
     left: 10px;
     bottom: 100px;
     word-wrap: break-word;
-   
   }
 }
 </style>
+
+

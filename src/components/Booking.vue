@@ -79,6 +79,7 @@ import NavigationBar from './NavigationBar.vue'
   background-repeat: no-repeat;
   z-index: 1;
   
+  
 }
 
 
@@ -104,6 +105,7 @@ box-shadow: 15px 15px 10px 0px #F5347F;
 display: flex;
     flex-direction: column;
     align-items: center;
+    
 }
 .bookhead{
   color: var(--LIght, #F5347F);
