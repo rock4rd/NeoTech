@@ -18,50 +18,44 @@ import NavigationBar from './NavigationBar.vue'
           <th class="header-item">Time</th>
         </tr>
       </thead>
-      <tbody >
+      <tbody>
         <tr v-for="notif in notif" :key="notif.id" @click="handleRowClick(notif)" class="notifItem">
         <td>{{ notif['Full name'] }}</td>
         <td>{{ notif['Purpose'] }}</td>
         <td>{{ notif['Created AT'] }}</td>
         </tr>
-</tbody>
-
+      </tbody>
      </table>
-
-      
     </div>
   </div> 
   </div>
 
   <div v-if="selectedNotif" class="popup-container">
-  <div class="popup-background"></div>
-  <div class="popup-content">
-    <h2>Booking Details</h2>
-    <div class="field">
-      <label for="name">Name:</label>
-      <span id="name">{{ selectedNotif['Full name'] }}</span>
-    </div>
-    <div class="field">
-      <label for="purpose">Purpose:</label>
-      <span id="purpose">{{ selectedNotif['Purpose'] }}</span>
-    </div>
-    <div class="field">
-      <label for="timeIn">Time In:</label>
-      <span id="timeIn">{{ selectedNotif['TimeIN'] }}</span>
-    </div>
-    <div class="field">
-      <label for="timeOut">Time Out:</label>
-      <span id="timeOut">{{ selectedNotif['TimeOut']}}</span>
-    </div>
-    <!-- Add other fields like date, note, etc. as needed -->
-    <div class="buttons">
-      <button @click="acceptBooking" class="accept-button">Accept</button>
-            <button @click="declineBooking" class="decline-button">Decline</button>
+    <div class="popup-background"></div>
+    <div class="popup-content">
+      <h2>Booking Details</h2>
+      <div class="field">
+        <label for="name">Name:</label>
+        <span id="name">{{ selectedNotif['Full name'] }}</span>
+      </div>
+      <div class="field">
+        <label for="purpose">Purpose:</label>
+        <span id="purpose">{{ selectedNotif['Purpose'] }}</span>
+      </div>
+      <div class="field">
+        <label for="timeIn">Time In:</label>
+        <span id="timeIn">{{ selectedNotif['TimeIN'] }}</span>
+      </div>
+      <div class="field">
+        <label for="timeOut">Time Out:</label>
+        <span id="timeOut">{{ selectedNotif['TimeOut'] }}</span>
+      </div>
+      <div class="buttons">
+        <button @click="acceptBooking" class="accept-button">Accept</button>
+        <button @click="declineBooking" class="decline-button">Decline</button>
+      </div>
     </div>
   </div>
-</div>
-
-
 </template>
 
 <style>
@@ -93,10 +87,10 @@ import NavigationBar from './NavigationBar.vue'
   }
 
 .bookingcontainer{
-  position: relative;
-    top: 10%;
+  position: fixed;
+    top: 15.5%;
     left: 13%;
-    height: 85%;
+    height: 75%;
     width: 80%;
     border-radius: 34.56px 34.56px 0px 0px;
 border: 1px solid var(--LIght, #F5347F);
@@ -354,33 +348,38 @@ tbody{
 </style>
 
 <script>
-import NavigationBar from './NavigationBar.vue'
+import NavigationBar from './NavigationBar.vue';
 import axios from 'axios';
 
-
 // Function to convert duration in seconds to hours, minutes, and AM/PM format
-function formatDurationToAMPM(durationInSeconds) {
-    const hours = Math.floor(durationInSeconds / 3600);
-    const minutes = Math.floor((durationInSeconds % 3600) / 60);
-    
-    // Calculate AM/PM
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    
-    // Convert hours to 12-hour format
-    const formattedHours = hours % 12 || 12;
-    
-    // Format the output
-    const formattedDuration = `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
+// Function to convert duration string to HH:MM:SS format
+function formatDurationToHHMMSS(durationString) {
+  // Extract seconds from the provided format (e.g., PT300S)
+  const seconds = parseInt(durationString.substring(2, durationString.length - 1));
 
-    return formattedDuration;
+  // Convert seconds to HH:MM:SS format
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+
+  // Format each part to ensure leading zeros if necessary
+  const formattedHours = hours < 10 ? `0${hours}` : hours;
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
+
+  // Return the formatted time
+  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 }
 
-// Example usage
-const durationInSeconds = 7260; // PT7260S
-const formattedDuration = formatDurationToAMPM(durationInSeconds);
-console.log(formattedDuration); // Output: "2:01 AM"
 
+function formatDateINtoDayOfWeek(dateIN) {
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const date = new Date(dateIN);
+  const dayOfWeekIndex = date.getDay();
+  return daysOfWeek[dayOfWeekIndex];
+}
 
+// Function to convert timestamp to "time ago" format
 function timeAgo(timestamp) {
   const currentDate = new Date();
   const createdAtDate = new Date(timestamp);
@@ -391,22 +390,13 @@ function timeAgo(timestamp) {
   const days = Math.floor(hours / 24);
   const weeks = Math.floor(days / 7);
   const months = Math.floor(days / 30);
-
-  if (months > 0) {
-    return months === 1 ? "1 month ago" : `${months} months ago`;
-  } else if (weeks > 0) {
-    return weeks === 1 ? "1 week ago" : `${weeks} weeks ago`;
-  } else if (days > 0) {
-    return days === 1 ? "1 day ago" : `${days} days ago`;
-  } else if (hours > 0) {
-    return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
-  } else if (minutes > 0) {
-    return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
-  } else {
-    return "Just now";
-  }
+  if (months > 0) return months === 1 ? "1 month ago" : `${months} months ago`;
+  if (weeks > 0) return weeks === 1 ? "1 week ago" : `${weeks} weeks ago`;
+  if (days > 0) return days === 1 ? "1 day ago" : `${days} days ago`;
+  if (hours > 0) return hours === 1 ? "1 hour ago" : `${hours} hours ago`;
+  if (minutes > 0) return minutes === 1 ? "1 minute ago" : `${minutes} minutes ago`;
+  return "Just now";
 }
-
 
 export default {
   data() {
@@ -419,38 +409,101 @@ export default {
     this.fetchData();
   },
   methods: {
+    
     async fetchData() {
   try {
     const response = await axios.get('http://localhost:8000/api/bookings/');
     this.notif = response.data;
-   
+    console.log("Fetched notifications:", this.notif); // Log fetched notifications
     this.notif.forEach(notification => {
-      console.log(notification['Full name']);
+      notification['Created AT'] = timeAgo(notification['Created AT']);
+      notification['TimeIN'] = formatDurationToHHMMSS(notification['TimeIN']);
+      notification['TimeOut'] = formatDurationToHHMMSS(notification['TimeOut']);
+      notification['DayOfWeek'] = formatDateINtoDayOfWeek(notification['Datein']);
+
       console.log(notification['TimeIN']);
       console.log(notification['TimeOut']);
-      console.log(formatDurationToAMPM(notification['TimeIN']));
-      notification['Created AT'] = timeAgo(notification['Created AT']);
-      notification['TimeIN'] = formatDurationToAMPM(notification['TimeIN']);
-      notification['TimeOut'] = formatDurationToAMPM(notification['TimeOut']);
-
     });
   } catch (error) {
     console.error('Error fetching notifications:', error);
   }
 },
-    handleRowClick(notif) {
-      this.selectedNotif = notif;
-      console.log("Selected Notification:", notif);
-    },
-    acceptBooking() {
-      console.log("Booking accepted!");
-      // Add logic to handle accepting the booking
-      this.selectedNotif = null; // Close the popup
-    },
-    declineBooking() {
-      console.log("Booking declined!");
-      // Add logic to handle declining the booking
-      this.selectedNotif = null; // Close the popup
+
+
+    
+handleRowClick(notif) {
+  this.selectedNotif = notif;
+  console.log("Selected Notification:", notif);
+  console.log("Notification properties:", Object.keys(notif)); // Log all properties of the notification
+  console.log("Timein:", notif.TimeIN);
+  console.log("Timeout:", notif.TimeOut);
+},
+
+
+async acceptBooking() {
+  try {
+    if (!this.selectedNotif || !this.selectedNotif.TimeIN || !this.selectedNotif.TimeOut) {
+      console.error('Selected notification or time data is undefined.');
+      return;
+    }
+    const guestid = this.selectedNotif.Guestid;
+    const dayofweek = formatDateINtoDayOfWeek(this.selectedNotif.dateIN);
+    const timein = this.selectedNotif.TimeIN; // Corrected property name to 'TimeIN'
+    const timeout = this.selectedNotif.TimeOut; // Corrected property name to 'TimeOut'
+    const participant = this.selectedNotif['Full name']; // Use 'Full name' with correct capitalization
+
+    console.log(this.selectedNotif.Guestid);
+    console.log(this.selectedNotif.dateIN);
+    console.log(formatDateINtoDayOfWeek(this.selectedNotif.dateIN));
+    console.log('value of timein formatted', this.selectedNotif.TimeIN);
+    console.log('value of timeout formatted', this.selectedNotif.TimeOut);
+    console.log('value of name' , this.selectedNotif['Full name'] );
+    console.log('Value of timein:', timein);
+    
+    // Create a FormData object
+    const formData = new FormData();
+    // Append data to the form data object
+    formData.append('guest_id', guestid);
+    formData.append('day_of_week', dayofweek);
+    formData.append('time_in', timein);
+    formData.append('time_out', timeout);
+    formData.append('participant', participant);
+
+
+    // Make a POST request with form data
+    const response = await axios.post(`http://127.0.0.1:8000/api/schedule/acceptbook`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data' // Set content type to multipart/form-data
+        }
+        
+    });
+
+    console.log("Booking accepted:", response.data);
+    this.selectedNotif = null; // Close the popup
+  } catch (error) {
+    console.error('Error accepting booking:', error);
+  }
+},  
+
+
+
+
+    async declineBooking() {
+      try {
+        const bookingId = this.selectedNotif.bookingid; // Correctly accessing the booking ID
+        
+        const response = await axios.delete(`http://localhost:8000/api/bookings/${bookingId}`);
+        console.log("Booking declined:", response.data);
+        // Remove the declined notification from the list
+        this.notif = this.notif.filter(notif => notif.bookingid !== bookingId);
+        this.selectedNotif = null; // Close the popup
+      } catch (error) {
+        console.error('Error declining booking:', error);
+        if (error.response) {
+          console.error('Response data:', error.response.data);
+          console.error('Response status:', error.response.status);
+        }
+      }
     },
   },
 };

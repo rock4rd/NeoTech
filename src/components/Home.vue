@@ -231,10 +231,10 @@ const getStatusColor = (status) => {
   background-color: lightcoral;
 }
 .highlighted-thursday {
-  background-color: lightgoldenrodyellow;
+  background-color: yellow;
 }
 .highlighted-friday {
-  background-color: lightpink;
+  background-color: green;
 }
 .itemscontainer {
   position: relative;
