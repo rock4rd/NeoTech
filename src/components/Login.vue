@@ -72,6 +72,7 @@ export default {
   data() {
     return {
       username: '',
+      user_id: '',  // This will be set after successful login
       password: '',
       agreedToTerms: false,
       showPrompt: false,
@@ -87,44 +88,53 @@ export default {
       this.showUserPrompt = false;
     },
     attemptLogin() {
-  this.closePrompt(); // Close any open prompts
+      this.closePrompt(); // Close any open prompts
 
-  if (!this.agreedToTerms) {
-    this.showPrompt = true;
-  } else {
-    const formData = new FormData();
-    formData.append('username', this.username);
-    formData.append('password', this.password);
+      if (!this.agreedToTerms) {
+        this.showPrompt = true;
+      } else {
+        const formData = new FormData();
+        formData.append('username', this.username);
+        formData.append('password', this.password);
 
-    axios.post('http://127.0.0.1:8000/api/users/login/', formData)
-      .then(response => {
-        if (response.status === 200) {
-          console.log("Success");
-          this.showSuccessPrompt = true;
-          localStorage.setItem('username', this.username);
-          console.log('Username stored in local storage:', localStorage.getItem('username'));
-          setTimeout(() => {
-            this.$router.push('/home'); // Redirect to home after successful login
-          }, 5000);
-       
-        } else {
-          console.log("Error");
-          this.showWrong = true; // Show prompt for wrong password
-        }
-      })
-      .catch(error => {
-        console.error('Error during login:', error);
-        if (error.response && error.response.status === 401) {
-          this.showWrong = true; // Show prompt for wrong password
-        } else {
-          this.showUserPrompt = true; // Show prompt for non-existing username
-        }
-      });
-  }
-}
+        axios.post('http://127.0.0.1:8000/api/users/login/', formData)
+          .then(response => {
+            if (response.status === 200) {
+              console.log("Success", response.data);
+              this.showSuccessPrompt = true;
+
+              // Set the user_id from the response
+              this.user_id = response.data.user_id;
+              
+              // Store in localStorage
+              localStorage.setItem('username', this.username);
+              localStorage.setItem('userId', this.user_id.toString()); // Convert to string
+
+              console.log('Username stored in local storage:', localStorage.getItem('username'));
+              console.log('UserId stored in local storage:', localStorage.getItem('userId'));
+              
+              setTimeout(() => {
+                this.$router.push('/home'); // Redirect to home after successful login
+              }, 5000);
+            } else {
+              console.log("Error");
+              this.showWrong = true; // Show prompt for wrong password
+            }
+          })
+          .catch(error => {
+            console.error('Error during login:', error);
+            if (error.response && error.response.status === 401) {
+              this.showWrong = true; // Show prompt for wrong password
+            } else {
+              this.showUserPrompt = true; // Show prompt for non-existing username
+            }
+          });
+      }
+    }
   }
 }
 </script>
+
 
 
 

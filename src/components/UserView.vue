@@ -644,25 +644,20 @@ export default {
     console.log('Booking submitted successfully:', response.data);
     // Optionally, perform any additional actions upon successful submission
     // For example, transition to the next step or display a success message
+    this.redirectToLogin();
   } catch (error) {
     console.error('Error submitting booking:', error);
     alert('Error submitting booking. Please try again later.');
     // Optionally, display an error message to the user
-  
-}
+  }
+},
 
+redirectToLogin() {
+  setTimeout(() => {
+    this.$router.push('/');
+  }, 5000);
+},
 
-
-    
-
-
-
-    },
-    redirectlogin() {
-      setTimeout(() => {
-        this.$router.push('/');
-      }, 5000);
-    },
     nextStep() {
       this.currentStep++;
     },

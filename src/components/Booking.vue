@@ -437,63 +437,108 @@ handleRowClick(notif) {
   console.log("Notification properties:", Object.keys(notif)); // Log all properties of the notification
   console.log("Timein:", notif.TimeIN);
   console.log("Timeout:", notif.TimeOut);
+  
+  console.log(localStorage.getItem('username'));
+  console.log(localStorage.getItem('userId'));
+  
 },
 
 
 async acceptBooking() {
-  try {
-    if (!this.selectedNotif || !this.selectedNotif.TimeIN || !this.selectedNotif.TimeOut) {
-      console.error('Selected notification or time data is undefined.');
-      return;
-    }
-    const guestid = this.selectedNotif.Guestid;
-    const dayofweek = formatDateINtoDayOfWeek(this.selectedNotif.dateIN);
-    const timein = this.selectedNotif.TimeIN; // Corrected property name to 'TimeIN'
-    const timeout = this.selectedNotif.TimeOut; // Corrected property name to 'TimeOut'
-    const participant = this.selectedNotif['Full name']; // Use 'Full name' with correct capitalization
-
-    console.log(this.selectedNotif.Guestid);
-    console.log(this.selectedNotif.dateIN);
-    console.log(formatDateINtoDayOfWeek(this.selectedNotif.dateIN));
-    console.log('value of timein formatted', this.selectedNotif.TimeIN);
-    console.log('value of timeout formatted', this.selectedNotif.TimeOut);
-    console.log('value of name' , this.selectedNotif['Full name'] );
-    console.log('Value of timein:', timein);
-    
-    // Create a FormData object
-    const formData = new FormData();
-    // Append data to the form data object
-    formData.append('guest_id', guestid);
-    formData.append('day_of_week', dayofweek);
-    formData.append('time_in', timein);
-    formData.append('time_out', timeout);
-    formData.append('participant', participant);
-
-
-    // Make a POST request with form data
-    const response = await axios.post(`http://127.0.0.1:8000/api/schedule/acceptbook`, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data' // Set content type to multipart/form-data
+      try {
+        if (!this.selectedNotif || !this.selectedNotif.TimeIN || !this.selectedNotif.TimeOut) {
+          console.error('Selected notification or time data is undefined.');
+          return;
         }
+        const guestid = this.selectedNotif.Guestid;
+        const dayofweek = formatDateINtoDayOfWeek(this.selectedNotif.dateIN);
+        const timein = this.selectedNotif.TimeIN;
+        const timeout = this.selectedNotif.TimeOut;
+        const participant = this.selectedNotif['Full name'];
+        const userId = localStorage.getItem('userId'); // Get and parse User ID from localStorage
+        const bookingId = this.selectedNotif.bookingid;
+
+        // Create a FormData object
+        const formData = new FormData();
+        formData.append('guest_id', guestid);
+        formData.append('day_of_week', dayofweek);
+        formData.append('time_in', timein);
+        formData.append('time_out', timeout);
+        formData.append('participant', participant);
+
+        // Make a POST request with form data to accept booking
+        const response = await axios.post(`http://127.0.0.1:8000/api/schedule/acceptbook`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+
+        console.log("Booking accepted:", response.data);
+
+        // Add data for the history entry
+        const historyFormData = new FormData();
+        historyFormData.append('guest_id', guestid);
+        historyFormData.append('booking_id', bookingId); // Assuming the booking ID is returned in the response
+        historyFormData.append('full_name', participant);
+        historyFormData.append('purpose', this.selectedNotif.Purpose);
+        historyFormData.append('action', 'Accepted'); // Add action status
+        historyFormData.append('user_id', userId); // Append the User ID
+
+        // Make a POST request with form data to add history
+        const historyResponse = await axios.post(`http://127.0.0.1:8000/api/history/add`, historyFormData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+
+        console.log("History added:", historyResponse.data);
+
+       
         
-    });
+        const deleteResponse = await axios.delete(`http://localhost:8000/api/bookings/${bookingId}`);
+        console.log("Booking deleted:", deleteResponse.data);
 
-    console.log("Booking accepted:", response.data);
-    this.selectedNotif = null; // Close the popup
-  } catch (error) {
-    console.error('Error accepting booking:', error);
-  }
-},  
-
-
-
+        // Remove the deleted notification from the list
+        this.notif = this.notif.filter(notif => notif.bookingid !== bookingId);
+        this.selectedNotif = null; // Close the popup
+      } catch (error) {
+        console.error('Error accepting booking:', error);
+      }
+    },
 
     async declineBooking() {
       try {
+        if (!this.selectedNotif) {
+          console.error('Selected notification is undefined.');
+          return;
+        }
+        const guestid = this.selectedNotif.Guestid;
+        const participant = this.selectedNotif['Full name'];
+        const userId = localStorage.getItem('userId'); // Get and parse User ID from localStorage
         const bookingId = this.selectedNotif.bookingid; // Correctly accessing the booking ID
-        
+
+        // Add data for the history entry
+        const historyFormData = new FormData();
+        historyFormData.append('guest_id', guestid);
+        historyFormData.append('booking_id', bookingId);
+        historyFormData.append('full_name', participant);
+        historyFormData.append('purpose', this.selectedNotif.Purpose);
+        historyFormData.append('action', 'Declined'); // Add action status
+        historyFormData.append('user_id', userId); // Append the User ID
+
+        // Make a POST request with form data to add history
+        const historyResponse = await axios.post(`http://127.0.0.1:8000/api/history/add`, historyFormData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+
+        console.log("History added:", historyResponse.data);
+
+        // Delete the booking after storing it in history
         const response = await axios.delete(`http://localhost:8000/api/bookings/${bookingId}`);
         console.log("Booking declined:", response.data);
+
         // Remove the declined notification from the list
         this.notif = this.notif.filter(notif => notif.bookingid !== bookingId);
         this.selectedNotif = null; // Close the popup
