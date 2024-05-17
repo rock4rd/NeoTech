@@ -53,4 +53,7 @@ export default {
   padding: 20px;
   border-radius: 10px;
 }
+.popup-content p {
+  font-weight: bolder;
+}
 </style>

@@ -91,7 +91,7 @@ const hasSchedulesForTimeDayAndRoom = (time, day, roomNumber, yearSection) => {
     const scheduleTimeOutMinutes = convertTimeToMinutes(schedule.timeout);
 
     const isMatchingRoom = roomNumber === 'All' || schedule.roomnumber === roomNumber;
-    const isMatchingYearSection = yearSection === '' || schedule.yearandsection === yearSection;
+    const isMatchingYearSection = yearSection === '' || schedule.YearSection === yearSection;
 
     return (
       isMatchingRoom &&
@@ -147,6 +147,7 @@ const getStatusColor = (status) => {
     <div class="homecontainer">
       <div class="itemscontainer">
         <h2 class="schedhead">SCHEDULE</h2>
+          <h4 class="reactiveheader">{{ selectedYearSection }}</h4>
         <div class="lab-filter">
           <label for="lab-select">Select Laboratory:</label>
           <select id="lab-select" v-model="selectedLab">
@@ -157,7 +158,7 @@ const getStatusColor = (status) => {
         <div class="yrNsectionfilter">
           <label for="section-select">Select Year & Section:</label>
           <select id="section-select" v-model="selectedYearSection">
-            <option value="">All</option>
+            
             <option v-for="section in YearnSection" :value="section" :key="section">{{ section }}</option>
           </select>
         </div>
@@ -255,7 +256,7 @@ const getStatusColor = (status) => {
   position: relative;
   top: 10%;
   left: 13%;
-  height: 75%;
+  height: 87.5%;
   width: 80%;
   border-radius: 34.56px 34.56px 0px 0px;
   border: 1px solid var(--LIght, #F5347F);
@@ -266,13 +267,54 @@ const getStatusColor = (status) => {
   position: relative;
   background-color: white;
   left: 30px;
-  top: 30px;
+  bottom: 5%;
   color: white;
   height: 82%;
-  width: 45%;
+  width: 55%;
   overflow-y: auto;
 }
+.lab-filter{
+  position: relative;
+  left: 3.5%;
+}
+.yrNsectionfilter{
+  position: relative;
+  left: 44%;
+  bottom: 8%;
+}
+.lab-filter, .yrNsectionfilter {
+  margin-bottom: 5px;
+}
+
+.lab-filter label, .yrNsectionfilter label {
+  font-weight: bold;
+  color: #333;
+}
+
+.lab-filter select, .yrNsectionfilter select {
+  display: block;
+  width: 10%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.lab-filter select:focus, .yrNsectionfilter select:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
 .sched-table {
+  position:relative;
   color: black;
   border: black;
   grid: black;
@@ -293,17 +335,18 @@ const getStatusColor = (status) => {
 }
 .divider {
   position: relative;
-  height: 90%;
+  
+  height: 95%;
   width: 5px;
-  bottom: 85%;
+  bottom: 97.5%;
   background-color: black;
-  left: 49%;
+  left: 60%;
 }
 .schedhead {
   color: black;
   font-weight: bold;
   position: relative;
-  left: 17%;
+  left: 23%;
   top: 3%;
 }
 .sched-table td, .sched-table th {
@@ -360,8 +403,8 @@ tr .timeslottd{
   position: relative;
   height: 300px;
   width: 500px;
-  left: 55%;
-  bottom: 160%;
+  left: 65%;
+  bottom: 175%;
   color: white;
   font-size: 70%;
 }
@@ -396,6 +439,14 @@ tr .timeslottd{
   border: none;
   padding: 5px;
 }
+.reactiveheader{
+  position: relative;
+  top: 2%;
+  left: 26%;
+  font-size: 20px;
+  font-weight: bold;
+  color:black;
+}
 .status {
   position: relative;
   bottom: 10px;
@@ -405,6 +456,7 @@ tr .timeslottd{
   position: relative;
   bottom: 15%;
 }
+
 /* Media query for smaller screens */
 @media only screen and (max-width: 1500px) {
   .schedcontainer {
