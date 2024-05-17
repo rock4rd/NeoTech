@@ -14,12 +14,23 @@ const selectedTimeOut = ref('');
 const selectedParticipant = ref('');
 const selectedLab = ref('');
 const selectedYearSection = ref('');
+const currentTime = ref('');
+const currentDay = ref('');
+
 const timeSlots = [
   '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 NN','Lunch Break',
   '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM','7:00 PM', '8:00 PM'
 ];
 const YearnSection = [
-  'BSIT-1A', 'BSIT-1B', 'BSCS-1', 'BSIT-2A', 'BSIT-2B', 'BSCS-2', 'BSIT-3A', 'BSIT-3B', 'BSCS-3'
+'BSCS-1',
+'BSCS-2',
+'BSCS-3',
+'BSIT-1A',
+'BSIT-1B',
+'BSIT-2A',
+'BSIT-2B',
+'BSIT-3A',
+'BSIT-3B',
 ];
 
 const formatTime = (ptTime) => {
@@ -67,8 +78,10 @@ const fetchSchedules = async () => {
       ...schedule,
       timein: formatTime(schedule.timein),
       timeout: formatTime(schedule.timeout),
+     
     }));
-    console.log('Schedules:', schedules.value);
+    updateLabStatus();
+    console.log(response.data);
   } catch (error) {
     console.error('Error fetching schedules:', error.response ? error.response.data : error.message);
   }
@@ -78,6 +91,7 @@ const fetchLabs = async () => {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/labstatus/');
     labs.value = response.data;
+    updateLabStatus();
   } catch (error) {
     console.error('Error fetching labs:', error.response ? error.response.data : error.message);
   }
@@ -110,9 +124,41 @@ const convertTimeToMinutes = (time) => {
   return adjustedHours * 60 + minutes;
 };
 
+// Function to update the current time and day
+const updateCurrentTime = () => {
+  const now = new Date();
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  currentTime.value = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  currentDay.value = now.toLocaleDateString('en-US', { weekday: 'long' });
+};
+
+// Function to update lab status based on the current time and day
+const updateLabStatus = () => {
+  updateCurrentTime();
+
+  labs.value.forEach(lab => {
+    const isOccupied = schedules.value.some(schedule => {
+      const scheduleTimeInMinutes = convertTimeToMinutes(schedule.timein);
+      const scheduleTimeOutMinutes = convertTimeToMinutes(schedule.timeout);
+      const currentTimeInMinutes = convertTimeToMinutes(currentTime.value);
+      
+      return (
+        scheduleTimeInMinutes <= currentTimeInMinutes &&
+        scheduleTimeOutMinutes > currentTimeInMinutes &&
+        schedule.dayofweek.trim() === currentDay.value.trim() &&
+        schedule.roomnumber === lab.labname
+      );
+    });
+    lab.occupied = isOccupied;
+  });
+};
+
 onMounted(() => {
   fetchSchedules();
   fetchLabs();
+  setInterval(updateLabStatus, 30000); // Update lab status every 30 sec
+  
 });
 
 // Helper function to get highlight class based on day
@@ -139,15 +185,13 @@ const getStatusColor = (status) => {
 };
 </script>
 
-
-
 <template>
   <div>
     <NavigationBar />
     <div class="homecontainer">
       <div class="itemscontainer">
         <h2 class="schedhead">SCHEDULE</h2>
-          <h4 class="reactiveheader">{{ selectedYearSection }}</h4>
+        <h4 class="reactiveheader">{{ selectedYearSection }}</h4>
         <div class="lab-filter">
           <label for="lab-select">Select Laboratory:</label>
           <select id="lab-select" v-model="selectedLab">
@@ -158,7 +202,6 @@ const getStatusColor = (status) => {
         <div class="yrNsectionfilter">
           <label for="section-select">Select Year & Section:</label>
           <select id="section-select" v-model="selectedYearSection">
-            
             <option v-for="section in YearnSection" :value="section" :key="section">{{ section }}</option>
           </select>
         </div>
@@ -175,10 +218,8 @@ const getStatusColor = (status) => {
               </tr>
             </thead>
             <tbody>
-              <!-- Loop through each time slot -->
               <tr v-for="time in timeSlots" :key="time">
                 <td class="timeslottd">{{ time }}</td>
-                <!-- Loop through each day of the week -->
                 <td v-for="day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']" :key="day"
                     :class="{ [getHighlightClassForDay(day)]: hasSchedulesForTimeDayAndRoom(time, day, selectedLab, selectedYearSection) }"
                     @click="showPopup(time, day)">
@@ -192,11 +233,9 @@ const getStatusColor = (status) => {
           <p class="headir">LABORATORY ROOM</p>
           <table class="labtable">
             <tbody>
-              <!-- Loop through each lab -->
               <tr v-for="lab in labs" :key="lab.labstatusid">
                 <td>
                   <div class="lab-content">
-                    <!-- Display lab information -->
                     <div class="labroom">{{ lab.labname }}</div>
                     <div class="status" :style="{ color: getStatusColor(lab.occupied ? 'Occupied' : 'Available') }">
                       {{ lab.occupied ? 'Occupied' : 'Available' }}
@@ -209,7 +248,6 @@ const getStatusColor = (status) => {
         </div>
       </div>
     </div>
-    <!-- Pop-up component -->
     <Popup
       v-if="isPopupVisible"
       :time="selectedTimeIn"
@@ -262,6 +300,10 @@ const getStatusColor = (status) => {
   border: 1px solid var(--LIght, #F5347F);
   background: rgba(255, 255, 255, 0.41);
   box-shadow: 15px 15px 10px 0px #F5347F;
+}
+.manual-time{
+  position: relative;
+  bottom: 20%
 }
 .schedhome {
   position: relative;
