@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 import NavigationBar from './NavigationBar.vue';
 import Popup from './Popup.vue';
@@ -18,19 +18,11 @@ const currentTime = ref('');
 const currentDay = ref('');
 
 const timeSlots = [
-  '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 NN','Lunch Break',
-  '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM','7:00 PM', '8:00 PM'
+  '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 NN', 'Lunch Break',
+  '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM', '7:00 PM', '8:00 PM'
 ];
 const YearnSection = [
-'BSCS-1',
-'BSCS-2',
-'BSCS-3',
-'BSIT-1A',
-'BSIT-1B',
-'BSIT-2A',
-'BSIT-2B',
-'BSIT-3A',
-'BSIT-3B',
+  'BSCS-1', 'BSCS-2', 'BSCS-3', 'BSIT-1A', 'BSIT-1B', 'BSIT-2A', 'BSIT-2B', 'BSIT-3A', 'BSIT-3B'
 ];
 
 const formatTime = (ptTime) => {
@@ -78,10 +70,8 @@ const fetchSchedules = async () => {
       ...schedule,
       timein: formatTime(schedule.timein),
       timeout: formatTime(schedule.timeout),
-     
     }));
     updateLabStatus();
-    console.log(response.data);
   } catch (error) {
     console.error('Error fetching schedules:', error.response ? error.response.data : error.message);
   }
@@ -124,7 +114,6 @@ const convertTimeToMinutes = (time) => {
   return adjustedHours * 60 + minutes;
 };
 
-// Function to update the current time and day
 const updateCurrentTime = () => {
   const now = new Date();
   const hours = now.getHours();
@@ -133,7 +122,6 @@ const updateCurrentTime = () => {
   currentDay.value = now.toLocaleDateString('en-US', { weekday: 'long' });
 };
 
-// Function to update lab status based on the current time and day
 const updateLabStatus = () => {
   updateCurrentTime();
 
@@ -158,8 +146,9 @@ onMounted(() => {
   fetchSchedules();
   fetchLabs();
   setInterval(updateLabStatus, 30000); // Update lab status every 30 sec
-  
 });
+
+watch([currentTime, currentDay], updateLabStatus);
 
 // Helper function to get highlight class based on day
 const getHighlightClassForDay = (day) => {
@@ -258,6 +247,7 @@ const getStatusColor = (status) => {
     />
   </div>
 </template>
+
 
 
 
