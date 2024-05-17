@@ -175,6 +175,7 @@ line-height: normal;
   }
 }
 .highlight-container {
+  font-size: 20px;
   height: 35px;
   border-radius: 11.853px;
   background: rgba(0, 0, 0, 0.14);

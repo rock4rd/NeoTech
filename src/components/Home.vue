@@ -1,66 +1,65 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-
-// Import NavigationBar component
 import NavigationBar from './NavigationBar.vue';
 import Popup from './Popup.vue';
 
-
-// Define reactive variables
 const schedules = ref([]);
 const labs = ref([]);
 const isPopupVisible = ref(false);
-const selectedTime = ref(''); // Define selectedTime here
+const selectedTime = ref('');
 const selectedDay = ref('');
-
-// Define time slots
+const selectedTimeIn = ref('');
+const selectedTimeOut = ref('');
+const selectedParticipant = ref('');
+const selectedLab = ref('');
+const selectedYearSection = ref('');
 const timeSlots = [
-  '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 NN',
-  '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM'
+  '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 NN','Lunch Break',
+  '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM','7:00 PM', '8:00 PM'
+];
+const YearnSection = [
+  'BSIT-1A', 'BSIT-1B', 'BSCS-1', 'BSIT-2A', 'BSIT-2B', 'BSCS-2', 'BSIT-3A', 'BSIT-3B', 'BSCS-3'
 ];
 
-// Helper function to format time
 const formatTime = (ptTime) => {
   const seconds = parseInt(ptTime.replace('PT', '').replace('S', ''), 10);
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
 };
+
 const togglePopup = () => {
   isPopupVisible.value = !isPopupVisible.value;
 };
+
 const showPopup = (time, day) => {
-  console.log("Clicked Time:", time);
-  console.log("Clicked Day:", day);
-  // Check if the clicked cell is highlighted
-  if (hasSchedulesForTimeDay(time, day)) {
+  const schedule = schedules.value.find(schedule => {
+    const scheduleTimeInMinutes = convertTimeToMinutes(schedule.timein);
+    const scheduleTimeOutMinutes = convertTimeToMinutes(schedule.timeout);
+    const slotTime = convertTimeToMinutes(time);
+    const slotEnd = slotTime + 60;
+    return (
+      scheduleTimeInMinutes < slotEnd &&
+      scheduleTimeOutMinutes >= slotTime &&
+      schedule.dayofweek.trim() === day.trim()
+    );
+  });
+
+  if (schedule) {
     selectedTime.value = time;
     selectedDay.value = day;
-    isPopupVisible.value = true;
-  }
-
-
-  // Check if the schedule exists and if the cell is highlighted
-  if (schedule && hasSchedulesForTimeDay(time, day)) {
-    // Extract timein, timeout, and participant from the schedule
-    const { timein, timeout, participant } = schedule;
-    selectedTime.value = timein;
-    selectedDay.value = day;
-    selectedParticipant.value = participant; // Assuming you have a ref for participant
+    selectedTimeIn.value = schedule.timein;
+    selectedTimeOut.value = schedule.timeout;
+    selectedParticipant.value = schedule.participant;
     isPopupVisible.value = true;
   }
 };
 
-
-
-
-// Function to hide pop-up
 const hidePopup = () => {
   isPopupVisible.value = false;
 };
 
-// Function to fetch schedules
 const fetchSchedules = async () => {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/schedule/');
@@ -69,12 +68,12 @@ const fetchSchedules = async () => {
       timein: formatTime(schedule.timein),
       timeout: formatTime(schedule.timeout),
     }));
+    console.log('Schedules:', schedules.value);
   } catch (error) {
     console.error('Error fetching schedules:', error.response ? error.response.data : error.message);
   }
 };
 
-// Function to fetch lab statuses
 const fetchLabs = async () => {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/labstatus/');
@@ -84,28 +83,26 @@ const fetchLabs = async () => {
   }
 };
 
-// Function to check if there are schedules for a specific time and day
-const hasSchedulesForTimeDay = (time, day) => {
+const hasSchedulesForTimeDayAndRoom = (time, day, roomNumber, yearSection) => {
   const slotTime = convertTimeToMinutes(time);
 
-  const doesOverlap = (scheduleTimeInMinutes, scheduleTimeOutMinutes, slotTime) => {
-    const slotEnd = slotTime + 60;
-    return (scheduleTimeInMinutes < slotEnd && scheduleTimeOutMinutes >= slotTime);
-  };
-
   return schedules.value.some(schedule => {
-    console.log("Schedule Day:", schedule.dayofweek.trim());
-    console.log("Selected Day:", day.trim());
     const scheduleTimeInMinutes = convertTimeToMinutes(schedule.timein);
     const scheduleTimeOutMinutes = convertTimeToMinutes(schedule.timeout);
-    return doesOverlap(scheduleTimeInMinutes, scheduleTimeOutMinutes, slotTime) && schedule.dayofweek.trim() === day.trim();
+
+    const isMatchingRoom = roomNumber === 'All' || schedule.roomnumber === roomNumber;
+    const isMatchingYearSection = yearSection === '' || schedule.yearandsection === yearSection;
+
+    return (
+      isMatchingRoom &&
+      isMatchingYearSection &&
+      scheduleTimeInMinutes < slotTime + 60 &&
+      scheduleTimeOutMinutes >= slotTime &&
+      schedule.dayofweek.trim() === day.trim()
+    );
   });
 };
 
-
-
-
-// Helper function to convert time to minutes for easier comparison
 const convertTimeToMinutes = (time) => {
   const [timePart, ampm] = time.split(' ');
   const [hours, minutes] = timePart.split(':').map(Number);
@@ -113,7 +110,6 @@ const convertTimeToMinutes = (time) => {
   return adjustedHours * 60 + minutes;
 };
 
-// Fetch data when the component is mounted
 onMounted(() => {
   fetchSchedules();
   fetchLabs();
@@ -141,9 +137,8 @@ const getHighlightClassForDay = (day) => {
 const getStatusColor = (status) => {
   return status === 'Occupied' ? 'red' : 'green';
 };
-
-
 </script>
+
 
 
 <template>
@@ -152,6 +147,20 @@ const getStatusColor = (status) => {
     <div class="homecontainer">
       <div class="itemscontainer">
         <h2 class="schedhead">SCHEDULE</h2>
+        <div class="lab-filter">
+          <label for="lab-select">Select Laboratory:</label>
+          <select id="lab-select" v-model="selectedLab">
+            <option value="All">All</option>
+            <option v-for="lab in labs" :value="lab.labname" :key="lab.labstatusid">{{ lab.labname }}</option>
+          </select>
+        </div>
+        <div class="yrNsectionfilter">
+          <label for="section-select">Select Year & Section:</label>
+          <select id="section-select" v-model="selectedYearSection">
+            <option value="">All</option>
+            <option v-for="section in YearnSection" :value="section" :key="section">{{ section }}</option>
+          </select>
+        </div>
         <div class="schedhome">
           <table class="sched-table">
             <thead>
@@ -167,12 +176,11 @@ const getStatusColor = (status) => {
             <tbody>
               <!-- Loop through each time slot -->
               <tr v-for="time in timeSlots" :key="time">
-                <td>{{ time }}</td>
+                <td class="timeslottd">{{ time }}</td>
                 <!-- Loop through each day of the week -->
                 <td v-for="day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']" :key="day"
-                    :class="{ [getHighlightClassForDay(day)]: hasSchedulesForTimeDay(time, day) }"
+                    :class="{ [getHighlightClassForDay(day)]: hasSchedulesForTimeDayAndRoom(time, day, selectedLab, selectedYearSection) }"
                     @click="showPopup(time, day)">
-                  <!-- Apply class conditionally based on schedules -->
                 </td>
               </tr>
             </tbody>
@@ -201,10 +209,17 @@ const getStatusColor = (status) => {
       </div>
     </div>
     <!-- Pop-up component -->
-    <Popup v-if="isPopupVisible" :time="selectedTime" :day="selectedDay" :timeout="selectedTimeOut" @close="hidePopup" />
-
+    <Popup
+      v-if="isPopupVisible"
+      :time="selectedTimeIn"
+      :day="selectedDay"
+      :timeout="selectedTimeOut"
+      :participant="selectedParticipant"
+      @close="hidePopup"
+    />
   </div>
 </template>
+
 
 
 <style>
@@ -259,8 +274,8 @@ const getStatusColor = (status) => {
 }
 .sched-table {
   color: black;
-  border: none;
-  grid: none;
+  border: black;
+  grid: black;
   font-size: 90%;
   width: 100%;
 }
@@ -290,6 +305,12 @@ const getStatusColor = (status) => {
   position: relative;
   left: 17%;
   top: 3%;
+}
+.sched-table td, .sched-table th {
+  padding: 10px; /* Add padding inside cells */
+}
+tr .timeslottd{
+  margin-bottom: 10px;
 }
 .homeheader {
   position: relative;
@@ -352,6 +373,9 @@ const getStatusColor = (status) => {
   font-size: medium;
 }
 .labroom {
+  display: flex; /* Use flexbox */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
   height: 50px;
   width: 200px;
   border-radius: 10px;
@@ -359,8 +383,10 @@ const getStatusColor = (status) => {
   color: black;
   font-weight: bold;
   margin-bottom: 20px;
+  margin-right: 200px;
   padding: 14px;
 }
+
 .laboratory .labtable {
   border-collapse: separate;
   border-spacing: 1px;

@@ -154,6 +154,10 @@ tbody{
   padding: 10px;
   width: 100%; /* Adjusted to 100% */
 }
+.header-item{
+  font-size: 23px;
+  font-weight: bolder;
+}
 .header-item:first-child {
   position: fixed;
   left: 18%; /* Move the first child to the right */
@@ -163,31 +167,31 @@ tbody{
 
 .header-item:nth-child(2) {
   position: fixed;
-  left: 50%;/* Move the middle child to the right */
+  left: 49.5%;/* Move the middle child to the right */
 }
 .header-item:last-child {
   position: fixed;
-  left: 82.5%; /* Align text to the right */
+  left: 82%; /* Align text to the right */
 }
 .notifItem td {
   
  
-    padding: 10px;
-    text-align: left;
+    position: relative;
+    top: 21%;
     
 }
 .notifItem td:first-child{
-  position: relative;
-  left: 6%;
+  position: fixed;
+  left: 18.5%;
 }
 .notifItem td:nth-child(2) {
     position: fixed;
-    left:50%;
+    left:50.5%;
   }
 
   .notifItem td:last-child {
-   position: relative;
-    left: 33%;
+   position: fixed;
+    left: 82.5%;
   }
 
 .time {

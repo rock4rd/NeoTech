@@ -8,23 +8,23 @@
       <div class="sched-wrapper">
         <table class="history-table">
           <thead>
-            <tr>
-              <th>History ID</th>
-              <th>Date</th>  
+            <tr class="headerhistory">
+              <th @click="toggleSort('Date')">Date</th> <!-- Added click event -->
               <th>Full Name</th>
               <th>Purpose</th>
+              <th>Admin</th>
               <th>Action</th>
-              <th>Admin Name</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in historyData" :key="item.historyid">
-              <td>{{ item.historyid }}</td>
-              <td>{{ item.date }}</td>
-              <td>{{ item.fullname }}</td>
-              <td>{{ item.purpose }}</td>
-              <td>{{ item.action }}</td>
-              <td>{{ item.adminname }}</td>
+            <tr v-for="item in historyDataSorted" :key="item.HistoryID" class="historyitems">
+              <td>{{ item.Date }}</td>
+              <td>{{ item.FullName }}</td>
+              <td>{{ item.Purpose }}</td>
+              <td>{{ item.AdminFullName }}</td>
+              <td :class="{'accepted': item.Action === 'Accepted', 'declined': item.Action === 'Declined'}">
+                {{ item.Action }}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -36,26 +36,51 @@
 <script setup>
 import NavigationBar from './NavigationBar.vue';
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 const historyData = ref([]);
+
+const sortConfig = ref({
+  key: 'Date',
+  ascending: true
+});
 
 onMounted(async () => {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/bookings/history');
     historyData.value = response.data;
-    console.log(historyData.data);
-    console.log(response.data);
+    console.log("Fetched history data:", response.data);
   } catch (error) {
     console.error('Error fetching history:', error);
   }
 });
+
+const historyDataSorted = computed(() => {
+  const data = [...historyData.value];
+  const key = sortConfig.value.key;
+  const ascending = sortConfig.value.ascending;
+
+  return data.sort((a, b) => {
+    const comparison = a[key].localeCompare(b[key]);
+
+    return ascending ? comparison : -comparison;
+  });
+});
+
+const toggleSort = (key) => {
+  if (sortConfig.value.key === key) {
+    sortConfig.value.ascending = !sortConfig.value.ascending;
+  } else {
+    sortConfig.value.key = key;
+    sortConfig.value.ascending = true;
+  }
+};
 </script>
 
 <style>
 .hiscontainer {
   position: fixed;
-  top: 0; /* Adjusted to start from the top of the viewport */
+  top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
@@ -66,19 +91,48 @@ onMounted(async () => {
   background-repeat: no-repeat;
   z-index: 1;
 }
-.schedtable{
-  color: black;
-    border: none;
-    grid: none;
-    position: relative;
-    left: 3%;
-    font-size: 85%; /* Adjust the font size as needed */
-  width: 65%; /* Set the width to 100% or a specific value */
-  max-height: 100%;
-  border-radius: 34.56px;
-background: rgba(0, 0, 0, 0.05);
-box-shadow: -1.44px 0px 5.76px 0px rgba(0, 0, 0, 0.15) inset, 0px 11.52px 8.64px 0px rgba(0, 0, 0, 0.05);
-backdrop-filter: blur(25px);
+
+.hisheader {
+  color: var(--Light, #F5347F);
+  position: relative;
+  top: 50px;
+  left: 8%;
+  font-family: Suez One;
+  font-size: 45px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.headerhistory th {
+  font-size: 20px;
+}
+.historyitems td{
+  position: relative;
+  padding: 20px;
+  top: 20px;
+  
+}
+
+.sched-wrapper {
+  aspect-ratio: 1.32;
+  position: relative;
+  top: 10%;
+  left: 13%;
+  height: 75%;
+  width: 80%;
+  border-radius: 34.56px 34.56px 0px 0px;
+  border: 1px solid var(--Light, #F5347F);
+  background: rgba(255, 255, 255, 0.41);
+  box-shadow: 15px 15px 10px 0px #F5347F;
+}
+
+.history-table {
+  position: relative;
+  top: 13%;
+  left: 3%;
+  width: 95%;
+  border-collapse: separate;
+  border-spacing: 5px 1rem;
 }
 button {
   background: none;
@@ -91,46 +145,23 @@ button {
   align-items: center;
 }
 
-.hisheader {
-  color: var(--LIght, #F5347F);
-  position: relative;
-  top: 50px;
-  left: 8%;
-font-family: Suez One;
-font-size: 45px;
-font-style: normal;
-font-weight: 400;
-line-height: normal;
-}
-.sched-wrapper{
-  aspect-ratio: 1.32;
-  position: relative;
-    top: 10%;
-    left: 13%;
-    height: 75%;
-    width: 80%;
-    border-radius: 34.56px 34.56px 0px 0px;
-border: 1px solid var(--LIght, #F5347F);
-background: rgba(255, 255, 255, 0.41);
-box-shadow: 15px 15px 10px 0px #F5347F;
-}
-.history-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
 .history-table th,
 .history-table td {
-  border: 1px solid #ddd;
+  border: none;
   padding: 8px;
   text-align: left;
+  font-weight: bold; /* Bold letters */
 }
 
 .history-table th {
-  background-color: #f2f2f2;
+  background-color: transparent; /* No background for table header */
 }
 
-.history-table tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
+.accepted {
+  color: green;
+}
+
+.declined {
+  color: red;
 }
 </style>
