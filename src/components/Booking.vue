@@ -36,19 +36,23 @@ import NavigationBar from './NavigationBar.vue'
       <h2>Booking Details</h2>
       <b class="bi bi-x-circle xcircle" @click="closePopup"></b>
       <div class="field">
-        <label for="name">Name:</label>
+        <label for="desiredLab">Laboratory number: </label>
+        <span id="desiredLab">{{ selectedNotif['desiredLab'] }}</span>
+      </div>
+      <div class="field">
+        <label for="name">Name: </label>
         <span id="name">{{ selectedNotif['Full name'] }}</span>
       </div>
       <div class="field">
-        <label for="purpose">Purpose:</label>
+        <label for="purpose">Purpose: </label>
         <span id="purpose">{{ selectedNotif['Purpose'] }}</span>
       </div>
       <div class="field">
-        <label for="timeIn">Time In:</label>
+        <label for="timeIn">Time In: </label>
         <span id="timeIn">{{ selectedNotif['TimeIN'] }}</span>
       </div>
       <div class="field">
-        <label for="timeOut">Time Out:</label>
+        <label for="timeOut">Time Out: </label>
         <span id="timeOut">{{ selectedNotif['TimeOut'] }}</span>
       </div>
       <div class="buttons">
@@ -174,25 +178,35 @@ tbody{
   position: fixed;
   left: 82%; /* Align text to the right */
 }
+.notifItem{
+  padding: 20px;
+  margin-bottom: 20px;
+}
 .notifItem td {
   
- 
+    font-weight: bold;
     position: relative;
     top: 21%;
+    margin-bottom: 20px;
+    
     
 }
 .notifItem td:first-child{
   position: relative;
-  left: 7%;
+  top: 40px;
+  left: 6.5%;
+  margin-bottom: 20px;
 }
 .notifItem td:nth-child(2) {
     position: relative;
-    left:50.5%;
+    top: 40px;
+    right: 8%
   }
 
   .notifItem td:last-child {
    position: relative;
-    left: 82.5%;
+   top: 40px;
+    left: 20.3%;
   }
 
 .time {
@@ -269,8 +283,10 @@ tbody{
   margin-bottom: 10px;
 }
 
-.popup-content .field {
+.popup-content .field label {
   margin-bottom: 10px;
+  font-weight: bold;
+  margin-right: 10px;
 }
 
 .notif-item {
