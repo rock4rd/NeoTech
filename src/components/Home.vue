@@ -16,6 +16,7 @@ const selectedLab = ref('');
 const selectedYearSection = ref('');
 const currentTime = ref('');
 const currentDay = ref('');
+const showGuestsOnly = ref(false);
 
 const timeSlots = [
   '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 NN', 'Lunch Break',
@@ -26,10 +27,18 @@ const YearnSection = [
 ];
 
 const formatTime = (ptTime) => {
-  const seconds = parseInt(ptTime.replace('PT', '').replace('S', ''), 10);
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  const timePattern = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
+  const matches = ptTime.match(timePattern);
+
+  const hours = matches[1] ? parseInt(matches[1], 10) : 0;
+  const minutes = matches[2] ? parseInt(matches[2], 10) : 0;
+  const seconds = matches[3] ? parseInt(matches[3], 10) : 0;
+
+  const totalMinutes = Math.floor(seconds / 60) + minutes;
+  const totalHours = hours + Math.floor(totalMinutes / 60);
+  const remainingMinutes = totalMinutes % 60;
+
+  return `${totalHours.toString().padStart(2, '0')}:${remainingMinutes.toString().padStart(2, '0')}`;
 };
 
 const togglePopup = () => {
@@ -66,11 +75,15 @@ const hidePopup = () => {
 const fetchSchedules = async () => {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/schedule/');
-    schedules.value = response.data.map(schedule => ({
-      ...schedule,
-      timein: formatTime(schedule.timein),
-      timeout: formatTime(schedule.timeout),
-    }));
+    console.log('Fetched Schedules:', response.data);
+    schedules.value = response.data
+      .filter(schedule => !showGuestsOnly.value || schedule.guestID !== null || !schedule.YearSection)
+      .map(schedule => ({
+        ...schedule,
+        timein: formatTime(schedule.timein),
+        timeout: formatTime(schedule.timeout),
+      }));
+    console.log('Filtered Schedules:', schedules.value);
     updateLabStatus();
   } catch (error) {
     console.error('Error fetching schedules:', error.response ? error.response.data : error.message);
@@ -95,7 +108,7 @@ const hasSchedulesForTimeDayAndRoom = (time, day, roomNumber, yearSection) => {
     const scheduleTimeOutMinutes = convertTimeToMinutes(schedule.timeout);
 
     const isMatchingRoom = roomNumber === 'All' || schedule.roomnumber === roomNumber;
-    const isMatchingYearSection = yearSection === '' || schedule.YearSection === yearSection;
+    const isMatchingYearSection = yearSection === '' || schedule.YearSection === yearSection || schedule.YearSection === null;
 
     return (
       isMatchingRoom &&
@@ -106,6 +119,7 @@ const hasSchedulesForTimeDayAndRoom = (time, day, roomNumber, yearSection) => {
     );
   });
 };
+
 
 const convertTimeToMinutes = (time) => {
   const [timePart, ampm] = time.split(' ');
@@ -149,6 +163,8 @@ onMounted(() => {
 });
 
 watch([currentTime, currentDay], updateLabStatus);
+
+watch(showGuestsOnly, fetchSchedules);
 
 // Helper function to get highlight class based on day
 const getHighlightClassForDay = (day) => {
@@ -211,14 +227,14 @@ const getStatusColor = (status) => {
                 <td class="timeslottd">{{ time }}</td>
                 <td v-for="day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']" :key="day"
                     :class="{ [getHighlightClassForDay(day)]: hasSchedulesForTimeDayAndRoom(time, day, selectedLab, selectedYearSection) }"
-                    @click="showPopup(time, day)">
+                    @click="hasSchedulesForTimeDayAndRoom(time, day, selectedLab, selectedYearSection) && showPopup(time, day)">
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
         <div class="divider"></div>
-        <div class="laboratory">
+        <div class="laboratory"> 
           <p class="headir">LABORATORY ROOM</p>
           <table class="labtable">
             <tbody>
@@ -251,6 +267,12 @@ const getStatusColor = (status) => {
 
 
 
+
+
+
+
+
+
 <style>
 .homecontainer {
   position: fixed;
@@ -266,16 +288,16 @@ const getStatusColor = (status) => {
   z-index: 1;
 }
 .highlighted-monday {
-  background-color: lightblue;
+  background-color: yellow
 }
 .highlighted-tuesday {
-  background-color: lightgreen;
+  background-color: yellowgreen;
 }
 .highlighted-wednesday {
-  background-color: lightcoral;
+  background-color: yellow;
 }
 .highlighted-thursday {
-  background-color: yellow;
+  background-color: yellowgreen;
 }
 .highlighted-friday {
   background-color: green;
@@ -304,6 +326,10 @@ const getStatusColor = (status) => {
   height: 82%;
   width: 55%;
   overflow-y: auto;
+}
+.guest-filter{
+  position: relative;
+bottom: 20%;
 }
 .lab-filter{
   position: relative;
@@ -472,9 +498,9 @@ tr .timeslottd{
   padding: 5px;
 }
 .reactiveheader{
-  position: relative;
-  top: 2%;
-  left: 26%;
+  position: fixed;
+  top: 16.5%;
+  left: 34%;
   font-size: 20px;
   font-weight: bold;
   color:black;

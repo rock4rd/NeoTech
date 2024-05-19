@@ -235,6 +235,7 @@ const date = ref()
 <input
   id="timeInPicker"
   type="time"
+  step="3600"
   v-model="selectedTimeIn"
   class="custom-timepicker"
 />
@@ -243,13 +244,14 @@ const date = ref()
 <input
   id="timeOutPicker"
   type="time"
+  step="3600"
   v-model="selectedTimeOut"
   class="custom-timepicker"
 />
 
       </div>
 
-      <div>
+      <div class="timeintimeout">
         <p class="labeltime">Time In: {{ selectedTimeIn }}</p>
         <p class="labeltime">Time Out: {{ selectedTimeOut }}</p>
       </div>
@@ -281,7 +283,14 @@ const date = ref()
   class="name-input"
   placeholder="Enter your last name"
 />
-
+<label for="email" class="labelinput1">Email:</label>
+<input 
+id="email"
+type="text"
+v-model="email"
+class="name-input"
+placeholder="Enter your email"
+/>
 <label for="purpose" class="labelinput1">Purpose:</label>
 <input
   id="purpose"
@@ -571,6 +580,7 @@ export default {
       selectedTimeIn: "",
       selectedTimeOut: "",
       purpose: "",
+      email: "",
       firstName: "",
       lastName: "",
       currentStep: 1,
@@ -618,9 +628,11 @@ export default {
 
   console.log('First Name:', this.firstName);
   console.log('Last Name:', this.lastName);
+  console.log('Email:', this.email);
   console.log('Purpose:', this.purpose);
+  
 
-  if (!this.selectedDate || !this.selectedTimeIn || !this.selectedTimeOut || !this.firstName || !this.lastName || !this.purpose) {
+  if (!this.selectedDate || !this.selectedTimeIn || !this.selectedTimeOut || !this.firstName || !this.lastName || !this.email ||!this.purpose) {
     console.log('One or more fields are empty.');
     alert('Please fill in all the fields.');
     return;
@@ -637,6 +649,7 @@ export default {
   formData.append('timeOut', formattedTimeOut);
   formData.append('Firstname', this.firstName);
   formData.append('Lastname', this.lastName);
+  formData.append('Email', this.email);
   formData.append('purpose', this.purpose);
 
   try {
@@ -712,6 +725,10 @@ redirectToLogin() {
   border: 1px solid var(--LIght, #F5347F);
   background: rgba(255, 255, 255, 0.41);
   box-shadow: 15px 15px 10px 0px #F5347F;
+  }
+  .timeintimeout{
+    position: relative;
+    top: 10%;
   }
   .page2{
     display: flex;
@@ -998,7 +1015,7 @@ redirectToLogin() {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 5px;
+    
   }
 
   .labelinput1{
@@ -1012,7 +1029,7 @@ redirectToLogin() {
     height: 35px;
     font-size: 14px;
     padding: 5px;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
     border: 1px solid black;
     border-radius: 5px;
   }

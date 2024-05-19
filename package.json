@@ -16,6 +16,8 @@
     "bootstrap-vue": "^2.21.2",
     "mdb-vue-ui-kit": "^4.1.1",
     "moment": "^2.29.4",
+    "primeicons": "^7.0.0",
+    "primevue": "^3.52.0",
     "vue": "^3.3.4",
     "vue-full-calendar": "^3.0.0",
     "vue-router": "^4.3.0",

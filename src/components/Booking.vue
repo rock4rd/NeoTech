@@ -34,6 +34,7 @@ import NavigationBar from './NavigationBar.vue'
     <div class="popup-background"></div>
     <div class="popup-content">
       <h2>Booking Details</h2>
+      <b class="bi bi-x-circle xcircle" @click="closePopup"></b>
       <div class="field">
         <label for="name">Name:</label>
         <span id="name">{{ selectedNotif['Full name'] }}</span>
@@ -312,6 +313,13 @@ tbody{
 .popup-content .buttons button:focus {
   color: #171e29;
 }
+.xcircle{
+  font-size: 24px;
+  position: relative;
+  left: 93%;
+  bottom: 50px;
+  cursor: pointer;
+}
 
 .popup-content .buttons button:hover {
   border-color: #06f;
@@ -358,22 +366,35 @@ import axios from 'axios';
 // Function to convert duration in seconds to hours, minutes, and AM/PM format
 // Function to convert duration string to HH:MM:SS format
 function formatDurationToHHMMSS(durationString) {
-  // Extract seconds from the provided format (e.g., PT300S)
-  const seconds = parseInt(durationString.substring(2, durationString.length - 1));
-
-  // Convert seconds to HH:MM:SS format
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainingSeconds = seconds % 60;
-
-  // Format each part to ensure leading zeros if necessary
-  const formattedHours = hours < 10 ? `0${hours}` : hours;
-  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-  const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
-
-  // Return the formatted time
-  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  // Check if the durationString includes 'H' for hours
+  if (durationString.includes('H')) {
+    // Extract hours from the provided format (e.g., PT12H)
+    const hours = parseInt(durationString.substring(2, durationString.length - 1));
+    
+    // Convert hours to HH:MM:SS format
+    const formattedHours = hours < 10 ? `0${hours}` : hours;
+    
+    // Return the formatted time with hours
+    return `${formattedHours}:00:00`;
+  } else {
+    // Extract seconds from the provided format (e.g., PT300S)
+    const seconds = parseInt(durationString.substring(2, durationString.length - 1));
+    
+    // Convert seconds to HH:MM:SS format
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    
+    // Format each part to ensure leading zeros if necessary
+    const formattedHours = hours < 10 ? `0${hours}` : hours;
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
+    
+    // Return the formatted time
+    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  }
 }
+
 
 
 function formatDateINtoDayOfWeek(dateIN) {
@@ -413,6 +434,10 @@ export default {
     this.fetchData();
   },
   methods: {
+    
+    closePopup() {
+      this.selectedNotif = null;
+    },
     
     async fetchData() {
   try {

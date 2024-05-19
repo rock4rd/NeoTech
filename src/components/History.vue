@@ -124,15 +124,21 @@ const toggleSort = (key) => {
   border: 1px solid var(--Light, #F5347F);
   background: rgba(255, 255, 255, 0.41);
   box-shadow: 15px 15px 10px 0px #F5347F;
+  overflow: hidden; /* Ensure content overflow is hidden */
 }
 
 .history-table {
   position: relative;
-  top: 13%;
+  top: 8%;
   left: 3%;
   width: 95%;
   border-collapse: separate;
   border-spacing: 5px 1rem;
+  max-height: 80vh; /* Set maximum height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  width: 100%; /* Set width to 100% to fill the container */
+  border-collapse: collapse; /* Collapse table borders */
+  
 }
 button {
   background: none;
