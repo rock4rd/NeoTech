@@ -41,129 +41,6 @@ const date = ref()
 
                   <div class="tlabsched">
                       <h2 class="tschedhead"> LABORATORY SCHEDULE</h2>
-          <table class="sched-table">
-      <thead>
-        <tr>
-          
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="font-weight: bold;">Morning</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>7:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>8:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>9:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>10:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>11:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td style="font-weight: bold;">Afternoon</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>1:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>2:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>3:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>4:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>5:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>6:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-
-        <!-- Add more rows for different times -->
-      </tbody>
-    </table>
 
                   </div>
             
@@ -227,33 +104,40 @@ const date = ref()
         <b class="bi bi-clock clockicon"></b>
       </div>
 
-      <h3>Select time of your reservation</h3>
+      <h3>Select time of your reservation and desired laboratory</h3>
 
       <div class="timepickercontainer">
       <div class="timepicker">
         <label for="timeInPicker" class="labelpick">Time In:</label>
-<input
-  id="timeInPicker"
-  type="time"
-  step="3600"
-  v-model="selectedTimeIn"
-  class="custom-timepicker"
-/>
+        <input
+          id="timeInPicker"
+          type="time"
+          step="3600"
+          v-model="selectedTimeIn"
+          class="custom-timepicker"
+        />
 
-<label for="timeOutPicker" class="labelpick">Time Out:</label>
-<input
-  id="timeOutPicker"
-  type="time"
-  step="3600"
-  v-model="selectedTimeOut"
-  class="custom-timepicker"
-/>
+        <label for="timeOutPicker" class="labelpick">Time Out:</label>
+        <input
+          id="timeOutPicker"
+          type="time"
+          step="3600"
+          v-model="selectedTimeOut"
+          class="custom-timepicker"
+        />  
+
+        <label for="desiredLab" class="labelpick">Choose a Laboratory:   </label>
+<select v-model="desiredLab" @focus="fetchAvailableRooms">
+  <option v-for="room in availableRooms" :key="room" :value="room">
+    {{ room }}
+  </option>
+</select>
 
       </div>
 
       <div class="timeintimeout">
-        <p class="labeltime">Time In: {{ selectedTimeIn }}</p>
-        <p class="labeltime">Time Out: {{ selectedTimeOut }}</p>
+        <p class="labeltime">Time In: {{ formattedTimeIn}}</p>
+        <p class="labeltime">Time Out: {{ formattedTimeOut }}</p>
       </div>
     </div>
   </div>
@@ -307,7 +191,7 @@ placeholder="Enter your email"
 
   <div class="next-cancel-buttons">
         
-        <button class="back-button" @click="prevStep">Back <b class="bi bi-caret-left-fill buttonicons"></b></button>
+        <button class="back-button" @click="backtologin">Back to Login <b class="bi bi-caret-left-fill buttonicons"></b></button>
         <button class="next-button" @click="validateAndNext" >Next <b class="bi bi-caret-right-fill buttonicons"></b></button>
 
   </div>
@@ -369,153 +253,10 @@ placeholder="Enter your email"
         <div class="overlay overlay-left">
           <div class="overlay-panel" :style="{ transform: isSliderOnLeft ? 'translateX(0%)' : 'translateX(100%)' }" ref="labschedule1">
 
-            <div class="tpic">
-                  <b class="bi bi-person logot"></b>
-                  
-                </div>
-                <h2 class="tname">Teachers Name</h2>
-                <div class="tcred">
-                  <table class="tcredtable">
-                        <tbody>
-                          <tr v-for="(value, label) in userInfo" :key="label">
-                            <td class="tlabel">{{ label }} :</td>
-                            <td class="titem">
-                            </td>
-                          </tr>
-                        </tbody>
-                    </table>
-                </div>
+          </div>
+        </div>
+      </div>
 
-                  <div class="tlabsched">
-                      <h2 class="tschedhead"> LABORATORY SCHEDULE</h2>
-          <table class="sched-table">
-      <thead>
-        <tr>
-          
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="font-weight: bold;">Morning</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>7:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>8:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>9:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>10:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>11:00 AM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td style="font-weight: bold;">Afternoon</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>1:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>2:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>3:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>4:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>5:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>6:00 PM</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-
-        <!-- Add more rows for different times -->
-      </tbody>
-    </table>
-
-                  </div>
-                </div>
-                </div>
-              </div>
     <div class="bookwrap" :style="{ transform: isSliderOnLeft ? 'translateX(-100%)' : 'translateX(-100%)' }">
 
             
@@ -557,8 +298,9 @@ placeholder="Enter your email"
 import MyCalendar from './MyCalendar.vue';
 import Timepicker from 'vue3-timepicker';
 import axios from 'axios';
-import { ref } from 'vue';
-import { onMounted } from 'vue';
+import { ref, watch } from 'vue';
+
+const availableRooms = ref([]);
 
 export default {
   components: {
@@ -573,13 +315,15 @@ export default {
       isTransitioned: false,
       delayDuration: 100, // Adjust as needed
       sliderText: "LABORATORY SCHEDULE",
-      selectedDate: null,
+      
       customFormat: 'yyyy-MM-dd', // Define your custom date format here
-      daysOfWeek: [""],
+      daysOfWeek: ref(['']),
       selectedDay: "",
+      selectedDate: "",
       selectedTimeIn: "",
       selectedTimeOut: "",
       purpose: "",
+      desiredLab: "",
       email: "",
       firstName: "",
       lastName: "",
@@ -590,6 +334,17 @@ export default {
     calendar() {
       return [[]]; // Replace with your actual calendar data
     },
+    formattedTimeIn() {
+      return this.formatTime(this.selectedTimeIn);
+    },
+    formattedTimeOut() {
+      return this.formatTime(this.selectedTimeOut);
+    },
+  },
+  watch: {
+    selectedDate: 'fetchAvailableRooms',
+    selectedTimeIn: 'fetchAvailableRooms',
+    selectedTimeOut: 'fetchAvailableRooms',
   },
   methods: {
     toggleLayout() {
@@ -611,68 +366,92 @@ export default {
       }, this.delayDuration);
     },
     handleDateSelection(date) {
-    this.selectedDate = date;
-  },
-  async submitBooking() {
-  console.log('Selected Date:', this.selectedDate);
-  
-  // Ensure selectedTimeIn includes seconds
-  const timeInParts = this.selectedTimeIn.split(':');
-  const formattedTimeIn = `${timeInParts[0].padStart(2, '0')}:${timeInParts[1]}:00`;
-  console.log('Formatted Time In:', formattedTimeIn);
+      this.selectedDate.value = date;
+    },
+    async fetchAvailableRooms() {
+      if (!this.selectedDate || !this.selectedTimeIn || !this.selectedTimeOut) {
+        return;
+      }
 
-  // Ensure selectedTimeOut includes seconds
-  const timeOutParts = this.selectedTimeOut.split(':');
-  const formattedTimeOut = `${timeOutParts[0].padStart(2, '0')}:${timeOutParts[1]}:00`;
-  console.log('Formatted Time Out:', formattedTimeOut);
+      const formattedDate = this.formatDateToDayOfWeek(this.selectedDate);
+      const formattedTimeIn = this.formattedTimeIn;
+      const formattedTimeOut = this.formattedTimeOut;
+      console.log(formattedDate);
+      console.log(formattedTimeIn);
+      console.log(formattedTimeOut);
+      const formData = new FormData();
+      formData.append('dayOfWeek', formattedDate);
+      formData.append('timeIn', formattedTimeIn);
+      formData.append('timeOut', formattedTimeOut);
 
-  console.log('First Name:', this.firstName);
-  console.log('Last Name:', this.lastName);
-  console.log('Email:', this.email);
-  console.log('Purpose:', this.purpose);
-  
-
-  if (!this.selectedDate || !this.selectedTimeIn || !this.selectedTimeOut || !this.firstName || !this.lastName || !this.email ||!this.purpose) {
-    console.log('One or more fields are empty.');
-    alert('Please fill in all the fields.');
-    return;
+      try {
+  const response = await axios.post('http://127.0.0.1:8000/api/labstatus/bookinglab/', formData);
+  console.log(response.data); // Log the entire response data
+  if (response.data.available_rooms !== undefined) {
+    availableRooms.value = response.data.available_rooms;
+    console.log(availableRooms.value);
+  } else {
+    console.error('Response does not contain available_rooms data:', response.data);
   }
+} catch (error) {
+  console.error('Error fetching available rooms:', error);
+}
+    },
 
-  // Format the selected date to "YYYY-MM-DD"
-  const formattedDate = this.selectedDate.toISOString().split('T')[0];
-  console.log('Formatted Date:', formattedDate);
+    formatDateToDayOfWeek(date) {
+      const options = { weekday: 'long' };
+      return new Intl.DateTimeFormat('en-US', options).format(new Date(date));
+    },
+    async submitBooking() {
+      if (!this.selectedDate || !this.selectedTimeIn || !this.selectedTimeOut || !this.firstName || !this.lastName || !this.email || !this.purpose) {
+        alert('Please fill in all the fields.');
+        return;
+      }
 
-  // Prepare form data
-  const formData = new FormData();
-  formData.append('daterequested', formattedDate);
-  formData.append('timeIn', formattedTimeIn);
-  formData.append('timeOut', formattedTimeOut);
-  formData.append('Firstname', this.firstName);
-  formData.append('Lastname', this.lastName);
-  formData.append('Email', this.email);
-  formData.append('purpose', this.purpose);
+      const formattedDate = this.selectedDate.toISOString().split('T')[0];
+      const timeInParts = this.selectedTimeIn.split(':');
+      const formattedTimeIn = `${timeInParts[0].padStart(2, '0')}:${timeInParts[1]}:00`;
+      const timeOutParts = this.selectedTimeOut.split(':');
+      const formattedTimeOut = `${timeOutParts[0].padStart(2, '0')}:${timeOutParts[1]}:00`;
 
-  try {
-    const response = await axios.post('http://127.0.0.1:8000/api/bookings/', formData);
-    console.log('Booking submitted successfully:', response.data);
-    // Optionally, perform any additional actions upon successful submission
-    // For example, transition to the next step or display a success message
-    this.redirectToLogin();
-  } catch (error) {
-    console.error('Error submitting booking:', error);
-    alert('Error submitting booking. Please try again later.');
-    // Optionally, display an error message to the user
-  }
-},
+      console.log(formattedDate);
+      console.log(formattedTimeIn);
+      console.log(formattedTimeOut);
+      console.log(this.firstName);
+      console.log(this.lastName);
+      console.log(this.email);
+      console.log(this.desiredLab);
+      console.log(this.purpose);
 
-redirectToLogin() {
-  setTimeout(() => {
-    this.$router.push('/');
-  }, 5000);
-},
+      const formData = new FormData();
+      formData.append('daterequested', formattedDate);
+      formData.append('timeIn', formattedTimeIn);
+      formData.append('timeOut', formattedTimeOut);
+      formData.append('Firstname', this.firstName);
+      formData.append('Lastname', this.lastName);
+      formData.append('Email', this.email);
+      formData.append('desiredLab', this.desiredLab);
+      formData.append('purpose', this.purpose);
 
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/api/bookings/', formData);
+        console.log('Booking submitted successfully:', response.data);
+        this.redirectToLogin();
+      } catch (error) {
+        console.error('Error submitting booking:', error);
+        alert('Error submitting booking. Please try again later.');
+      }
+    },
+    redirectToLogin() {
+      setTimeout(() => {
+        this.$router.push('/');
+      }, 5000);
+    },
     nextStep() {
       this.currentStep++;
+    },
+    backtologin(){
+      this.$router.push('/');
     },
     submitStep() {
       this.currentStep++;
@@ -689,9 +468,19 @@ redirectToLogin() {
       }
       this.nextStep();
     },
-  }
+    formatTime(time) {
+  if (!time) return '';
+  const [hours, minutes] = time.split(':');
+  return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00`;
+}
+
+  },
+  mounted() {
+    this.fetchAvailableRooms();
+  },
 };
 </script>
+
 
 
   <style>

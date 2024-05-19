@@ -182,16 +182,16 @@ tbody{
     
 }
 .notifItem td:first-child{
-  position: fixed;
-  left: 18.5%;
+  position: relative;
+  left: 7%;
 }
 .notifItem td:nth-child(2) {
-    position: fixed;
+    position: relative;
     left:50.5%;
   }
 
   .notifItem td:last-child {
-   position: fixed;
+   position: relative;
     left: 82.5%;
   }
 
